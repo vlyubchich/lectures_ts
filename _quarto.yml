@@ -1,0 +1,25 @@
+project:
+  type: book
+
+book:
+  title: "lectures_ts"
+  author: "Vyacheslav Lyubchich and Yulia R. Gel"
+  date: "2022-12-31"
+  date-format: iso
+  chapters:
+    - index.qmd
+    - intro.qmd
+    - summary.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    code-fold: true
+    theme: cosmo
+  pdf:
+    documentclass: scrreprt
+
+
+
