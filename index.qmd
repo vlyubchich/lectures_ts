@@ -1,14 +1,34 @@
----
-output: html_document
-editor_options: 
-  chunk_output_type: console
----
 # Preface {.unnumbered}
 
-This is a Quarto book.
-
-To learn more about Quarto books visit <https://quarto.org/docs/books>.
 
 ```{r}
-1 + 1
+#| echo: FALSE
+options(digits = 3)
 ```
+
+
+```{r}
+library(lmtest)
+library(randtests)
+# TS intro
+library(Ecdat)
+# Smoothing
+# library(fma)
+# library(forecast)
+library(pracma)
+# ARMA
+library(funtimes)
+library(forecast)
+# Reg1
+library(tseries)
+library(dynlm)
+library(urca)
+library(dplyr)
+library(ecm)
+# Reg2
+library(forecast)
+# plotting
+library(ggplot2)
+library(plotly)
+```
+
