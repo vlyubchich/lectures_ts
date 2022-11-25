@@ -1,0 +1,46 @@
+# Software {.unnumbered}
+
+Examples were calculated in `r R.Version()$version.string` with an effort to use the most recent versions of R packages.
+
+The R packages used in this book include (in alphabetic order):
+
+* `fma` [@R-fma]
+* `forecast` [@R-forecast]
+* `ggplot2` [@R-ggplot2]
+* `knitr` [@R-knitr]
+* `patchwork` [@R-patchwork]
+* `pracma` [@R-pracma]
+
+
+```{r}
+#| echo: false
+# Automatically create a bib database for R packages
+knitr::write_bib(c(
+    .packages(), 'base', 'knitr'
+    ,'ggplot2'
+    ,'patchwork'
+    ,'fma' # l03
+    ,'forecast' # l03
+    ,'pracma' # l03
+), 'refPackages.bib')
+```
+
+
+<!-- ```{r, eval = FALSE, include=FALSE} -->
+<!-- library(lmtest) -->
+<!-- library(randtests) -->
+<!-- # TS intro -->
+<!-- library(Ecdat) -->
+<!-- # ARMA -->
+<!-- library(funtimes) -->
+<!-- library(forecast) -->
+<!-- # Reg1 -->
+<!-- library(tseries) -->
+<!-- library(dynlm) -->
+<!-- library(urca) -->
+<!-- library(dplyr) -->
+<!-- library(ecm) -->
+<!-- # Reg2 -->
+<!-- # plotting -->
+<!-- library(plotly) -->
+<!-- ``` -->

@@ -5,7 +5,7 @@ project:
 book:
   title: "Time Series Analysis"
   subtitle: "Lecture Notes"
-  author: "Vyacheslav Lyubchich and Yulia R. Gel"
+  author: "V. Lyubchich and Y. R. Gel"
   date: "2022-12-31"
   date-format: iso
   number-sections: true
@@ -18,11 +18,13 @@ book:
     search: true
   chapters:
     - index.qmd
-    - intro.qmd
-    - l03_smoothing.qmd
+    # - l03_smoothing.qmd
+    - software.qmd
     - references.qmd
 
-bibliography: references.bib
+bibliography:
+    - references.bib
+    - refPackages.bib
 csl: springer-basicVL.csl
 
 format:
