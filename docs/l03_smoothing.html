@@ -1,0 +1,1655 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.189">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Time Series Analysis - 2&nbsp; Smoothing (Detrending and Deseasonalizing)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./references.html" rel="next">
+<link href="./intro.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Smoothing (Detrending and Deseasonalizing)</span></h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Time Series Analysis</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-reader-toggle sidebar-tool" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+      <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">Preface</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./l03_smoothing.html" class="sidebar-item-text sidebar-link active"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Smoothing (Detrending and Deseasonalizing)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">References</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="toc-section-number">2.1</span>  Introduction</a></li>
+  <li><a href="#sec-movavg" id="toc-sec-movavg" class="nav-link" data-scroll-target="#sec-movavg"><span class="toc-section-number">2.2</span>  Finite moving average smoothing</a>
+  <ul class="collapse">
+  <li><a href="#sec-movavgSeas" id="toc-sec-movavgSeas" class="nav-link" data-scroll-target="#sec-movavgSeas"><span class="toc-section-number">2.2.1</span>  Moving average smoothing for seasonal data</a></li>
+  </ul></li>
+  <li><a href="#lowess-smoothing" id="toc-lowess-smoothing" class="nav-link" data-scroll-target="#lowess-smoothing"><span class="toc-section-number">2.3</span>  Lowess smoothing</a>
+  <ul class="collapse">
+  <li><a href="#lowess-smoothing-for-seasonal-data" id="toc-lowess-smoothing-for-seasonal-data" class="nav-link" data-scroll-target="#lowess-smoothing-for-seasonal-data"><span class="toc-section-number">2.3.1</span>  Lowess smoothing for seasonal data</a></li>
+  </ul></li>
+  <li><a href="#exponential-smoothing" id="toc-exponential-smoothing" class="nav-link" data-scroll-target="#exponential-smoothing"><span class="toc-section-number">2.4</span>  Exponential smoothing</a>
+  <ul class="collapse">
+  <li><a href="#exponential-smoothing-for-seasonal-data" id="toc-exponential-smoothing-for-seasonal-data" class="nav-link" data-scroll-target="#exponential-smoothing-for-seasonal-data"><span class="toc-section-number">2.4.1</span>  Exponential smoothing for seasonal data</a></li>
+  </ul></li>
+  <li><a href="#sec-regressionTime" id="toc-sec-regressionTime" class="nav-link" data-scroll-target="#sec-regressionTime"><span class="toc-section-number">2.5</span>  Polynomial regression on time</a>
+  <ul class="collapse">
+  <li><a href="#seasonal-regression-with-dummy-variables" id="toc-seasonal-regression-with-dummy-variables" class="nav-link" data-scroll-target="#seasonal-regression-with-dummy-variables"><span class="toc-section-number">2.5.1</span>  Seasonal regression with dummy variables</a></li>
+  <li><a href="#seasonal-regression-with-fourier-series" id="toc-seasonal-regression-with-fourier-series" class="nav-link" data-scroll-target="#seasonal-regression-with-fourier-series"><span class="toc-section-number">2.5.2</span>  Seasonal regression with Fourier series</a></li>
+  </ul></li>
+  <li><a href="#sec-differencing" id="toc-sec-differencing" class="nav-link" data-scroll-target="#sec-differencing"><span class="toc-section-number">2.6</span>  Differencing</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="toc-section-number">2.7</span>  Conclusion</a></li>
+  <li><a href="#appendix" id="toc-appendix" class="nav-link" data-scroll-target="#appendix"><span class="toc-section-number">2.8</span>  Appendix</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Smoothing (Detrending and Deseasonalizing)</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<div class="cell">
+
+</div>
+<p>The goal of this lecture is to learn a variety of methods used for <em>trend visualization</em> (such that make a trend in noisy data more apparent), <em>trend modeling</em> (such that can help us to come up with ‘an equation’ for the trend, which could be further studied or used for interpolation, forecasting, or detrending), and <em>detrending</em> (just to remove trend from the series, with or without modeling it). You should be able to choose a method based on the goals of your analysis. We will start with simple and widely used methods that can be further combined into more elaborate algorithms.</p>
+<p><strong>Objectives</strong></p>
+<ol type="1">
+<li>Implement smoothing methods often used for trend
+<ul>
+<li>visualization (example: moving average, lowess);</li>
+<li>modeling (example: exponential smoothing, polynomial smoothing);</li>
+<li>removal (example: differencing, however, the above methods can be also used to remove trends).</li>
+</ul></li>
+<li>For each of the cases above, consider a situation when seasonality is present.</li>
+<li>Understand the concepts of trend- and difference-stationary time series.</li>
+</ol>
+<p><strong>Reading materials</strong></p>
+<ul>
+<li>Chapter 1.5 in <span class="citation" data-cites="Brockwell:Davis:2002">Brockwell and Davis (<a href="references.html#ref-Brockwell:Davis:2002" role="doc-biblioref">2002</a>)</span></li>
+<li>Chapter 5 in <span class="citation" data-cites="Kirchgassner:Wolters:2007">Kirchgässner and Wolters (<a href="references.html#ref-Kirchgassner:Wolters:2007" role="doc-biblioref">2007</a>)</span> (optional)</li>
+</ul>
+<section id="introduction" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">2.1</span> Introduction</h2>
+<p>Recall the classical decomposition <span id="eq-trseas"><span class="math display">\[
+Y_t = M_t + S_t + \epsilon_t,
+\tag{2.1}\]</span></span> where <span class="math inline">\(M_t\)</span> is slowly changing function (trend component), <span class="math inline">\(\epsilon_t\)</span> is stationary random noise component, and <span class="math inline">\(S_t\)</span> is the periodic term with period <span class="math inline">\(m\geqslant 2\)</span> (seasonal component) and scaling factors <span class="math inline">\(\lambda_k &gt; 0\)</span> such that <span class="math inline">\(S_{t+km} = \lambda_kS_t\)</span> for <span class="math inline">\(1 \leqslant t \leqslant m\)</span> and each <span class="math inline">\(k \geqslant 1\)</span>. For identification, we need <span class="math inline">\(\sum_{t=1}^m S_t = 0\)</span> and <span class="math inline">\(\mathrm{E}(\epsilon_t)=0\)</span>.</p>
+<p>Our goal is to estimate and extract <span class="math inline">\(M_t\)</span> and <span class="math inline">\(S_t\)</span> with a hope that the residual or noise component <span class="math inline">\(\epsilon_t\)</span> will turn out to be a stationary time series (<a href="#sec-movavg"><span>Section&nbsp;2.2</span></a>–<a href="#sec-regressionTime"><span>Section&nbsp;2.5</span></a>). Alternatively, Box–Jenkins models use difference operators repeatedly to the series <span class="math inline">\(Y_t\)</span> until a stationary time series is obtained (see <a href="#sec-differencing"><span>Section&nbsp;2.6</span></a> on differencing).</p>
+<p>The seasonal component is said to have <em>constant seasonal variation</em> if the scaling factors satisfy <span class="math inline">\(\lambda_{k} = 1\)</span> for all <span class="math inline">\(k\)</span>. In other words, <span class="math inline">\(S_{t+m} = S_{t}\)</span> for all <span class="math inline">\(t\)</span>. The constant variation is an assumption of most modeling techniques we will be using in this course. Unfortunately, many real seasonal time series do not have this constancy property and it is necessary to first perform a <em>variance-stabilizing transformation</em> to modify the original time series into one with constant variation. To some extent this is a matter of trial-and-error, where we work from ‘weaker’ transformations to ‘stronger’ transformations as needed. Typically, power transformations are used <span class="math inline">\(Y_{t} \rightarrow Y^{\lambda}_{t}\)</span>, where <span class="math inline">\(0 &lt; \lambda &lt; 1\)</span> or, log or even log log transformations, e.g., <span class="math inline">\(Y_{t} \rightarrow \log Y_{t}\)</span>.</p>
+<p>The log transformation of <span class="math inline">\(Y_t\)</span> is convenient when we assume not an additive model as <a href="#eq-trseas">Equation&nbsp;<span>2.1</span></a> is, but a multiplicative model as <span id="eq-trseasmult"><span class="math display">\[
+Y_t = M_t \cdot S_t \cdot \epsilon_t.
+\tag{2.2}\]</span></span> When applying variance-stabilizing log transformation to <a href="#eq-trseasmult">Equation&nbsp;<span>2.2</span></a>, we get an additive result: <span id="eq-trseasmultlog"><span class="math display">\[
+\log Y_t = \log M_t + \log S_t + \log \epsilon_t,
+\tag{2.3}\]</span></span> which is now similar to <a href="#eq-trseas">Equation&nbsp;<span>2.1</span></a>. We will refer to <a href="#eq-trseas">Equation&nbsp;<span>2.1</span></a> as <em>additive seasonality</em>, and to <a href="#eq-trseasmult">Equation&nbsp;<span>2.2</span></a> as <em>multiplicative seasonality</em>. Only few methods can deal with the multiplicative case <a href="#eq-trseasmult">Equation&nbsp;<span>2.2</span></a> directly; most methods we consider in this course will require us to apply a transformation as in <a href="#eq-trseasmultlog">Equation&nbsp;<span>2.3</span></a>.</p>
+<p>In the following sections, we consider methods for estimation and elimination of <span class="math inline">\(M_t\)</span> (for non-seasonal data, when <span class="math inline">\(S_t = 0\)</span> in the additive case <a href="#eq-trseas">Equation&nbsp;<span>2.1</span></a> or <span class="math inline">\(S_t = 1\)</span> in the multiplicative case <a href="#eq-trseasmult">Equation&nbsp;<span>2.2</span></a>) and of both <span class="math inline">\(M_t\)</span> and <span class="math inline">\(S_t\)</span> (for seasonal data).</p>
+</section>
+<section id="sec-movavg" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="sec-movavg"><span class="header-section-number">2.2</span> Finite moving average smoothing</h2>
+<p>Non-seasonal model with trend: <span class="math display">\[
+Y_t = M_t + \epsilon_t,
+\]</span> where <span class="math inline">\(\mathrm{E}(\epsilon_t)=0\)</span> and <span class="math inline">\(t=1,\ldots,n\)</span>.</p>
+<p>Let <span class="math inline">\(q\)</span> be a non-negative integer (<span class="math inline">\(q \in \mathbb{N}^{+}\)</span>) and consider the <em>two-sided moving average</em> of the series <span class="math inline">\(Y_t\)</span>: <span id="eq-movav"><span class="math display">\[
+\begin{split}
+W_t &amp;= \frac{1}{2q+1}\sum_{j=-q}^q Y_{t-j}\\
+&amp;= \frac{1}{2q+1}\sum_{j=-q}^q M_{t-j} + \frac{1}{2q+1}\sum_{j=-q}^q \epsilon_{t-j} \\
+&amp;\approx M_t,
+\end{split}
+\tag{2.4}\]</span></span> where <span class="math inline">\(w = 2q+1\)</span> is size of the moving window. Note that the above approximation is correct if the average value of <span class="math inline">\(\epsilon_{t}\)</span> within each window is close to 0 (important for selecting <span class="math inline">\(q\)</span>).</p>
+<div class="callout-note callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example: Shampoo plots
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><a href="#fig-shampoo">Figure&nbsp;<span>2.1</span></a> shows a time series plot of monthly shampoo sales. While the data are monthly, the seasonal component is not visible:</p>
+<ul>
+<li>no strong periodicity in the time series plot;</li>
+<li>the ACF at seasonal lag (1 year) is not significant.</li>
+</ul>
+<p>Therefore, we apply <a href="#eq-movav">Equation&nbsp;<span>2.4</span></a> as to non-seasonal data.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the data from the package fma</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>shampoo <span class="ot">&lt;-</span> fma<span class="sc">::</span>shampoo </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>shampoo</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;     Jan   Feb   Mar   Apr   May   Jun   Jul   Aug   Sep   Oct   Nov   Dec
+#&gt; 1 266.0 145.9 183.1 119.3 180.3 168.5 231.8 224.5 192.8 122.9 336.5 185.9
+#&gt; 2 194.3 149.5 210.1 273.3 191.4 287.0 226.0 303.6 289.9 421.6 264.5 342.3
+#&gt; 3 339.7 440.4 315.9 439.3 401.3 437.4 575.5 407.6 682.0 475.3 581.3 646.9</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pshampoo <span class="ot">&lt;-</span> <span class="fu">autoplot</span>(shampoo, <span class="at">col =</span> <span class="st">"grey50"</span>) <span class="sc">+</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Year"</span>) <span class="sc">+</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"Sales"</span>) <span class="sc">+</span> </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> forecast<span class="sc">::</span><span class="fu">ggAcf</span>(shampoo) <span class="sc">+</span> </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">""</span>) <span class="sc">+</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Lag (months)"</span>) <span class="sc">+</span> </span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>pshampoo <span class="sc">+</span> p2 <span class="sc">+</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_annotation</span>(<span class="at">tag_levels =</span> <span class="st">'A'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-shampoo" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="l03_smoothing_files/figure-html/fig-shampoo-1.png" class="img-fluid figure-img" width="768"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;2.1: Monthly shampoo sales over three years and a corresponding sample ACF.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>There are multiple ways to calculate moving averages in R, and formulas for <span class="math inline">\(W_t\)</span> may vary. If using someone’s else functions, remember to read the help files or source code to find out the exact formula in place of <a href="#eq-movav">Equation&nbsp;<span>2.4</span></a>. Below are some examples. Note that the package <code>forecast</code> is now retired in favor of the package <code>fable</code>.</p>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The package <code>forecast</code> is now retired in favor of the package <code>fable</code>.</p>
+</div>
+</div>
+<p>For example, <code>forecast::ma()</code> has the default option <code>centre = TRUE</code>, and the <code>order</code> argument represents the window size. Odd <code>order</code> and <code>centre = TRUE</code> correspond exactly to our definitions in <a href="#eq-movav">Equation&nbsp;<span>2.4</span></a>:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>forecast<span class="sc">::</span><span class="fu">ma</span>(shampoo, <span class="at">order =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;      Jan    Feb    Mar    Apr    May    Jun    Jul    Aug    Sep    Oct    Nov
+#&gt; 1     NA     NA 178.92 159.42 176.60 184.88 199.58 188.10 221.70 212.52 206.48
+#&gt; 2 215.26 202.62 203.72 222.26 237.56 256.26 259.58 305.62 301.12 324.38 331.60
+#&gt; 3 340.56 375.52 387.32 406.86 433.88 452.22 500.76 515.56 544.34 558.62     NA
+#&gt;      Dec
+#&gt; 1 197.82
+#&gt; 2 361.70
+#&gt; 3     NA</code></pre>
+</div>
+</div>
+<p>For example, <code>pracma::movavg()</code> averages last <code>n</code> data points:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>pracma<span class="sc">::</span><span class="fu">movavg</span>(shampoo, <span class="at">n =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;  [1] 266.0000 205.9500 198.3333 178.5750 178.9200 159.4200 176.6000 184.8800
+#&gt;  [9] 199.5800 188.1000 221.7000 212.5200 206.4800 197.8200 215.2600 202.6200
+#&gt; [17] 203.7200 222.2600 237.5600 256.2600 259.5800 305.6200 301.1200 324.3800
+#&gt; [25] 331.6000 361.7000 340.5600 375.5200 387.3200 406.8600 433.8800 452.2200
+#&gt; [33] 500.7600 515.5600 544.3400 558.6200</code></pre>
+</div>
+</div>
+<p>The base-R function <code>stats::filter()</code> can also be used. Its odd window size and <code>sides = 2</code> correspond to our definitions in <a href="#eq-movav">Equation&nbsp;<span>2.4</span></a>:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>window_size <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>stats<span class="sc">::</span><span class="fu">filter</span>(shampoo, <span class="at">filter =</span> <span class="dv">1</span><span class="sc">/</span><span class="fu">rep</span>(window_size, window_size), <span class="at">sides =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;      Jan    Feb    Mar    Apr    May    Jun    Jul    Aug    Sep    Oct    Nov
+#&gt; 1     NA     NA 178.92 159.42 176.60 184.88 199.58 188.10 221.70 212.52 206.48
+#&gt; 2 215.26 202.62 203.72 222.26 237.56 256.26 259.58 305.62 301.12 324.38 331.60
+#&gt; 3 340.56 375.52 387.32 406.86 433.88 452.22 500.76 515.56 544.34 558.62     NA
+#&gt;      Dec
+#&gt; 1 197.82
+#&gt; 2 361.70
+#&gt; 3     NA</code></pre>
+</div>
+</div>
+<p>The <code>sides = 1</code> in <code>stats::filter()</code> corresponds to the <code>pracma::movavg()</code> results above:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>stats<span class="sc">::</span><span class="fu">filter</span>(shampoo, <span class="at">filter =</span> <span class="dv">1</span><span class="sc">/</span><span class="fu">rep</span>(window_size, window_size), <span class="at">sides =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;      Jan    Feb    Mar    Apr    May    Jun    Jul    Aug    Sep    Oct    Nov
+#&gt; 1     NA     NA     NA     NA 178.92 159.42 176.60 184.88 199.58 188.10 221.70
+#&gt; 2 206.48 197.82 215.26 202.62 203.72 222.26 237.56 256.26 259.58 305.62 301.12
+#&gt; 3 331.60 361.70 340.56 375.52 387.32 406.86 433.88 452.22 500.76 515.56 544.34
+#&gt;      Dec
+#&gt; 1 212.52
+#&gt; 2 324.38
+#&gt; 3 558.62</code></pre>
+</div>
+</div>
+<p>See <a href="#fig-shampoo-movavg">Figure&nbsp;<span>2.2</span></a> and <a href="#fig-shampoo-movavg2">Figure&nbsp;<span>2.3</span></a> for the effects of the window size.</p>
+<div class="callout-note callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example: Shampoo moving average smoothing
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>ps <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">5</span>), <span class="cf">function</span>(q){</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    w <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> q <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    Wt <span class="ot">&lt;-</span> forecast<span class="sc">::</span><span class="fu">ma</span>(shampoo, <span class="at">order =</span> w)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    pshampoo <span class="sc">+</span> </span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> Wt), <span class="at">col =</span> <span class="dv">4</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>) <span class="sc">+</span> </span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ggtitle</span>(<span class="fu">paste0</span>(<span class="st">"q = "</span>, q, <span class="st">" (window = "</span>, w, <span class="st">")"</span>))</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="fu">wrap_plots</span>(ps, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_annotation</span>(<span class="at">tag_levels =</span> <span class="st">'A'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-shampoo-movavg" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="l03_smoothing_files/figure-html/fig-shampoo-movavg-1.png" class="img-fluid figure-img" width="768"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;2.2: Shampoo sales over three years smoothed with <em>centered</em> moving average filters, where the window size is <span class="math inline">\(w = 2q+1\)</span>.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>ps <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">5</span>), <span class="cf">function</span>(q){</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    w <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> q <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    Wt <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">filter</span>(shampoo, <span class="at">filter =</span> <span class="dv">1</span><span class="sc">/</span><span class="fu">rep</span>(w, w), <span class="at">sides =</span> <span class="dv">1</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    pshampoo <span class="sc">+</span> </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> Wt), <span class="at">col =</span> <span class="dv">4</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>) <span class="sc">+</span> </span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ggtitle</span>(<span class="fu">paste0</span>(<span class="st">"q = "</span>, q, <span class="st">" (window = "</span>, w, <span class="st">")"</span>))</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="fu">wrap_plots</span>(ps, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_annotation</span>(<span class="at">tag_levels =</span> <span class="st">'A'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-shampoo-movavg2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="l03_smoothing_files/figure-html/fig-shampoo-movavg2-1.png" class="img-fluid figure-img" width="768"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;2.3: Shampoo sales over three years smoothed with <em>non-centered</em> moving average filters, where the window size is <span class="math inline">\(w = 2q+1\)</span>.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+<section id="sec-movavgSeas" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="sec-movavgSeas"><span class="header-section-number">2.2.1</span> Moving average smoothing for seasonal data</h3>
+<p>Come back to the trend-seasonal model <a href="#eq-trseas">Equation&nbsp;<span>2.1</span></a>: <span class="math display">\[
+Y_t = M_t + S_t + \epsilon_t.
+\]</span></p>
+<p>We apply the following steps for estimating seasonality and trend:</p>
+<ol type="1">
+<li>Apply a moving average filter specially chosen to eliminate the seasonal component and dampen the noise – get <span class="math inline">\(\hat{M}_t\)</span>. Remember that sum of <span class="math inline">\(S_t\)</span> within each period is 0. Hence, to smooth out the seasonal component (and noise) and get an estimate of just <span class="math inline">\(M_t\)</span>, we will use a moving window <span class="math inline">\(w\)</span> sized as the seasonal period <span class="math inline">\(m\)</span> (more generally, <span class="math inline">\(w = km\)</span>, where <span class="math inline">\(k\in \mathbb{N}^{+}\)</span>, if a greater smoothness is desired). It will often lead to the window size <span class="math inline">\(w\)</span> being even. For even <span class="math inline">\(w\)</span>, <a href="#eq-movav">Equation&nbsp;<span>2.4</span></a> is modified as follows (we now use <span class="math inline">\(km + 1\)</span> elements so the window is still centered, but the elements on the ends receive half the weight): <span id="eq-movavEven"><span class="math display">\[
+\hat{M}_t = \frac{0.5Y_{t-km/2} + Y_{t-km/2 + 1} +\ldots+Y_{t+km/2-1} + 0.5Y_{t+km/2}}{km}.
+\tag{2.5}\]</span></span></li>
+<li>Use <span class="math inline">\(Y_t - \hat{M}_t\)</span> to estimate the seasonal component – get <span class="math inline">\(\hat{S}_t\)</span>. If needed, correct the estimates to sum up to 0 in each period. Let <span class="math inline">\(\hat{S}^*_t\)</span> be the corrected values.</li>
+<li>Use deseasonalized data <span class="math inline">\(Y_t - \hat{S}^*_t\)</span> to re-estimate the trend. Let <span class="math inline">\(\hat{M}^*_t\)</span> be the corrected trend estimate.</li>
+<li>The estimated random noise is then: <span class="math inline">\(\hat{\epsilon}_t = Y_t - \hat{M}^*_t - \hat{S}^*_t\)</span>.</li>
+</ol>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For the multiplicative case, replace subtractions with <em>divisions</em>, let the <em>product</em> of <span class="math inline">\(\hat{S}^*_t\)</span> be 1 within each seasonal period.</p>
+</div>
+</div>
+<p>The above algorithm is implemented in <code>stats::decompose()</code>, but its main disadvantage is in the centered moving average filter used to estimate <span class="math inline">\(M_t\)</span> that does not produce smoothed values for the most recent observations. We can elaborate this algorithm, first, by using different estimators for <span class="math inline">\(M_t\)</span>; second, by also replacing estimators for <span class="math inline">\(S_t\)</span> (e.g., see the next section).</p>
+<div class="callout-note callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example: Secchi automatic (simple moving average-based) decomposition
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Consider monthly data of Secchi disk depth measured at the station CB1.1 in Chesapeake Bay (<a href="#fig-Secchi">Figure&nbsp;<span>2.4</span></a>), with the decomposition in <a href="#fig-SecchiDecompose">Figure&nbsp;<span>2.5</span></a>.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"./data/Secchi_CB1.1.RData"</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>pSecchi <span class="ot">&lt;-</span> <span class="fu">autoplot</span>(Secchi, <span class="at">col =</span> <span class="st">"grey50"</span>) <span class="sc">+</span> </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Year"</span>) <span class="sc">+</span> </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"Secchi depth (m)"</span>) <span class="sc">+</span> </span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> forecast<span class="sc">::</span><span class="fu">ggAcf</span>(Secchi) <span class="sc">+</span> </span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">""</span>) <span class="sc">+</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Lag (months)"</span>) <span class="sc">+</span> </span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>pSecchi <span class="sc">+</span> p2 <span class="sc">+</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_annotation</span>(<span class="at">tag_levels =</span> <span class="st">'A'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-Secchi" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="l03_smoothing_files/figure-html/fig-Secchi-1.png" class="img-fluid figure-img" width="768"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;2.4: Monthly average Secchi disk depth at station CB1.1 and its ACF.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(stats<span class="sc">::</span><span class="fu">decompose</span>(Secchi))  <span class="sc">+</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-SecchiDecompose" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="l03_smoothing_files/figure-html/fig-SecchiDecompose-1.png" class="img-fluid figure-img" width="768"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;2.5: Trend-seasonal decomposition of monthly average Secchi disk depth at station CB1.1.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="lowess-smoothing" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="lowess-smoothing"><span class="header-section-number">2.3</span> Lowess smoothing</h2>
+<p>One of the alternatives for estimating trends <span class="math inline">\(M_t\)</span> is <em>locally weighted regression</em> (shortened as ‘lowess’ or ‘loess’) <span class="citation" data-cites="Cleveland:1979">(<a href="references.html#ref-Cleveland:1979" role="doc-biblioref">Cleveland 1979</a>)</span>. We can apply lowess as a regression of <span class="math inline">\(Y_t\)</span> on time, for example, using the algorithm outlined by <span class="citation" data-cites="Berk:2016">Berk (<a href="references.html#ref-Berk:2016" role="doc-biblioref">2016</a>)</span>:</p>
+<ol type="1">
+<li>Choose the smoothing parameter such as bandwidth, <span class="math inline">\(f\)</span>, which is a proportion between 0 and 1.</li>
+<li>Choose a point <span class="math inline">\(t_0\)</span> and its <span class="math inline">\(w = f n\)</span> nearest points on the time axis.</li>
+<li>For these <span class="math inline">\(w\)</span> nearest neighbor points, compute a weighted least squares regression line for <span class="math inline">\(Y_t\)</span> on <span class="math inline">\(t\)</span>. The coefficients <span class="math inline">\(\boldsymbol{\beta}\)</span> of such regression are estimated by minimizing the residual sum of squares <span class="math display">\[
+\text{RSS}^*(\boldsymbol{\beta}) = (\boldsymbol{Y}^* - \boldsymbol{X}^* \boldsymbol{\beta})^{\top} \boldsymbol{W}^* (\boldsymbol{Y}^* - \boldsymbol{X}^* \boldsymbol{\beta}),
+\]</span> where the asterisk indicates that only the observations in the window are included. The regressor matrix <span class="math inline">\(\boldsymbol{X}^*\)</span> can contain polynomial terms of time, <span class="math inline">\(t\)</span>. The <span class="math inline">\(\boldsymbol{W}^*\)</span> is a diagonal matrix conforming to <span class="math inline">\(\boldsymbol{X}^*\)</span>, with diagonal elements being a function of distance from <span class="math inline">\(t_0\)</span> (observations closer to <span class="math inline">\(t_0\)</span> receive higher weights).</li>
+<li>Calculate the fitted value <span class="math inline">\(\tilde{Y}_t\)</span> for that single <span class="math inline">\(t_0\)</span>.</li>
+<li>Repeat Steps 2–4 for each <span class="math inline">\(t_0 = 1,\ldots,n\)</span>.</li>
+</ol>
+<p>By selecting large bandwidth <span class="math inline">\(f\)</span> in the lowess algorithm, we can obtain greater smoothing (see <a href="#fig-lowess">Figure&nbsp;<span>2.6</span></a>).</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(WWWusage)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>ps <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>), <span class="cf">function</span>(w){</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">autoplot</span>(WWWusage, <span class="at">col =</span> <span class="st">"grey50"</span>)  <span class="sc">+</span> </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ggtitle</span>(<span class="fu">paste0</span>(<span class="st">"span = "</span>, w)) <span class="sc">+</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme_light</span>() <span class="sc">+</span> </span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"loess"</span>, <span class="at">span =</span> w, <span class="at">se =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="fu">wrap_plots</span>(ps, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_annotation</span>(<span class="at">tag_levels =</span> <span class="st">'A'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-lowess" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="l03_smoothing_files/figure-html/fig-lowess-1.png" class="img-fluid figure-img" width="768"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;2.6: A lowess illustration, adapted from <span class="citation" data-cites="Berk:2016">Berk (<a href="references.html#ref-Berk:2016" role="doc-biblioref">2016</a>)</span>.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The function <code>ggplot2::geom_smooth()</code> has the default setting <code>se = TRUE</code> that produces a confidence interval around the smooth. In time series applications, autocorrelated residuals may lead to underestimated standard errors and incorrect (typically, too narrow) confidence intervals. Hence, we set <code>se = FALSE</code>. For testing significance of the identified trends, see lectures on trend testing (detection).</p>
+</div>
+</div>
+<section id="lowess-smoothing-for-seasonal-data" class="level3" data-number="2.3.1">
+<h3 data-number="2.3.1" class="anchored" data-anchor-id="lowess-smoothing-for-seasonal-data"><span class="header-section-number">2.3.1</span> Lowess smoothing for seasonal data</h3>
+<p>Now use the Secchi time series (<a href="#fig-Secchi">Figure&nbsp;<span>2.4</span></a>) and implement the procedure of detrending and deseasonalizing from <a href="#sec-movavgSeas"><span>Section&nbsp;2.2.1</span></a>, but replace the simple moving average estimates of <span class="math inline">\(M_t\)</span> with lowess estimates.</p>
+<div class="callout-note callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example: Secchi lowess-based decomposition
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>Yt <span class="ot">&lt;-</span> Secchi</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(<span class="fu">time</span>(Yt))</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>month <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(<span class="fu">cycle</span>(Yt))</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Initial trend estimate</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>Mt <span class="ot">&lt;-</span> <span class="fu">loess</span>(Yt <span class="sc">~</span> t, <span class="at">span =</span> <span class="fl">0.25</span>)<span class="sc">$</span>fitted</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Estimate of a cycle, corrected to sum up to 0</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>St <span class="ot">&lt;-</span> <span class="fu">tapply</span>(Yt <span class="sc">-</span> Mt, month, mean)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>St</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;           1           2           3           4           5           6 
+#&gt; -0.03593763  0.04567476 -0.24831439 -0.26834156 -0.07164770 -0.01293677 
+#&gt;           7           8           9          10          11          12 
+#&gt;  0.14110808  0.20244954  0.12762356  0.11081730  0.03912786 -0.01649349</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(St)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 0.01312957</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>St_star <span class="ot">&lt;-</span> St <span class="sc">-</span> <span class="fu">sum</span>(St)<span class="sc">/</span><span class="dv">12</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(St_star)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 3.469447e-18</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Refine trend estimate</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>Mt_star <span class="ot">&lt;-</span> <span class="fu">loess</span>((Yt <span class="sc">-</span> St_star[month]) <span class="sc">~</span> t, <span class="at">span =</span> <span class="fl">0.25</span>)<span class="sc">$</span>fitted</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Noise</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>et <span class="ot">&lt;-</span> Yt <span class="sc">-</span> Mt_star <span class="sc">-</span> St_star[month]</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert back to ts format for plotting</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>et <span class="ot">&lt;-</span> <span class="fu">ts</span>(<span class="fu">as.vector</span>(et), <span class="at">start =</span> <span class="fu">start</span>(Secchi), <span class="at">frequency =</span> <span class="dv">12</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>See <a href="#fig-SecchiDeseas">Figure&nbsp;<span>2.7</span></a> for the results.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> pSecchi <span class="sc">+</span> </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> Mt_star), <span class="at">col =</span> <span class="dv">4</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>) <span class="sc">+</span> </span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Trend estimate: Mt_star"</span>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> pSecchi <span class="sc">+</span> </span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> Mt_star <span class="sc">+</span> St_star[month]), <span class="at">col =</span> <span class="dv">4</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>) <span class="sc">+</span> </span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Final trend-cycle: Mt_star + St_star"</span>)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">autoplot</span>(et) <span class="sc">+</span> </span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Year"</span>) <span class="sc">+</span> </span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Residuals: et"</span>) <span class="sc">+</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> forecast<span class="sc">::</span><span class="fu">ggAcf</span>(et) <span class="sc">+</span> </span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"ACF of residuals"</span>) <span class="sc">+</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Lag (months)"</span>) <span class="sc">+</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>(p1 <span class="sc">+</span> p2) <span class="sc">/</span> (p3 <span class="sc">+</span> p4) <span class="sc">+</span> </span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot_annotation</span>(<span class="at">tag_levels =</span> <span class="st">'A'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-SecchiDeseas" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="l03_smoothing_files/figure-html/fig-SecchiDeseas-1.png" class="img-fluid figure-img" width="768"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;2.7: Detrending using lowess and deseasonalizing the Secchi depth data.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In <a href="#fig-SecchiDeseas2">Figure&nbsp;<span>2.8</span></a>, we use the decomposition function <code>stl()</code> forced to have approximately the same values as we used in the steps above and as shown in <a href="#fig-SecchiDeseas">Figure&nbsp;<span>2.7</span></a>. Hence, <a href="#fig-SecchiDeseas">Figure&nbsp;<span>2.7</span></a> and <a href="#fig-SecchiDeseas2">Figure&nbsp;<span>2.8</span></a> are similar. However, the function <code>stl()</code> is more flexible – it also automatically smooths the seasonal component (across Januaries, across Februaries, etc.) – and can provide finer estimates (see <a href="#fig-SecchiDeseas3">Figure&nbsp;<span>2.9</span></a>).</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Span we used above (the fraction)</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>span <span class="ot">=</span> <span class="fl">0.25</span> </span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Window size in number of lags (observations)</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> span <span class="sc">*</span> <span class="fu">length</span>(Secchi)<span class="sc">/</span><span class="dv">2</span> </span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fu">stl</span>(Yt, <span class="at">s.window =</span> <span class="st">"periodic"</span>, <span class="at">t.window =</span> w)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> pSecchi <span class="sc">+</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> D<span class="sc">$</span>time.series[,<span class="st">"trend"</span>]), <span class="at">col =</span> <span class="dv">4</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>) <span class="sc">+</span> </span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Trend estimate: Mt_star"</span>)</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> pSecchi <span class="sc">+</span> </span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> D<span class="sc">$</span>time.series[,<span class="st">"trend"</span>] <span class="sc">+</span> D<span class="sc">$</span>time.series[,<span class="st">"seasonal"</span>]), <span class="at">col =</span> <span class="dv">4</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>) <span class="sc">+</span> </span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Final trend-cycle: Mt_star + St_star"</span>)</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">autoplot</span>(D<span class="sc">$</span>time.series[,<span class="st">"remainder"</span>]) <span class="sc">+</span> </span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Year"</span>) <span class="sc">+</span> </span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Residuals: et"</span>) <span class="sc">+</span></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> forecast<span class="sc">::</span><span class="fu">ggAcf</span>(D<span class="sc">$</span>time.series[,<span class="st">"remainder"</span>]) <span class="sc">+</span> </span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"ACF of residuals"</span>) <span class="sc">+</span></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Lag (months)"</span>) <span class="sc">+</span></span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>(p1 <span class="sc">+</span> p2) <span class="sc">/</span> (p3 <span class="sc">+</span> p4) <span class="sc">+</span> </span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot_annotation</span>(<span class="at">tag_levels =</span> <span class="st">'A'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-SecchiDeseas2" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="l03_smoothing_files/figure-html/fig-SecchiDeseas2-1.png" class="img-fluid figure-img" width="768"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;2.8: Detrending and deseasonalizing the Secchi depth data using lowess within the function <code>stl()</code> forced to behave similarly to <a href="#fig-SecchiDeseas">Figure&nbsp;<span>2.7</span></a>.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>D <span class="ot">&lt;-</span> <span class="fu">stl</span>(Yt, <span class="at">s.window =</span> <span class="dv">24</span>, <span class="at">s.degree =</span> <span class="dv">1</span>, <span class="at">t.window =</span> w)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> pSecchi <span class="sc">+</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> D<span class="sc">$</span>time.series[,<span class="st">"trend"</span>]), <span class="at">col =</span> <span class="dv">4</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>) <span class="sc">+</span> </span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Trend estimate: Mt_star"</span>)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> pSecchi <span class="sc">+</span> </span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> D<span class="sc">$</span>time.series[,<span class="st">"trend"</span>] <span class="sc">+</span> D<span class="sc">$</span>time.series[,<span class="st">"seasonal"</span>]), <span class="at">col =</span> <span class="dv">4</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>) <span class="sc">+</span> </span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Final trend-cycle: Mt_star + St_star"</span>)</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">autoplot</span>(D<span class="sc">$</span>time.series[,<span class="st">"remainder"</span>]) <span class="sc">+</span> </span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Year"</span>) <span class="sc">+</span> </span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Residuals: et"</span>) <span class="sc">+</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> forecast<span class="sc">::</span><span class="fu">ggAcf</span>(D<span class="sc">$</span>time.series[,<span class="st">"remainder"</span>]) <span class="sc">+</span> </span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"ACF of residuals"</span>) <span class="sc">+</span></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Lag (months)"</span>) <span class="sc">+</span></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>(p1 <span class="sc">+</span> p2) <span class="sc">/</span> (p3 <span class="sc">+</span> p4) <span class="sc">+</span> </span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot_annotation</span>(<span class="at">tag_levels =</span> <span class="st">'A'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-SecchiDeseas3" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="l03_smoothing_files/figure-html/fig-SecchiDeseas3-1.png" class="img-fluid figure-img" width="768"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;2.9: Detrending and deseasonalizing the Secchi depth data using lowess within the function <code>stl()</code> with default settings.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="exponential-smoothing" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="exponential-smoothing"><span class="header-section-number">2.4</span> Exponential smoothing</h2>
+<p>Exponential smoothing (ES) is a successful forecasting technique. It turns out that ES can be modified to be used effectively for time series with</p>
+<ul>
+<li>slowly drifting trend (double exponential smoothing);</li>
+<li>trends (Holt’s method);</li>
+<li>seasonal patterns;</li>
+<li>combination of trend and seasonality (Holt–Winters method).</li>
+</ul>
+<p>ES is easy to adjust for past errors and easy to prepare follow-on forecasts. ES is ideal for situations where many forecasts must be prepared. Several different functional forms of ES are used depending on presence of trend or cyclical variations.</p>
+<p>In short, an ES is an averaging technique that uses unequal weights while the weights applied to past observations decline in an exponential manner.</p>
+<p><strong>Single exponential smoothing</strong> calculates the smoothed series as a damping coefficient <span class="math inline">\(\alpha\)</span> (<span class="math inline">\(\alpha \in [0, 1]\)</span>) times the actual series plus <span class="math inline">\(1 - \alpha\)</span> times the lagged value of the smoothed series. For the model <span class="math display">\[
+Y_{t} = M_t + \epsilon_{t},
+\]</span></p>
+<p>the updating equation is <span class="math display">\[
+\begin{split}
+\hat{M}_1 &amp;= Y_1\\
+\hat{M}_t &amp;= \alpha Y_t + (1 - \alpha) \hat{M}_{t - 1}
+\end{split}
+\]</span></p>
+<p>and forecast is <span class="math display">\[
+\hat{Y}_{t+1} = \hat{M}_t.
+\]</span></p>
+<p>An exponential smoothing over an already smoothed time series is called <em>double exponential smoothing</em>. In some cases, it might be necessary to extend it even to a <em>triple exponential smoothing</em>.</p>
+<p><strong>Holt’s linear exponential smoothing</strong> Suppose that the series <span class="math inline">\(Y_t\)</span> is non-seasonal but displays a trend. Now we need to estimate both the current mean (or <em>level</em> in some professional jargon) and the current trend.</p>
+<p>The updating equations express ideas similar to those for exponential smoothing. However, now we have two smoothing parameters, <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> (<span class="math inline">\(\alpha \in [0, 1]\)</span>; <span class="math inline">\(\beta \in [0, 1]\)</span>).</p>
+<p>The updating equations are <span class="math display">\[
+a_{t} = \alpha Y_{t} + \left( 1- \alpha \right) \left( a_{t - 1} + b_{t - 1} \right)
+\]</span> for the mean and <span class="math display">\[
+b_{t} = \beta \left( a_{t} - a_{t-1} \right) + \left( 1 - \beta \right) b_{t-1}
+\]</span> for the trend.</p>
+<p>Then the forecasting for <span class="math inline">\(k\)</span> steps into the future is <span class="math display">\[
+\hat{Y}_{t+k} = a_{t} + kb_{t}.
+\]</span></p>
+<p>Usually, the initial (starting) values are <span class="math display">\[
+\begin{split}
+a_{1} &amp; = Y_{2}, \\
+b_{1} &amp; = Y_{2} - Y_{1}.
+\end{split}
+\]</span></p>
+<div class="callout-note callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example: Shampoo exponential smoothing
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>See an example in <a href="#fig-shampoo-ses">Figure&nbsp;<span>2.10</span></a>.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>clrs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"0.3"</span> <span class="ot">=</span> <span class="dv">4</span>, <span class="st">"0.7"</span> <span class="ot">=</span> <span class="dv">2</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">HoltWinters</span>(shampoo, <span class="at">alpha =</span> <span class="fl">0.3</span>, <span class="at">beta =</span> <span class="cn">FALSE</span>, <span class="at">gamma =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">HoltWinters</span>(shampoo, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">beta =</span> <span class="cn">FALSE</span>, <span class="at">gamma =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> pshampoo <span class="sc">+</span> </span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">data =</span> <span class="fu">fitted</span>(m1)[,<span class="dv">1</span>], <span class="fu">aes</span>(<span class="at">col =</span> <span class="st">"0.3"</span>), <span class="at">lwd =</span> <span class="fl">1.5</span>) <span class="sc">+</span> </span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">data =</span> <span class="fu">fitted</span>(m2)[,<span class="dv">1</span>], <span class="fu">aes</span>(<span class="at">col =</span> <span class="st">"0.7"</span>), <span class="at">lwd =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Simple exponential smoothing"</span>) <span class="sc">+</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">"\u03b1"</span>) <span class="sc">+</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_manual</span>(<span class="at">values =</span> clrs)</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>clrs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"(0.3, 0.3)"</span> <span class="ot">=</span> <span class="dv">4</span>, <span class="st">"(0.7, 0.7)"</span> <span class="ot">=</span> <span class="dv">2</span>)</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">HoltWinters</span>(shampoo, <span class="at">alpha =</span> <span class="fl">0.3</span>, <span class="at">beta =</span> <span class="fl">0.3</span>, <span class="at">gamma =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">HoltWinters</span>(shampoo, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">beta =</span> <span class="fl">0.7</span>, <span class="at">gamma =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> pshampoo <span class="sc">+</span> </span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">data =</span> <span class="fu">fitted</span>(m1)[,<span class="dv">1</span>], <span class="fu">aes</span>(<span class="at">col =</span> <span class="st">"(0.3, 0.3)"</span>), <span class="at">lwd =</span> <span class="fl">1.5</span>) <span class="sc">+</span> </span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">data =</span> <span class="fu">fitted</span>(m2)[,<span class="dv">1</span>], <span class="fu">aes</span>(<span class="at">col =</span> <span class="st">"(0.7, 0.7)"</span>), <span class="at">lwd =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Holt's method"</span>) <span class="sc">+</span></span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">"(\u03b1, \u03b2)"</span>) <span class="sc">+</span></span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_manual</span>(<span class="at">values =</span> clrs)</span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2 <span class="sc">+</span></span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_annotation</span>(<span class="at">tag_levels =</span> <span class="st">'A'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-shampoo-ses" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="l03_smoothing_files/figure-html/fig-shampoo-ses-1.png" class="img-fluid figure-img" width="768"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;2.10: Shampoo sales over a three-year period smoothed with different exponential smoothing filters.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+<section id="exponential-smoothing-for-seasonal-data" class="level3" data-number="2.4.1">
+<h3 data-number="2.4.1" class="anchored" data-anchor-id="exponential-smoothing-for-seasonal-data"><span class="header-section-number">2.4.1</span> Exponential smoothing for seasonal data</h3>
+<p><strong>Multiplicative Holt–Winters procedure</strong></p>
+<p>Now in addition to the Holt parameters, suppose that the series exhibits multiplicative seasonality and let <span class="math inline">\(S_{t}\)</span> be the multiplicative seasonal factor at time <span class="math inline">\(t\)</span>.</p>
+<p>Suppose also that there are <span class="math inline">\(m\)</span> observations in one period (in a year). For example, <span class="math inline">\(m = 4\)</span> for quarterly data and <span class="math inline">\(m = 12\)</span> for monthly data.</p>
+<p>In some time series, seasonal variation is so strong it obscures any trends or other cycles, which are important for understanding of the observed process. Holt–Winters smoothing method can remove seasonality and makes long-term fluctuations in the series stand out more clearly.</p>
+<p>A simple way of detecting trend in seasonal data is to take averages over a certain period. If these averages change with time we can say that there is evidence of a trend in the series.</p>
+<p>We now use three smoothing parameters: <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta\)</span>, and <span class="math inline">\(\gamma\)</span> (<span class="math inline">\(\alpha \in [0, 1]\)</span>; <span class="math inline">\(\beta \in [0, 1]\)</span>; <span class="math inline">\(\gamma \in [0, 1]\)</span>).</p>
+<p>The updating equations for the level (<span class="math inline">\(a_t\)</span>), local trend (<span class="math inline">\(b_t\)</span>), and seasonal factor (<span class="math inline">\(S_t\)</span>) are: <span class="math display">\[
+\begin{split}
+a_{t} &amp; =  \alpha Y_{t} / S_{t - m} + (1 - \alpha) ( a_{t - 1} + b_{t - 1}), \\
+b_{t} &amp; =  \beta (a_{t} - a_{t - 1}) + (1 - \beta) b_{t - 1}, \\
+S_{t} &amp; =  \gamma Y_{t} / a_{t} + (1 - \gamma) S_{t - m}.
+\end{split}
+\]</span></p>
+<p>Then the forecasting for <span class="math inline">\(k\)</span> steps into the future is <span class="math display">\[
+\hat{Y}_{t+k} = (a_{t} + kb_{t}) S_{t+k-m},
+\]</span> where <span class="math inline">\(k = 1, 2, \ldots, m\)</span>.</p>
+<p>To obtain starting values, one may use an average over the first few periods (years) of the data.</p>
+<p>The smoothing parameters <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta\)</span> and <span class="math inline">\(\gamma\)</span> are estimated by minimizing the sum of the squared one-step prediction errors.</p>
+<p><strong>Additive Holt–Winters procedure</strong></p>
+<p>The updating equations are <span class="math display">\[
+\begin{split}
+a_{t} &amp; =  \alpha (Y_{t} - S_{t - m})  + (1 - \alpha) (a_{t - 1} + b_{t - 1}), \\
+b_{t} &amp; =  \beta (a_{t} - a_{t - 1}) + (1 - \beta) b_{t - 1} \\
+S_{t} &amp; =  \gamma (Y_{t} - a_{t}) + (1 - \gamma) S_{t - m}.
+\end{split}
+\]</span></p>
+<p>Then the forecasting for <span class="math inline">\(k\)</span> steps into the future is <span class="math display">\[
+\hat{Y}_{t+k} = a_{t} + kb_{t} + S_{t + k - m},
+\]</span> where <span class="math inline">\(k = 1, 2, \ldots, m\)</span>.</p>
+<div class="callout-note callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example: Airline passengers non-seasonal and seasonal exponential smoothing
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Monthly totals of international airline passengers, 1949–1960 (see <a href="#fig-airpassangers">Figure&nbsp;<span>2.11</span></a>). This is a classical example and benchmark in time series analysis.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>pAirPassengers <span class="ot">&lt;-</span> <span class="fu">autoplot</span>(AirPassengers, <span class="at">col =</span> <span class="st">"grey50"</span>) <span class="sc">+</span> </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Year"</span>) <span class="sc">+</span> </span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"Airline passengers (thousand)"</span>) <span class="sc">+</span> </span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> forecast<span class="sc">::</span><span class="fu">ggAcf</span>(AirPassengers) <span class="sc">+</span> </span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">""</span>) <span class="sc">+</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Lag (months)"</span>) <span class="sc">+</span> </span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>pAirPassengers <span class="sc">+</span> p2 <span class="sc">+</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_annotation</span>(<span class="at">tag_levels =</span> <span class="st">'A'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-airpassangers" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="l03_smoothing_files/figure-html/fig-airpassangers-1.png" class="img-fluid figure-img" width="768"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;2.11: Monthly <code>AirPassengers</code> data and a corresponding sample ACF.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Comparison of various exponential smoothing techniques for the <code>AirPassengers</code> data:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">HoltWinters</span>(AirPassengers, <span class="at">beta =</span> <span class="cn">FALSE</span>, <span class="at">gamma =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>m1<span class="sc">$</span>SSE</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 162510.6</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(m1<span class="sc">$</span>alpha, m1<span class="sc">$</span>beta, m1<span class="sc">$</span>gamma)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 0.9999339 0.0000000 0.0000000</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">HoltWinters</span>(AirPassengers, <span class="at">gamma =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>m2<span class="sc">$</span>SSE</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 163634.1</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(m2<span class="sc">$</span>alpha, m2<span class="sc">$</span>beta, m2<span class="sc">$</span>gamma)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;       alpha        beta             
+#&gt; 1.000000000 0.003218516 0.000000000</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">HoltWinters</span>(AirPassengers)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>m3<span class="sc">$</span>SSE</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 21860.18</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(m3<span class="sc">$</span>alpha, m3<span class="sc">$</span>beta, m3<span class="sc">$</span>gamma)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;      alpha       beta      gamma 
+#&gt; 0.24795949 0.03453373 1.00000000</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>m4 <span class="ot">&lt;-</span> <span class="fu">HoltWinters</span>(AirPassengers, <span class="at">seasonal =</span> <span class="st">"multiplicative"</span>)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>m4<span class="sc">$</span>SSE</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] 16570.78</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(m4<span class="sc">$</span>alpha, m4<span class="sc">$</span>beta, m4<span class="sc">$</span>gamma)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;      alpha       beta      gamma 
+#&gt; 0.27559247 0.03269295 0.87072922</code></pre>
+</div>
+</div>
+<p>The last multiplicative model is the best one, based on the sum of squared errors (SSE) in the training set (see <a href="#fig-airpassangersHW">Figure&nbsp;<span>2.12</span></a>). For a more thorough comparison, consider using out-of-sample data in a cross-validation.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>k <span class="ot">=</span> <span class="dv">12</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>fm1 <span class="ot">&lt;-</span> <span class="fu">predict</span>(m1, <span class="at">n.ahead =</span> k)</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>fm2 <span class="ot">&lt;-</span> <span class="fu">predict</span>(m2, <span class="at">n.ahead =</span> k)</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>fm3 <span class="ot">&lt;-</span> <span class="fu">predict</span>(m3, <span class="at">n.ahead =</span> k)</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>fm4 <span class="ot">&lt;-</span> <span class="fu">predict</span>(m4, <span class="at">n.ahead =</span> k)</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> pAirPassengers <span class="sc">+</span> </span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">data =</span> m1<span class="sc">$</span>fitted[,<span class="st">"xhat"</span>], <span class="at">col =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">autolayer</span>(fm1) <span class="sc">+</span></span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Exponential smoothing"</span>) <span class="sc">+</span></span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> pAirPassengers <span class="sc">+</span> </span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">data =</span> m2<span class="sc">$</span>fitted[,<span class="st">"xhat"</span>], <span class="at">col =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">autolayer</span>(fm2) <span class="sc">+</span></span>
+<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Holt's method"</span>) <span class="sc">+</span></span>
+<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
+<span id="cb45-16"><a href="#cb45-16" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> pAirPassengers <span class="sc">+</span> </span>
+<span id="cb45-17"><a href="#cb45-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">data =</span> m3<span class="sc">$</span>fitted[,<span class="st">"xhat"</span>], <span class="at">col =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb45-18"><a href="#cb45-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">autolayer</span>(fm3) <span class="sc">+</span></span>
+<span id="cb45-19"><a href="#cb45-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Additive Holt-Winters"</span>) <span class="sc">+</span></span>
+<span id="cb45-20"><a href="#cb45-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
+<span id="cb45-21"><a href="#cb45-21" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> pAirPassengers <span class="sc">+</span> </span>
+<span id="cb45-22"><a href="#cb45-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">data =</span> m4<span class="sc">$</span>fitted[,<span class="st">"xhat"</span>], <span class="at">col =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb45-23"><a href="#cb45-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">autolayer</span>(fm4) <span class="sc">+</span></span>
+<span id="cb45-24"><a href="#cb45-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Multiplicative Holt-Winters"</span>) <span class="sc">+</span></span>
+<span id="cb45-25"><a href="#cb45-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
+<span id="cb45-26"><a href="#cb45-26" aria-hidden="true" tabindex="-1"></a>(p1 <span class="sc">+</span> p2) <span class="sc">/</span> (p3 <span class="sc">+</span> p4) <span class="sc">+</span> </span>
+<span id="cb45-27"><a href="#cb45-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot_annotation</span>(<span class="at">tag_levels =</span> <span class="st">'A'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-airpassangersHW" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="l03_smoothing_files/figure-html/fig-airpassangersHW-1.png" class="img-fluid figure-img" width="768"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;2.12: Plots of the observed, fitted, and predicted <code>AirPassengers</code> data, using various smoothing procedures.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="sec-regressionTime" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="sec-regressionTime"><span class="header-section-number">2.5</span> Polynomial regression on time</h2>
+<p>This is a very intuitive procedure for fitting parametric trend functions to time series:</p>
+<ul>
+<li>Make a parametric model assumption about <span class="math inline">\(M_t\)</span> as a function of time <span class="math inline">\(t\)</span>, for example, quadratic trend: <span class="math display">\[
+M_t = \beta_0 + \beta_1 t + \beta_2 t^2
+\]</span></li>
+<li>Fit the model using the usual regression estimators (least squares or maximum likelihood)</li>
+</ul>
+<div class="callout-note callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example: Airline passengers non-seasonal polynomial smoothing
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Continue using the <code>AirPassengers</code> data and fit linear and quadratic trends.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(<span class="fu">time</span>(AirPassengers))</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>t2 <span class="ot">&lt;-</span> t<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>tm1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(AirPassengers <span class="sc">~</span> t)</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>tm2<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">lm</span>(AirPassengers <span class="sc">~</span> t <span class="sc">+</span> t2)</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>tm2<span class="fl">.2</span> <span class="ot">&lt;-</span> <span class="fu">lm</span>(AirPassengers <span class="sc">~</span> t <span class="sc">+</span> <span class="fu">I</span>(t<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>tm2<span class="fl">.3</span> <span class="ot">&lt;-</span> <span class="fu">lm</span>(AirPassengers <span class="sc">~</span> <span class="fu">poly</span>(t, <span class="at">degree =</span> <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>After estimating the trend coefficients with OLS, visualize the results (<a href="#fig-airpassangersRegTrend">Figure&nbsp;<span>2.13</span></a>).</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> pAirPassengers <span class="sc">+</span> </span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> tm1<span class="sc">$</span>fitted.values), <span class="at">col =</span> <span class="dv">4</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>) <span class="sc">+</span> </span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Linear trend"</span>)</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> pAirPassengers <span class="sc">+</span> </span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> tm2<span class="fl">.3</span><span class="sc">$</span>fitted.values), <span class="at">col =</span> <span class="dv">4</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>) <span class="sc">+</span> </span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Quadratic trend"</span>)</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2 <span class="sc">+</span></span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot_annotation</span>(<span class="at">tag_levels =</span> <span class="st">'A'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-airpassangersRegTrend" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="l03_smoothing_files/figure-html/fig-airpassangersRegTrend-1.png" class="img-fluid figure-img" width="768"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;2.13: The plots of the <code>AirPassengers</code> data with estimated parametric linear and quadratic trends.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout-note callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The models <code>tm2.1</code> and <code>tm2.2</code> are equivalent. Model <code>tm2.1</code> uses a pre-calculated quadratic transformation, while model <code>tm2.2</code> applies the transformation on-the-fly within the R formula call, using the <code>I()</code> syntax (without the <code>I()</code> wrapper, the output of <code>tm2.2</code> would be the same as of <code>tm1</code>, not <code>tm2.1</code>). However, both models <code>tm2.1</code> and <code>tm2.2</code> can easily violate the assumption of independence of predictors in linear regression, especially when values of the time index <span class="math inline">\(t\)</span> are large. That is the case for us, because <span class="math inline">\(t\)</span> represents decimal years, from 1949 to 1960.9166667, and <span class="math inline">\(\widehat{\mathrm{cor}}(t, t^2) =\)</span> 0.9999997. Therefore, model <code>tm2.3</code> is preferred, because it is evaluated on orthogonal polynomials (basically, centering and normalization is applied to <span class="math inline">\(t\)</span> and <span class="math inline">\(t^2\)</span>).</p>
+</div>
+</div>
+<section id="seasonal-regression-with-dummy-variables" class="level3" data-number="2.5.1">
+<h3 data-number="2.5.1" class="anchored" data-anchor-id="seasonal-regression-with-dummy-variables"><span class="header-section-number">2.5.1</span> Seasonal regression with dummy variables</h3>
+<p>To each time <span class="math inline">\(t\)</span> and each season <span class="math inline">\(k\)</span> we will assign an indicator which ‘turns on’ if and only if <span class="math inline">\(t\)</span> falls into that season. In principle, a seasonal period of any positive integer length <span class="math inline">\(m \geqslant 2\)</span> is possible, however, in most cases, the length of the seasonal cycle is one year and so the seasonal period of the time series depends on the number of observations per year. The most common periods are <span class="math inline">\(m = 12\)</span> (monthly data) and <span class="math inline">\(m = 4\)</span> (quarterly data). For each <span class="math inline">\(k = 1, \ldots, m\)</span>, we define the indicator <span class="math display">\[
+X_{k,t} = \left\{
+\begin{array}{cl}
+1, &amp; \mbox{if} ~  t ~ \text{corresponds to season} ~ k, \\
+0, &amp; \mbox{if} ~  t ~ \text{does not correspond to season} ~  k.  \\
+\end{array}
+\right.
+\]</span></p>
+<p>Note that for each <span class="math inline">\(t\)</span> we have <span class="math inline">\(X_{1,t} + X_{2,t} + \ldots + X_{m,t} = 1\)</span> since each <span class="math inline">\(t\)</span> corresponds to exactly one season. Thus, given any <span class="math inline">\(m - 1\)</span> of the variables, the remaining variable is known and thus redundant. Because of this linear dependence, we must drop one of the indicator variables (seasons) from the model. It does not matter which season is dropped although sometimes there are choices which are simpler from the point of view of constructing or labeling the design matrix. Thus the general form of a seasonal model looks like <span class="math display">\[
+\begin{split}
+f (Y_{t}) &amp;= M_{t} + \beta_{2} X_{2,t} + \beta_{3} X_{3,t} + \ldots + \beta_{m} X_{m,t} + \epsilon_{t} \\
+&amp;= M_{t} + \sum_{i=2}^{m}\beta_{i} X_{i,t} + \epsilon_{t},
+\end{split}
+\]</span> where <span class="math inline">\(M_{t}\)</span> is a trend term which may also include some <span class="math inline">\(\beta\)</span> parameters and explanatory variables. The function <span class="math inline">\(f\)</span> represents the appropriate variance-stabilizing transformations as needed. (Here the 1st season has been dropped from the model.)</p>
+<div class="callout-note callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example: Airline passengers polynomial smoothing with dummy variables for the seasons
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Consider adding the dummy variables to model seasonality additionally to the quadratic trend in the <code>AirPassengers</code> time series. We noticed multiplicative seasonality in this time series before, therefore we apply logarithmic transformation to the original data to transform the multiplicative seasonality into additive. That is, we need to estimate the model <span class="math display">\[
+\ln(Y_{t}) = \alpha_0 + \alpha_1 t + \alpha_2 t^2 + \sum_{i=2}^{12}\beta_{i} X_{i,t} + \epsilon_{t},
+\]</span> where <span class="math inline">\(X_{i,t}\)</span> are the dummy variables for the months. (Here the first month has been dropped from the model, the same as in R the first factor level is dropped.)</p>
+<p>If we were doing the regression analysis by hand, we would create a design matrix with few top rows looking like this:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;              t      t2 X2 X3 X4 X5 X6 X7 X8 X9 X10 X11 X12
+#&gt;  [1,] 1949.000 3798601  0  0  0  0  0  0  0  0   0   0   0
+#&gt;  [2,] 1949.083 3798926  1  0  0  0  0  0  0  0   0   0   0
+#&gt;  [3,] 1949.167 3799251  0  1  0  0  0  0  0  0   0   0   0
+#&gt;  [4,] 1949.250 3799576  0  0  1  0  0  0  0  0   0   0   0
+#&gt;  [5,] 1949.333 3799900  0  0  0  1  0  0  0  0   0   0   0
+#&gt;  [6,] 1949.417 3800225  0  0  0  0  1  0  0  0   0   0   0
+#&gt;  [7,] 1949.500 3800550  0  0  0  0  0  1  0  0   0   0   0
+#&gt;  [8,] 1949.583 3800875  0  0  0  0  0  0  1  0   0   0   0
+#&gt;  [9,] 1949.667 3801200  0  0  0  0  0  0  0  1   0   0   0
+#&gt; [10,] 1949.750 3801525  0  0  0  0  0  0  0  0   1   0   0
+#&gt; [11,] 1949.833 3801850  0  0  0  0  0  0  0  0   0   1   0
+#&gt; [12,] 1949.917 3802175  0  0  0  0  0  0  0  0   0   0   1
+#&gt; [13,] 1950.000 3802500  0  0  0  0  0  0  0  0   0   0   0</code></pre>
+</div>
+</div>
+<p>In R, it is enough to have <em>one</em> variable representing the seasons. This variable should be saved as <code>factor</code>. Then we apply the OLS method to find the model coefficients (see results in <a href="#fig-airpassangersRegTrendSeas">Figure&nbsp;<span>2.14</span></a>):</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>Month <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(<span class="fu">cycle</span>(AirPassengers))</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(AirPassengers) <span class="sc">~</span> <span class="fu">poly</span>(t, <span class="at">degree =</span> <span class="dv">2</span>) <span class="sc">+</span> Month)</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; 
+#&gt; Call:
+#&gt; lm(formula = log(AirPassengers) ~ poly(t, degree = 2) + Month)
+#&gt; 
+#&gt; Residuals:
+#&gt;      Min       1Q   Median       3Q      Max 
+#&gt; -0.12748 -0.03709  0.00418  0.03197  0.11529 
+#&gt; 
+#&gt; Coefficients:
+#&gt;                       Estimate Std. Error t value Pr(&gt;|t|)    
+#&gt; (Intercept)           5.457163   0.013924 391.912  &lt; 2e-16 ***
+#&gt; poly(t, degree = 2)1  5.022507   0.048367 103.841  &lt; 2e-16 ***
+#&gt; poly(t, degree = 2)2 -0.398373   0.048201  -8.265 1.41e-13 ***
+#&gt; Month2               -0.022270   0.019678  -1.132 0.259839    
+#&gt; Month3                0.107786   0.019679   5.477 2.15e-07 ***
+#&gt; Month4                0.076388   0.019680   3.882 0.000164 ***
+#&gt; Month5                0.073929   0.019682   3.756 0.000259 ***
+#&gt; Month6                0.196033   0.019684   9.959  &lt; 2e-16 ***
+#&gt; Month7                0.299975   0.019686  15.238  &lt; 2e-16 ***
+#&gt; Month8                0.290723   0.019689  14.765  &lt; 2e-16 ***
+#&gt; Month9                0.146174   0.019693   7.423 1.33e-11 ***
+#&gt; Month10               0.008145   0.019697   0.414 0.679912    
+#&gt; Month11              -0.135401   0.019701  -6.873 2.36e-10 ***
+#&gt; Month12              -0.021321   0.019706  -1.082 0.281286    
+#&gt; ---
+#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#&gt; 
+#&gt; Residual standard error: 0.0482 on 130 degrees of freedom
+#&gt; Multiple R-squared:  0.9892, Adjusted R-squared:  0.9881 
+#&gt; F-statistic: 912.7 on 13 and 130 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> pAirPassengers <span class="sc">+</span> </span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">exp</span>(m<span class="sc">$</span>fitted.values)), <span class="at">col =</span> <span class="dv">4</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>)</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> forecast<span class="sc">::</span><span class="fu">ggAcf</span>(m<span class="sc">$</span>residuals) <span class="sc">+</span> </span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"ACF of residuals"</span>) <span class="sc">+</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Lag (months)"</span>) <span class="sc">+</span> </span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2 <span class="sc">+</span></span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot_annotation</span>(<span class="at">tag_levels =</span> <span class="st">'A'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-airpassangersRegTrendSeas" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="l03_smoothing_files/figure-html/fig-airpassangersRegTrendSeas-1.png" class="img-fluid figure-img" width="768"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;2.14: Plot of the <code>AirPassengers</code> data, with estimated parametric quadratic trend and seasonality (modeled using <em>dummy variables</em>), and ACF of the residuals. Since the model was fitted on the log scale, the trend-cycle estimates need to be exponentiated to match the original scale of the data.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="seasonal-regression-with-fourier-series" class="level3" data-number="2.5.2">
+<h3 data-number="2.5.2" class="anchored" data-anchor-id="seasonal-regression-with-fourier-series"><span class="header-section-number">2.5.2</span> Seasonal regression with Fourier series</h3>
+<p>It is a spoiler for the future lecture on spectral analysis of time series, but seasonal regression modeling would not be complete without introducing the trigonometric Fourier series.</p>
+<p>We can fit a linear regression model using several pairs of trigonometric functions as predictors. For example, for monthly observations <span class="math display">\[
+\begin{split}
+cos_{k} (i) &amp;= \cos (2 \pi ki / 12), \\
+sin_{k} (i) &amp;= \sin (2 \pi ki / 12),
+\end{split}
+\]</span> where <span class="math inline">\(i\)</span> is the month within the year, and the trigonometric function has <span class="math inline">\(k\)</span> cycles per year.</p>
+<div class="callout-note callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example: Airline passengers polynomial smoothing with Fourier series for the seasons
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Now let us apply the method of sinusoids to the <code>AirPassengers</code> time series. We have one prominent and, possibly, one less prominent peak per year. Hence, we can test the model with <span class="math inline">\(k = 1\)</span> and <span class="math inline">\(k = 2\)</span>. We will construct the following trigonometric predictors: <span class="math display">\[
+\begin{split}
+cos_{1,t} &amp;= \cos(2 \pi \text{month}_t/12),\\
+sin_{1,t} &amp;= \sin(2 \pi \text{month}_t/12),\\
+cos_{2,t} &amp;= \cos(4 \pi \text{month}_t/12),\\
+sin_{2,t} &amp;= \sin(4 \pi \text{month}_t/12)
+\end{split}
+\]</span> to use in the model <span class="math display">\[
+\ln(Y_{t}) = \alpha_0 + \alpha_1 t + \alpha_2 t^2 + \beta_{1}cos_{1,t} + \beta_{2}sin_{1,t} + \beta_{3}cos_{2,t} + \beta_{4}sin_{2,t} + \epsilon_{t}.
+\]</span></p>
+<p>Calculate the predictors and estimate the model in R (see results in <a href="#fig-airpassangersRegTrendFourier">Figure&nbsp;<span>2.15</span></a>):</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>month <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">cycle</span>(AirPassengers))</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>cos1 <span class="ot">&lt;-</span> <span class="fu">cos</span>(<span class="dv">2</span> <span class="sc">*</span> pi <span class="sc">*</span> month <span class="sc">/</span> <span class="dv">12</span>)</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>sin1 <span class="ot">&lt;-</span> <span class="fu">sin</span>(<span class="dv">2</span> <span class="sc">*</span> pi <span class="sc">*</span> month <span class="sc">/</span> <span class="dv">12</span>)</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>cos2 <span class="ot">&lt;-</span> <span class="fu">cos</span>(<span class="dv">4</span> <span class="sc">*</span> pi <span class="sc">*</span> month <span class="sc">/</span> <span class="dv">12</span>)</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>sin2 <span class="ot">&lt;-</span> <span class="fu">sin</span>(<span class="dv">4</span> <span class="sc">*</span> pi <span class="sc">*</span> month <span class="sc">/</span> <span class="dv">12</span>)</span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(AirPassengers) <span class="sc">~</span> <span class="fu">poly</span>(t, <span class="at">degree =</span> <span class="dv">2</span>) <span class="sc">+</span> cos1 <span class="sc">+</span> sin1 <span class="sc">+</span> cos2 <span class="sc">+</span> sin2)</span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; 
+#&gt; Call:
+#&gt; lm(formula = log(AirPassengers) ~ poly(t, degree = 2) + cos1 + 
+#&gt;     sin1 + cos2 + sin2)
+#&gt; 
+#&gt; Residuals:
+#&gt;       Min        1Q    Median        3Q       Max 
+#&gt; -0.200784 -0.035391 -0.000559  0.040648  0.137714 
+#&gt; 
+#&gt; Coefficients:
+#&gt;                       Estimate Std. Error  t value Pr(&gt;|t|)    
+#&gt; (Intercept)           5.542176   0.004933 1123.463  &lt; 2e-16 ***
+#&gt; poly(t, degree = 2)1  5.029199   0.059360   84.723  &lt; 2e-16 ***
+#&gt; poly(t, degree = 2)2 -0.398191   0.059199   -6.726 4.34e-10 ***
+#&gt; cos1                 -0.141521   0.006978  -20.282  &lt; 2e-16 ***
+#&gt; sin1                 -0.049228   0.006991   -7.042 8.35e-11 ***
+#&gt; cos2                 -0.022762   0.006978   -3.262   0.0014 ** 
+#&gt; sin2                  0.078740   0.006980   11.282  &lt; 2e-16 ***
+#&gt; ---
+#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#&gt; 
+#&gt; Residual standard error: 0.0592 on 137 degrees of freedom
+#&gt; Multiple R-squared:  0.9828, Adjusted R-squared:  0.982 
+#&gt; F-statistic:  1303 on 6 and 137 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> pAirPassengers <span class="sc">+</span> </span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">exp</span>(m<span class="sc">$</span>fitted.values)), <span class="at">col =</span> <span class="dv">4</span>, <span class="at">lwd =</span> <span class="fl">1.5</span>)</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> forecast<span class="sc">::</span><span class="fu">ggAcf</span>(m<span class="sc">$</span>residuals) <span class="sc">+</span> </span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"ACF of residuals"</span>) <span class="sc">+</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Lag (months)"</span>) <span class="sc">+</span> </span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2 <span class="sc">+</span></span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot_annotation</span>(<span class="at">tag_levels =</span> <span class="st">'A'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-airpassangersRegTrendFourier" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="l03_smoothing_files/figure-html/fig-airpassangersRegTrendFourier-1.png" class="img-fluid figure-img" width="768"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;2.15: Plot of the <code>AirPassengers</code> data, with estimated parametric quadratic trend and seasonality (modeled using <em>trigonometric functions</em>), and ACF of the residuals. Since the model was fitted on the log scale, the trend-cycle estimates need to be exponentiated to match the original scale of the data.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="sec-differencing" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="sec-differencing"><span class="header-section-number">2.6</span> Differencing</h2>
+<p>A big subset of time series models (particularly, models dealing with random walk series) applies differencing to eliminate trends.</p>
+<p>Let <span class="math inline">\(\Delta\)</span> be the difference operator (<span class="math inline">\(\nabla\)</span> notation is also used sometimes), then the simple first-order differences are: <span class="math display">\[
+\begin{split}
+\Delta Y_t &amp;= Y_t - Y_{t-1} \\
+&amp;=(1-B)Y_t,
+\end{split}
+\]</span> where <span class="math inline">\(B\)</span> is a backshift operator.</p>
+<p><strong>Backshift operator</strong> and difference operator are useful for convenient representation of higher-order differences. We will often use backshift operators in future lectures: <span class="math display">\[
+\begin{split}
+B^0Y_{t} &amp;= Y_{t} \\
+BY_{t} &amp;= Y_{t-1} \\
+B^{2}Y_{t} &amp;= Y_{t-2} \\
+&amp; \vdots \\
+B^{k}Y_{t} &amp;= Y_{t-k}.
+\end{split}
+\]</span> The convenience is due to the fact that the powers of the operators can be treated as powers of elements of usual polynomials, so we can make different operations for more complex cases.</p>
+<p>For example, if we took second-order differences, <span class="math inline">\(\Delta^2Y_t = (1-B)^2Y_t\)</span>, to remove a trend and then used differences with the seasonal lag of 12 months to remove strong seasonal component, what would be the final form of transformed series? The transformed series, <span class="math inline">\(Y^*_t\)</span>, will be: <span class="math display">\[
+\begin{split}
+Y^*_t &amp; = (1-B)^2 (1 - B^{12})Y_t \\
+&amp; = (1 - 2B + B^2) (1 - B^{12})Y_t \\
+&amp; = (1 - 2B + B^2 - B^{12} + 2B^{13} - B^{14})Y_t \\
+&amp; = Y_t - 2Y_{t-1} + Y_{t-2} - Y_{t-12} + 2Y_{t-13}-Y_{t-14},
+\end{split}
+\]</span> but we will often use just the top-row notations.</p>
+<p>We will discuss formal tests to identify an appropriate order of differences in future lectures (unit-root tests), but for now use the <em>rule of thumb:</em> for time trends looking linear use 1st order differences (<span class="math inline">\(\Delta Y_t = Y_t - Y_{t-1}\)</span>), for parabolic shapes use differences of the 2nd order, etc. Apply differencing of higher orders until the time series looks stationary (plot the transformed series and its ACF at each step). In practice, differences of order 3 or higher are rarely needed.</p>
+<div class="callout-note callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example: Shampoo detrending by differencing
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Remove trend from the shampoo series by applying the differences.</p>
+<p>Based on <a href="#fig-shampooDiff">Figure&nbsp;<span>2.16</span></a>, differencing once is enough to remove the trend. The resulting detrended series is <span class="math display">\[
+Y^*_t = \Delta Y_t = (1 - B)Y_t = Y_t - Y_{t-1}.
+\]</span></p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> pshampoo</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> forecast<span class="sc">::</span><span class="fu">ggAcf</span>(shampoo) <span class="sc">+</span> </span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">""</span>) <span class="sc">+</span></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Lag (months)"</span>) <span class="sc">+</span> </span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">autoplot</span>(<span class="fu">diff</span>(shampoo)) <span class="sc">+</span> </span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Year"</span>) <span class="sc">+</span> </span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"Sales"</span>) <span class="sc">+</span> </span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span>
+<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> forecast<span class="sc">::</span><span class="fu">ggAcf</span>(<span class="fu">diff</span>(shampoo)) <span class="sc">+</span> </span>
+<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">""</span>) <span class="sc">+</span></span>
+<span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Lag (months)"</span>) <span class="sc">+</span> </span>
+<span id="cb55-13"><a href="#cb55-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span>
+<span id="cb55-14"><a href="#cb55-14" aria-hidden="true" tabindex="-1"></a>p5 <span class="ot">&lt;-</span> <span class="fu">autoplot</span>(<span class="fu">diff</span>(shampoo, <span class="at">differences =</span> <span class="dv">2</span>)) <span class="sc">+</span> </span>
+<span id="cb55-15"><a href="#cb55-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Year"</span>) <span class="sc">+</span> </span>
+<span id="cb55-16"><a href="#cb55-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"Sales"</span>) <span class="sc">+</span> </span>
+<span id="cb55-17"><a href="#cb55-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span>
+<span id="cb55-18"><a href="#cb55-18" aria-hidden="true" tabindex="-1"></a>p6 <span class="ot">&lt;-</span> forecast<span class="sc">::</span><span class="fu">ggAcf</span>(<span class="fu">diff</span>(shampoo, <span class="at">differences =</span> <span class="dv">2</span>)) <span class="sc">+</span> </span>
+<span id="cb55-19"><a href="#cb55-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">""</span>) <span class="sc">+</span></span>
+<span id="cb55-20"><a href="#cb55-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Lag (months)"</span>) <span class="sc">+</span> </span>
+<span id="cb55-21"><a href="#cb55-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span>
+<span id="cb55-22"><a href="#cb55-22" aria-hidden="true" tabindex="-1"></a>(p1 <span class="sc">+</span> p2) <span class="sc">/</span> (p3 <span class="sc">+</span> p4) <span class="sc">/</span> (p5 <span class="sc">+</span> p6) <span class="sc">+</span></span>
+<span id="cb55-23"><a href="#cb55-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot_annotation</span>(<span class="at">tag_levels =</span> <span class="st">'A'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-shampooDiff" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="l03_smoothing_files/figure-html/fig-shampooDiff-1.png" class="img-fluid figure-img" width="768"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;2.16: Time series plot of shampoo sales with an estimated ACF and the detrended (differenced) series with their ACFs.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout-note callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example: Airline passengers detrending and deseasonalizing by differencing
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Remove trend and seasonality from the log transformed <code>AirPassengers</code> series by applying the differences.</p>
+<p>Based on <a href="#fig-AirPassengersDiff">Figure&nbsp;<span>2.17</span></a>, differencing once with the non-seasonal and the seasonal lags is enough to remove the trend and strong seasonality. The final series (denoted as <code>D1D12</code>) is <span class="math display">\[
+\begin{split}
+D1D12_t &amp; = (1 - B)(1 - B^{12})\lg Y_t = (1 - B - B^{12} + B^{13})\lg Y_t\\
+&amp; = \lg Y_t - \lg Y_{t-1} - \lg Y_{t-12} + \lg Y_{t-13}.
+\end{split}
+\]</span></p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>Yt <span class="ot">&lt;-</span> <span class="fu">log10</span>(AirPassengers)</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply first-order (non-seasonal) differences</span></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>D1 <span class="ot">&lt;-</span> <span class="fu">diff</span>(Yt)</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Additionally, apply first-order seasonal differences</span></span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>D1D12 <span class="ot">&lt;-</span> <span class="fu">diff</span>(D1, <span class="at">lag =</span> <span class="dv">12</span>)</span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">autoplot</span>(Yt) <span class="sc">+</span> </span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Year"</span>) <span class="sc">+</span> </span>
+<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"log10(Air passangers)"</span>) <span class="sc">+</span> </span>
+<span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"Yt"</span>) <span class="sc">+</span></span>
+<span id="cb56-10"><a href="#cb56-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span>
+<span id="cb56-11"><a href="#cb56-11" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> forecast<span class="sc">::</span><span class="fu">ggAcf</span>(Yt) <span class="sc">+</span> </span>
+<span id="cb56-12"><a href="#cb56-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">""</span>) <span class="sc">+</span></span>
+<span id="cb56-13"><a href="#cb56-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Lag (months)"</span>) <span class="sc">+</span> </span>
+<span id="cb56-14"><a href="#cb56-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span>
+<span id="cb56-15"><a href="#cb56-15" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">autoplot</span>(D1) <span class="sc">+</span> </span>
+<span id="cb56-16"><a href="#cb56-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Year"</span>) <span class="sc">+</span> </span>
+<span id="cb56-17"><a href="#cb56-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"log10(Air passangers)"</span>) <span class="sc">+</span> </span>
+<span id="cb56-18"><a href="#cb56-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"D1"</span>) <span class="sc">+</span></span>
+<span id="cb56-19"><a href="#cb56-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span>
+<span id="cb56-20"><a href="#cb56-20" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> forecast<span class="sc">::</span><span class="fu">ggAcf</span>(D1) <span class="sc">+</span> </span>
+<span id="cb56-21"><a href="#cb56-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">""</span>) <span class="sc">+</span></span>
+<span id="cb56-22"><a href="#cb56-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Lag (months)"</span>) <span class="sc">+</span> </span>
+<span id="cb56-23"><a href="#cb56-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span>
+<span id="cb56-24"><a href="#cb56-24" aria-hidden="true" tabindex="-1"></a>p5 <span class="ot">&lt;-</span> <span class="fu">autoplot</span>(D1D12) <span class="sc">+</span> </span>
+<span id="cb56-25"><a href="#cb56-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Year"</span>) <span class="sc">+</span> </span>
+<span id="cb56-26"><a href="#cb56-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"log10(Air passangers)"</span>) <span class="sc">+</span> </span>
+<span id="cb56-27"><a href="#cb56-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"D1D12"</span>) <span class="sc">+</span></span>
+<span id="cb56-28"><a href="#cb56-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span>
+<span id="cb56-29"><a href="#cb56-29" aria-hidden="true" tabindex="-1"></a>p6 <span class="ot">&lt;-</span> forecast<span class="sc">::</span><span class="fu">ggAcf</span>(D1D12) <span class="sc">+</span> </span>
+<span id="cb56-30"><a href="#cb56-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">""</span>) <span class="sc">+</span></span>
+<span id="cb56-31"><a href="#cb56-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">"Lag (months)"</span>) <span class="sc">+</span> </span>
+<span id="cb56-32"><a href="#cb56-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span>
+<span id="cb56-33"><a href="#cb56-33" aria-hidden="true" tabindex="-1"></a>(p1 <span class="sc">+</span> p2) <span class="sc">/</span> (p3 <span class="sc">+</span> p4) <span class="sc">/</span> (p5 <span class="sc">+</span> p6) <span class="sc">+</span></span>
+<span id="cb56-34"><a href="#cb56-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot_annotation</span>(<span class="at">tag_levels =</span> <span class="st">'A'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-AirPassengersDiff" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="l03_smoothing_files/figure-html/fig-AirPassengersDiff-1.png" class="img-fluid figure-img" width="768"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;2.17: Time series plot of shampoo sales with an estimated ACF and the detrended (differenced) series with their ACFs.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="conclusion" class="level2" data-number="2.7">
+<h2 data-number="2.7" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">2.7</span> Conclusion</h2>
+<p>The choice of the method to use depends on many things, among them:</p>
+<ul>
+<li>The methods require different skill levels (and time commitment) for their implementation and can be categorized as automatic and non-automatic.</li>
+<li>Some methods are very flexible when dealing with seasonality (e.g., Holt–Winters), while others are not.</li>
+<li>The goal of smoothing and desired degree of smoothness in the output.</li>
+<li>Some of the methods have a convenient way of getting forecasts (e.g., exponential smoothing and polynomial regression), while other methods are more suitable for interpolation (polynomial regression) and simple visualization (simple moving average), or just trend elimination (all of the considered methods are capable of eliminating trends, but differencing is the method that does nothing else but the elimination).</li>
+</ul>
+<p>Remember that forecasted values (point forecasts) are not valuable if their uncertainty is not quantified. To quantify the uncertainty, we provide prediction intervals that are based on the past behavior of residuals and careful residual diagnostics (such as described in the previous lectures).</p>
+<p>The evaluation of the methods may involve splitting the time series into training and testing periods. Overall, this lecture focused on presenting the methods themselves, while <em>residual diagnostics and evaluation on a testing set</em> were omitted due to time constraints.</p>
+<p>While the considered methods are among the most common, there are many more smoothing methods that can be applied to time series: splines (such as used in generalized additive models, GAMs), kernels, machine learning techniques, etc.</p>
+</section>
+<section id="appendix" class="level2" data-number="2.8">
+<h2 data-number="2.8" class="anchored" data-anchor-id="appendix"><span class="header-section-number">2.8</span> Appendix</h2>
+<div class="callout-note callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Example: Smoothing blocks
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A student was concerned about applying smoothing to data that have a block-like structure. Without a real data set on hand, below we simulate a series <span class="math inline">\(X_t\)</span> with the mentioned structure.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Set number of blocks</span></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10</span> </span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Let the values of blocks come from standard normal distribution,</span></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a><span class="co"># and length of block be a random variable generated from Poisson distribution:</span></span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>Xt <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">rnorm</span>(n), <span class="at">times =</span> <span class="fu">rpois</span>(n, <span class="dv">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p><a href="#fig-blocks">Figure&nbsp;<span>2.18</span></a> shows an example of lowess applied to <span class="math inline">\(X_t\)</span> to get a smoothed series <span class="math inline">\(M_t\)</span>.</p>
+<p>We see that lowess estimates <em>smooth</em> trends. If we assume that trends are not smooth, then some other techniques (e.g., piecewise linear estimation) should be used.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(Xt))</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">t =</span> t, <span class="at">Xt =</span> Xt), <span class="fu">aes</span>(<span class="at">x =</span> t, <span class="at">y =</span> Xt)) <span class="sc">+</span> </span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span> </span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">span =</span> <span class="fl">0.25</span>) <span class="sc">+</span> </span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-blocks" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="l03_smoothing_files/figure-html/fig-blocks-1.png" class="img-fluid figure-img" width="768"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;2.18: Smoothing block-like data <span class="math inline">\(X_t\)</span>.</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography" style="display: none">
+<div id="ref-Berk:2016" class="csl-entry" role="doc-biblioentry">
+Berk RA (2016) <a href="https://doi.org/10.1007/978-3-319-44048-4">Statistical learning from a regression perspective</a>, 2nd edn. Springer, Switzerland
+</div>
+<div id="ref-Brockwell:Davis:2002" class="csl-entry" role="doc-biblioentry">
+Brockwell PJ, Davis RA (2002) Introduction to time series and forecasting, 2nd edn. Springer, New York
+</div>
+<div id="ref-Cleveland:1979" class="csl-entry" role="doc-biblioentry">
+Cleveland WS (1979) Robust locally weighted regression and smoothing scatterplots. Journal of the American Statistical Association 74:829–836. <a href="https://doi.org/10.1080/01621459.1979.10481038">https://doi.org/10.1080/01621459.1979.10481038</a>
+</div>
+<div id="ref-Kirchgassner:Wolters:2007" class="csl-entry" role="doc-biblioentry">
+Kirchgässner G, Wolters J (2007) <a href="https://doi.org/10.1007/978-3-540-73291-4">Introduction to modern time series analysis</a>. Springer-Verlag, Berlin
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./intro.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./references.html" class="pagination-link">
+        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>
