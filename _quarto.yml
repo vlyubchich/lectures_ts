@@ -9,12 +9,13 @@ book:
   date: "2022-12-31"
   date-format: iso
   number-sections: true
+  # repo-url: https://github.com/vlyubchich/lectures_ts/
+  # repo-actions: [edit]
+  # downloads: [pdf, epub]
+  # sharing: [twitter, facebook]
+  reader-mode: true
   sidebar:
     search: true
-  repo-url: https://github.com/vlyubchich/lectures_ts/
-  repo-actions: [edit]
-  downloads: [pdf, epub]
-  sharing: [twitter, facebook]
   chapters:
     - index.qmd
     - intro.qmd

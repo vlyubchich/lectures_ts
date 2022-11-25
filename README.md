@@ -29,7 +29,7 @@ p2 <- forecast::ggAcf(shampoo) +
     xlab("Lag (months)") + 
     theme_light()
 p1 + p2 +
-  plot_annotation(tag_levels = 'A')
+    plot_annotation(tag_levels = 'A')
 ```
 
 \bm replace with \boldsymbol 
@@ -38,6 +38,15 @@ Figure~\ref{fig: replace with @fig-
 # GitHub
 
 Write in `master`, then update `gh-pages`.
+
+::: {.callout-note icon=false}
+
+## Example: Secchi
+
+sds
+:::
+
+
 
 ```
 git checkout gh-pages
