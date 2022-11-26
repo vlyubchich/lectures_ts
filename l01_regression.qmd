@@ -120,7 +120,8 @@ p3 <- ggplot(D, aes(x = RES, y = mod1$residuals)) +
     xlab("Residential investments (RES)") +
     ylab("Residuals") +
     theme_light()
-p1 + p2 + p3
+p1 + p2 + p3 +
+    plot_annotation(tag_levels = 'A')
 ```
 :::
 
@@ -511,7 +512,6 @@ is added to the model because of the correction $(n-1)/(n-p)$.
 The intercept $\beta_{0}$ is not included in the $F$-test because there is no explanatory variable associated with it. In other words, $\beta_{0}$ does not contribute to the regression part of the model.
 :::
 
-
 ::: {.callout-note icon=false}
 
 ## Example: Dishwasher shipments multiple linear regression
@@ -549,7 +549,8 @@ p2 <- ggplot(D, aes(x = mod2$fitted.values, y = mod2$residuals)) +
     xlab("Fitted values") +
     ylab("Residuals") +
     theme_light()
-p1 + p2
+p1 + p2 +
+    plot_annotation(tag_levels = 'A')
 ```
 
 Check that the residuals $\epsilon_{t}$ are uncorrelated (the Durbin--Watson and the runs tests):

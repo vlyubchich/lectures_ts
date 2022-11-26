@@ -101,7 +101,7 @@ p2 <- forecast::ggAcf(shampoo) +
     xlab("Lag (months)") + 
     theme_light()
 pshampoo + p2 +
-  plot_annotation(tag_levels = 'A')
+    plot_annotation(tag_levels = 'A')
 ```
 :::
 
@@ -153,7 +153,7 @@ ps <- lapply(c(1, 2, 3, 5), function(q){
         ggtitle(paste0("q = ", q, " (window = ", w, ")"))
 })
 wrap_plots(ps, ncol = 2) +
-  plot_annotation(tag_levels = 'A')
+    plot_annotation(tag_levels = 'A')
 ```
 
 ```{r}
@@ -252,7 +252,7 @@ ps <- lapply(c(0.1, 0.3, 0.5, 0.75), function(w){
         geom_smooth(method = "loess", span = w, se = FALSE)
 })
 wrap_plots(ps, ncol = 2) +
-  plot_annotation(tag_levels = 'A')
+    plot_annotation(tag_levels = 'A')
 ```
 
 ::: {.callout-note}
@@ -451,7 +451,7 @@ p2 <- pshampoo +
     labs(color = "(\u03b1, \u03b2)") +
     scale_color_manual(values = clrs)
 p1 + p2 +
-  plot_annotation(tag_levels = 'A')
+    plot_annotation(tag_levels = 'A')
 ```
 :::
 
@@ -524,7 +524,7 @@ p2 <- forecast::ggAcf(AirPassengers) +
     xlab("Lag (months)") + 
     theme_light()
 pAirPassengers + p2 +
-  plot_annotation(tag_levels = 'A')
+    plot_annotation(tag_levels = 'A')
 ```
 
 Comparison of various exponential smoothing techniques for the `AirPassengers` data:
