@@ -167,7 +167,7 @@ ps <- lapply(c(1, 2, 3, 5), function(q){
         ggtitle(paste0("q = ", q, " (window = ", w, ")"))
 })
 wrap_plots(ps, ncol = 2) +
-  plot_annotation(tag_levels = 'A')
+    plot_annotation(tag_levels = 'A')
 ```
 :::
 
@@ -214,7 +214,7 @@ p2 <- forecast::ggAcf(Secchi) +
     xlab("Lag (months)") + 
     theme_light()
 pSecchi + p2 +
-  plot_annotation(tag_levels = 'A')
+    plot_annotation(tag_levels = 'A')
 ```
 
 ```{r}

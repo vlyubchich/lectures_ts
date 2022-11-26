@@ -10,6 +10,7 @@ The R packages used in this book include (in alphabetic order):
 * `forecast` [@R-forecast]
 <!-- * `ggfortify` [@R-ggfortify] -->
 * `ggplot2` [@R-ggplot2]
+* `lawstat` [@R-lawstat]
 * `lmtest` [@R-lmtest]
 * `patchwork` [@R-patchwork]
 * `pracma` [@R-pracma]
@@ -27,6 +28,7 @@ knitr::write_bib(c(
     ,'forecast' # l01, l03    
     # ,'ggfortify' # l01
     ,'ggplot2'
+    ,'lawstat'
     ,'lmtest'
     ,'patchwork'
     ,'pracma' # l03
