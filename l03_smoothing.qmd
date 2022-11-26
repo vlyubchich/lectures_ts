@@ -814,8 +814,9 @@ $$
 
 ```{r}
 #| label: fig-shampooDiff
-#| fig-cap: "Time series plot of shampoo sales with an estimated ACF and the detrended (differenced) series with their ACFs."
-p1 <- pshampoo
+#| fig-cap: "Time series plot of shampoo sales with an estimated ACF and the differenced series with their ACFs."
+p1 <- pshampoo +
+    ggtitle("Yt")
 p2 <- forecast::ggAcf(shampoo) + 
     ggtitle("") +
     xlab("Lag (months)") + 
@@ -823,6 +824,7 @@ p2 <- forecast::ggAcf(shampoo) +
 p3 <- ggplot2::autoplot(diff(shampoo)) + 
     xlab("Year") + 
     ylab("Sales") + 
+    ggtitle("D1") +
     theme_light()
 p4 <- forecast::ggAcf(diff(shampoo)) + 
     ggtitle("") +
@@ -830,7 +832,8 @@ p4 <- forecast::ggAcf(diff(shampoo)) +
     theme_light()
 p5 <- ggplot2::autoplot(diff(shampoo, differences = 2)) + 
     xlab("Year") + 
-    ylab("Sales") + 
+    ylab("Sales") +
+    ggtitle("D2") +
     theme_light()
 p6 <- forecast::ggAcf(diff(shampoo, differences = 2)) + 
     ggtitle("") +
