@@ -333,7 +333,7 @@ The above ordering assumes no ties, but ties can be quite common in data, even c
 
 Note that the proportion of observations less than or equal to $X_{(k/n)}$ is exactly $k/n$. Hence $X_{(k/n)}$, called the $k$th {\em sample quantile}, is an estimate of the population quantile $x_{(k/n)}$.
 
-The normal Q-Q plot is obtained by plotting the sample quantiles vs. the quantiles of the standard normal distribution. The base-R function `qqnorm()` produces a normal Q-Q plot of data and the function `qqline()` adds a line that passes through the first and third quartiles. The R package `ggplot2` has analogous functions `ggplot2::stat_qq()` and `ggplot2::stat_qq_line()`. The R package `car` also draws Q-Q plots and adds a point-wise confidence envelope. 
+The normal Q-Q plot is obtained by plotting the sample quantiles vs. the quantiles of the standard normal distribution. The base-R function `qqnorm()` produces a normal Q-Q plot of data and the function `qqline()` adds a line that passes through the first and third quartiles. The R package `ggplot2` has analogous functions `ggplot2::stat_qq()` and `ggplot2::stat_qq_line()`. The R package `car` also draws Q-Q plots and adds a point-wise confidence envelope with its function `car::qqPlot()`. 
 
 ::: {.callout-note icon=false}
 
