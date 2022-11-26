@@ -50,7 +50,7 @@ div.csl-indent {
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
 <link href="./references.html" rel="next">
-<link href="./index.html" rel="prev">
+<link href="./l03_smoothing.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -126,6 +126,16 @@ div.csl-indent {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./l01_regression.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Review of Linear Regression</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./l03_smoothing.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Smoothing (Detrending and Deseasonalizing)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./software.html" class="sidebar-item-text sidebar-link active">Software</a>
   </div>
 </li>
@@ -163,19 +173,20 @@ div.csl-indent {
 <p>Examples were calculated in R version 4.1.0 (2021-05-18) with an effort to use the most recent versions of R packages.</p>
 <p>The R packages used in this book include (in alphabetic order):</p>
 <ul>
+<li><code>car</code> <span class="citation" data-cites="R-car">(<a href="references.html#ref-R-car" role="doc-biblioref">Fox et al. 2021</a>)</span></li>
+<li><code>dplyr</code> <span class="citation" data-cites="R-dplyr">(<a href="references.html#ref-R-dplyr" role="doc-biblioref">Wickham et al. 2022b</a>)</span></li>
 <li><code>fma</code> <span class="citation" data-cites="R-fma">(<a href="references.html#ref-R-fma" role="doc-biblioref">Hyndman 2020</a>)</span></li>
-<li><code>forecast</code> <span class="citation" data-cites="R-forecast">(<a href="references.html#ref-R-forecast" role="doc-biblioref">Hyndman et al. 2022</a>)</span></li>
-<li><code>ggplot2</code> <span class="citation" data-cites="R-ggplot2">(<a href="references.html#ref-R-ggplot2" role="doc-biblioref">Wickham et al. 2022</a>)</span></li>
-<li><code>knitr</code> <span class="citation" data-cites="R-knitr">(<a href="references.html#ref-R-knitr" role="doc-biblioref">Xie 2022</a>)</span></li>
+<li><code>forecast</code> <span class="citation" data-cites="R-forecast">(<a href="references.html#ref-R-forecast" role="doc-biblioref">Hyndman et al. 2022</a>)</span> <!-- * `ggfortify` [@R-ggfortify] --></li>
+<li><code>ggplot2</code> <span class="citation" data-cites="R-ggplot2">(<a href="references.html#ref-R-ggplot2" role="doc-biblioref">Wickham et al. 2022a</a>)</span></li>
+<li><code>lmtest</code> <span class="citation" data-cites="R-lmtest">(<a href="references.html#ref-R-lmtest" role="doc-biblioref">Hothorn et al. 2022</a>)</span></li>
 <li><code>patchwork</code> <span class="citation" data-cites="R-patchwork">(<a href="references.html#ref-R-patchwork" role="doc-biblioref">Pedersen 2020</a>)</span></li>
 <li><code>pracma</code> <span class="citation" data-cites="R-pracma">(<a href="references.html#ref-R-pracma" role="doc-biblioref">Borchers 2021</a>)</span></li>
+<li><code>randtests</code> <span class="citation" data-cites="R-randtests">(<a href="references.html#ref-R-randtests" role="doc-biblioref">Caeiro and Mateus 2014</a>)</span></li>
 </ul>
 <div class="cell">
 
 </div>
 <!-- ```{r, eval = FALSE, include=FALSE} -->
-<!-- library(lmtest) -->
-<!-- library(randtests) -->
 <!-- # TS intro -->
 <!-- library(Ecdat) -->
 <!-- # ARMA -->
@@ -197,6 +208,15 @@ div.csl-indent {
 <div id="ref-R-pracma" class="csl-entry" role="doc-biblioentry">
 Borchers HW (2021) Pracma: Practical numerical math functions. R package version 2.3.6, <a href="https://CRAN.R-project.org/package=pracma">https://CRAN.R-project.org/package=pracma</a>
 </div>
+<div id="ref-R-randtests" class="csl-entry" role="doc-biblioentry">
+Caeiro F, Mateus A (2014) Randtests: Testing randomness in r. R package version 1.0, <a href="https://CRAN.R-project.org/package=randtests">https://CRAN.R-project.org/package=randtests</a>
+</div>
+<div id="ref-R-car" class="csl-entry" role="doc-biblioentry">
+Fox J, Weisberg S, Price B (2021) Car: Companion to applied regression. R package version 3.0-12, <a href="https://CRAN.R-project.org/package=car">https://CRAN.R-project.org/package=car</a>
+</div>
+<div id="ref-R-lmtest" class="csl-entry" role="doc-biblioentry">
+Hothorn T, Zeileis A, Farebrother RW, Cummins C (2022) Lmtest: Testing linear regression models. R package version 0.9-40, <a href="https://CRAN.R-project.org/package=lmtest">https://CRAN.R-project.org/package=lmtest</a>
+</div>
 <div id="ref-R-fma" class="csl-entry" role="doc-biblioentry">
 Hyndman R (2020) Fma: Data sets from "forecasting: Methods and applications" by makridakis, wheelwright &amp; hyndman (1998). R package version 2.4, <a href="https://CRAN.R-project.org/package=fma">https://CRAN.R-project.org/package=fma</a>
 </div>
@@ -207,10 +227,10 @@ Hyndman R, Athanasopoulos G, Bergmeir C, et al (2022) Forecast: Forecasting func
 Pedersen TL (2020) Patchwork: The composer of plots. R package version 1.1.1, <a href="https://CRAN.R-project.org/package=patchwork">https://CRAN.R-project.org/package=patchwork</a>
 </div>
 <div id="ref-R-ggplot2" class="csl-entry" role="doc-biblioentry">
-Wickham H, Chang W, Henry L, et al (2022) ggplot2: Create elegant data visualisations using the grammar of graphics. R package version 3.3.6, <a href="https://CRAN.R-project.org/package=ggplot2">https://CRAN.R-project.org/package=ggplot2</a>
+Wickham H, Chang W, Henry L, et al (2022a) ggplot2: Create elegant data visualisations using the grammar of graphics. R package version 3.3.6, <a href="https://CRAN.R-project.org/package=ggplot2">https://CRAN.R-project.org/package=ggplot2</a>
 </div>
-<div id="ref-R-knitr" class="csl-entry" role="doc-biblioentry">
-Xie Y (2022) Knitr: A general-purpose package for dynamic report generation in r. R package version 1.38, <a href="https://yihui.org/knitr/">https://yihui.org/knitr/</a>
+<div id="ref-R-dplyr" class="csl-entry" role="doc-biblioentry">
+Wickham H, François R, Henry L, Müller K (2022b) Dplyr: A grammar of data manipulation. R package version 1.0.8, <a href="https://CRAN.R-project.org/package=dplyr">https://CRAN.R-project.org/package=dplyr</a>
 </div>
 </div>
 
@@ -315,8 +335,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./index.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Preface</span>
+      <a href="./l03_smoothing.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Smoothing (Detrending and Deseasonalizing)</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

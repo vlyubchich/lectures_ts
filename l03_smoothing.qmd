@@ -7,6 +7,7 @@ editor_options:
 ```{r, echo=FALSE}
 library(ggplot2)
 library(patchwork)
+options(digits = 3)
 ```
 
 # Smoothing (Detrending and Deseasonalizing)
@@ -84,14 +85,14 @@ Therefore, we apply @eq-movav as to non-seasonal data.
 
 ```{r}
 # Get the data from the package fma
-shampoo <- fma::shampoo 
+shampoo <- fma::shampoo
 shampoo
 ```
 
 ```{r}
 #| label: fig-shampoo
 #| fig-cap: "Monthly shampoo sales over three years and a corresponding sample ACF."
-pshampoo <- autoplot(shampoo, col = "grey50") + 
+pshampoo <- ggplot2::autoplot(shampoo, col = "grey50") + 
     xlab("Year") + 
     ylab("Sales") + 
     theme_light()
@@ -204,7 +205,7 @@ Consider monthly data of Secchi disk depth measured at the station CB1.1 in Ches
 #| label: fig-Secchi
 #| fig-cap: "Monthly average Secchi disk depth at station CB1.1 and its ACF."
 load("./data/Secchi_CB1.1.RData")
-pSecchi <- autoplot(Secchi, col = "grey50") + 
+pSecchi <- ggplot2::autoplot(Secchi, col = "grey50") + 
     xlab("Year") + 
     ylab("Secchi depth (m)") + 
     theme_light()
@@ -219,7 +220,7 @@ pSecchi + p2 +
 ```{r}
 #| label: fig-SecchiDecompose
 #| fig-cap: "Trend-seasonal decomposition of monthly average Secchi disk depth at station CB1.1."
-autoplot(stats::decompose(Secchi))  + 
+ggplot2::autoplot(stats::decompose(Secchi))  + 
     theme_light()
 ```
 :::
@@ -245,7 +246,7 @@ By selecting large bandwidth $f$ in the lowess algorithm, we can obtain greater 
 #| fig-cap: "A lowess illustration, adapted from @Berk:2016."
 data(WWWusage)
 ps <- lapply(c(0.1, 0.3, 0.5, 0.75), function(w){
-    autoplot(WWWusage, col = "grey50")  + 
+    ggplot2::autoplot(WWWusage, colour = "grey50")  + 
         ggtitle(paste0("span = ", w)) +
         theme_light() + 
         geom_smooth(method = "loess", span = w, se = FALSE)
@@ -298,7 +299,7 @@ p1 <- pSecchi +
 p2 <- pSecchi + 
     geom_line(aes(y = Mt_star + St_star[month]), col = 4, lwd = 1.5) + 
     ggtitle("Final trend-cycle: Mt_star + St_star")
-p3 <- autoplot(et) + 
+p3 <- ggplot2::autoplot(et) + 
     xlab("Year") + 
     ggtitle("Residuals: et") +
     theme_light()
@@ -326,7 +327,7 @@ p1 <- pSecchi +
 p2 <- pSecchi + 
     geom_line(aes(y = D$time.series[,"trend"] + D$time.series[,"seasonal"]), col = 4, lwd = 1.5) + 
     ggtitle("Final trend-cycle: Mt_star + St_star")
-p3 <- autoplot(D$time.series[,"remainder"]) + 
+p3 <- ggplot2::autoplot(D$time.series[,"remainder"]) + 
     xlab("Year") + 
     ggtitle("Residuals: et") +
     theme_light()
@@ -348,7 +349,7 @@ p1 <- pSecchi +
 p2 <- pSecchi + 
     geom_line(aes(y = D$time.series[,"trend"] + D$time.series[,"seasonal"]), col = 4, lwd = 1.5) + 
     ggtitle("Final trend-cycle: Mt_star + St_star")
-p3 <- autoplot(D$time.series[,"remainder"]) + 
+p3 <- ggplot2::autoplot(D$time.series[,"remainder"]) + 
     xlab("Year") + 
     ggtitle("Residuals: et") +
     theme_light()
@@ -430,7 +431,7 @@ See an example in @fig-shampoo-ses.
 
 ```{r}
 #| label: fig-shampoo-ses
-#| fig-cap: "Shampoo sales over a three-year period smoothed with different exponential smoothing filters."
+#| fig-cap: "Shampoo sales over three years smoothed with different exponential smoothing filters."
 clrs <- c("0.3" = 4, "0.7" = 2)
 m1 <- HoltWinters(shampoo, alpha = 0.3, beta = FALSE, gamma = FALSE)
 m2 <- HoltWinters(shampoo, alpha = 0.7, beta = FALSE, gamma = FALSE)
@@ -514,7 +515,7 @@ Monthly totals of international airline passengers, 1949--1960 (see @fig-airpass
 ```{r}
 #| label: fig-airpassangers
 #| fig-cap: "Monthly `AirPassengers` data and a corresponding sample ACF."
-pAirPassengers <- autoplot(AirPassengers, col = "grey50") + 
+pAirPassengers <- ggplot2::autoplot(AirPassengers, col = "grey50") + 
     xlab("Year") + 
     ylab("Airline passengers (thousand)") + 
     theme_light()
@@ -591,6 +592,10 @@ $$
 M_t = \beta_0 + \beta_1 t + \beta_2 t^2
 $$
 * Fit the model using the usual regression estimators (least squares or maximum likelihood)
+
+::: {.callout-note}
+A nonstationary time series with a trend represented by a parametric function is a typical example of a *trend-stationary time series* or a time series with a *deterministic trend*. It is easy to make such a time series stationary by modeling and extracting the trend. 
+:::
 
 ::: {.callout-note icon=false}
 
@@ -792,6 +797,10 @@ but we will often use just the top-row notations.
 
 We will discuss formal tests to identify an appropriate order of differences in future lectures (unit-root tests), but for now use the *rule of thumb:* for time trends looking linear use 1st order differences ($\Delta Y_t = Y_t - Y_{t-1}$), for parabolic shapes use differences of the 2nd order, etc. Apply differencing of higher orders until the time series looks stationary (plot the transformed series and its ACF at each step). In practice, differences of order 3 or higher are rarely needed.
 
+::: {.callout-note}
+A nonstationary time series that can be converted to stationary by taking differences is also sometimes called a *difference-stationary time series* or a time series with a *stochastic trend*. 
+:::
+
 ::: {.callout-note icon=false}
 
 ## Example: Shampoo detrending by differencing
@@ -811,7 +820,7 @@ p2 <- forecast::ggAcf(shampoo) +
     ggtitle("") +
     xlab("Lag (months)") + 
     theme_light()
-p3 <- autoplot(diff(shampoo)) + 
+p3 <- ggplot2::autoplot(diff(shampoo)) + 
     xlab("Year") + 
     ylab("Sales") + 
     theme_light()
@@ -819,7 +828,7 @@ p4 <- forecast::ggAcf(diff(shampoo)) +
     ggtitle("") +
     xlab("Lag (months)") + 
     theme_light()
-p5 <- autoplot(diff(shampoo, differences = 2)) + 
+p5 <- ggplot2::autoplot(diff(shampoo, differences = 2)) + 
     xlab("Year") + 
     ylab("Sales") + 
     theme_light()
@@ -854,7 +863,7 @@ Yt <- log10(AirPassengers)
 D1 <- diff(Yt)
 # Additionally, apply first-order seasonal differences
 D1D12 <- diff(D1, lag = 12)
-p1 <- autoplot(Yt) + 
+p1 <- ggplot2::autoplot(Yt) + 
     xlab("Year") + 
     ylab("log10(Air passangers)") + 
     ggtitle("Yt") +
@@ -863,7 +872,7 @@ p2 <- forecast::ggAcf(Yt) +
     ggtitle("") +
     xlab("Lag (months)") + 
     theme_light()
-p3 <- autoplot(D1) + 
+p3 <- ggplot2::autoplot(D1) + 
     xlab("Year") + 
     ylab("log10(Air passangers)") + 
     ggtitle("D1") +
@@ -872,7 +881,7 @@ p4 <- forecast::ggAcf(D1) +
     ggtitle("") +
     xlab("Lag (months)") + 
     theme_light()
-p5 <- autoplot(D1D12) + 
+p5 <- ggplot2::autoplot(D1D12) + 
     xlab("Year") + 
     ylab("log10(Air passangers)") + 
     ggtitle("D1D12") +
@@ -886,9 +895,10 @@ p6 <- forecast::ggAcf(D1D12) +
 ```
 :::
 
+
 ## Conclusion
 
-The choice of the method to use depends on many things, among them:
+We have implemented various methods for trend visualization, modeling, and trend removal. In each case, the method could be extended to additionally remove from a time series a strong seasonal signal. The choice of a method depends on many things, such as:
 
 * The methods require different skill levels (and time commitment) for their implementation and can be categorized as automatic and non-automatic.
 * Some methods are very flexible when dealing with seasonality (e.g., Holt--Winters), while others are not.
@@ -897,7 +907,7 @@ The choice of the method to use depends on many things, among them:
 
 Remember that forecasted values (point forecasts) are not valuable if their uncertainty is not quantified. To quantify the uncertainty, we provide prediction intervals that are based on the past behavior of residuals and careful residual diagnostics (such as described in the previous lectures).
 
-The evaluation of the methods may involve splitting the time series into training and testing periods. Overall, this lecture focused on presenting the methods themselves, while *residual diagnostics and evaluation on a testing set* were omitted due to time constraints.
+The evaluation of the methods may involve splitting the time series into training and testing periods. Overall, this lecture focused on presenting the methods themselves, while *residual diagnostics* and *evaluation on a testing set* were omitted due to time constraints.
 
 While the considered methods are among the most common, there are many more smoothing methods that can be applied to time series: splines (such as used in generalized additive models, GAMs), kernels, machine learning techniques, etc.
 

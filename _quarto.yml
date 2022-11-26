@@ -6,7 +6,7 @@ book:
   title: "Time Series Analysis"
   subtitle: "Lecture Notes"
   author: "V. Lyubchich and Y. R. Gel"
-  date: "2022-12-31"
+  date: today
   date-format: iso
   number-sections: true
   # repo-url: https://github.com/vlyubchich/lectures_ts/
@@ -18,7 +18,8 @@ book:
     search: true
   chapters:
     - index.qmd
-    # - l03_smoothing.qmd
+    - l01_regression.qmd
+    - l03_smoothing.qmd
     - software.qmd
     - references.qmd
 

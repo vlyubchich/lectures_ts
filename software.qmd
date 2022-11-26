@@ -4,12 +4,16 @@ Examples were calculated in `r R.Version()$version.string` with an effort to use
 
 The R packages used in this book include (in alphabetic order):
 
+* `car` [@R-car]
+* `dplyr` [@R-dplyr]
 * `fma` [@R-fma]
 * `forecast` [@R-forecast]
+<!-- * `ggfortify` [@R-ggfortify] -->
 * `ggplot2` [@R-ggplot2]
-* `knitr` [@R-knitr]
+* `lmtest` [@R-lmtest]
 * `patchwork` [@R-patchwork]
 * `pracma` [@R-pracma]
+* `randtests` [@R-randtests]
 
 
 ```{r}
@@ -17,18 +21,21 @@ The R packages used in this book include (in alphabetic order):
 # Automatically create a bib database for R packages
 knitr::write_bib(c(
     .packages(), 'base', 'knitr'
-    ,'ggplot2'
-    ,'patchwork'
+    ,'car' # l01
+    ,'dplyr' # l01
     ,'fma' # l03
-    ,'forecast' # l03
+    ,'forecast' # l01, l03    
+    # ,'ggfortify' # l01
+    ,'ggplot2'
+    ,'lmtest'
+    ,'patchwork'
     ,'pracma' # l03
+    ,'randtests' # l01
 ), 'refPackages.bib')
 ```
 
 
 <!-- ```{r, eval = FALSE, include=FALSE} -->
-<!-- library(lmtest) -->
-<!-- library(randtests) -->
 <!-- # TS intro -->
 <!-- library(Ecdat) -->
 <!-- # ARMA -->
