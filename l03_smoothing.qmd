@@ -1,7 +1,7 @@
 ---
 output: html_document
 editor_options: 
-  chunk_output_type: console
+    chunk_output_type: console
 ---
 
 ```{r, echo=FALSE}
@@ -32,7 +32,7 @@ The goal of this lecture is to learn a variety of methods used for *trend visual
 ## Introduction
 
 Recall the classical decomposition
-$$ 
+$$
 Y_t = M_t + S_t + \epsilon_t,
 $${#eq-trseas}
 where $M_t$ is slowly changing function (trend component), $\epsilon_t$ is stationary random noise component, and $S_t$ is the periodic term with period $m\geqslant 2$ (seasonal component) and scaling factors $\lambda_k > 0$ such that $S_{t+km} = \lambda_kS_t$ for $1 \leqslant t \leqslant m$ and each $k \geqslant 1$. For identification, we need $\sum_{t=1}^m S_t = 0$ and $\mathrm{E}(\epsilon_t)=0$.
@@ -224,6 +224,7 @@ ggplot2::autoplot(stats::decompose(Secchi))  +
     theme_light()
 ```
 :::
+
 
 ## Lowess smoothing
 
@@ -473,9 +474,9 @@ We now use three smoothing parameters: $\alpha$, $\beta$, and $\gamma$ ($\alpha 
 The updating equations for the level ($a_t$), local trend ($b_t$), and seasonal factor ($S_t$) are:
 $$
 \begin{split}
-a_{t} & =  \alpha Y_{t} / S_{t - m} + (1 - \alpha) ( a_{t - 1} + b_{t - 1}), \\
-b_{t} & =  \beta (a_{t} - a_{t - 1}) + (1 - \beta) b_{t - 1}, \\
-S_{t} & =  \gamma Y_{t} / a_{t} + (1 - \gamma) S_{t - m}.
+a_{t} & = \alpha Y_{t} / S_{t - m} + (1 - \alpha) ( a_{t - 1} + b_{t - 1}), \\
+b_{t} & = \beta (a_{t} - a_{t - 1}) + (1 - \beta) b_{t - 1}, \\
+S_{t} & = \gamma Y_{t} / a_{t} + (1 - \gamma) S_{t - m}.
 \end{split}
 $$
 
@@ -494,9 +495,9 @@ The smoothing parameters $\alpha$, $\beta$ and $\gamma$ are estimated by minimiz
 The updating equations are
 $$
 \begin{split}
-a_{t} & =  \alpha (Y_{t} - S_{t - m})  + (1 - \alpha) (a_{t - 1} + b_{t - 1}), \\
-b_{t} & =  \beta (a_{t} - a_{t - 1}) + (1 - \beta) b_{t - 1} \\
-S_{t} & =  \gamma (Y_{t} - a_{t}) + (1 - \gamma) S_{t - m}.
+a_{t} & = \alpha (Y_{t} - S_{t - m}) + (1 - \alpha) (a_{t - 1} + b_{t - 1}), \\
+b_{t} & = \beta (a_{t} - a_{t - 1}) + (1 - \beta) b_{t - 1} \\
+S_{t} & = \gamma (Y_{t} - a_{t}) + (1 - \gamma) S_{t - m}.
 \end{split}
 $$
 
@@ -640,8 +641,8 @@ To each time $t$ and each season $k$ we will assign an indicator which 'turns on
 $$
 X_{k,t} = \left\{
 \begin{array}{cl}
-1, & \mbox{if} ~  t ~ \text{corresponds to season} ~ k, \\
-0, & \mbox{if} ~  t ~ \text{does not correspond to season} ~  k.  \\
+1, & \mbox{if} ~ t ~ \text{corresponds to season} ~ k, \\
+0, & \mbox{if} ~ t ~ \text{does not correspond to season} ~ k. \\
 \end{array}
 \right.
 $$

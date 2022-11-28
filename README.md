@@ -49,9 +49,6 @@ p1 + p2 +
 \bm replace with \boldsymbol 
 Figure~\ref{fig: replace with @fig-
 
-# GitHub
-
-Write in `master`, then update `gh-pages`.
 
 ::: {.callout-note icon=false}
 

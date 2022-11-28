@@ -1,7 +1,7 @@
 ---
 output: html_document
 editor_options: 
-  chunk_output_type: console
+    chunk_output_type: console
 ---
 
 ```{r, echo=FALSE}
@@ -30,7 +30,7 @@ After this lecture, you should be competent (again) in assessing violations of v
 
 Given a simple linear regression (SLR) model
 $$
-Y_{t} = \beta_{0} +  \beta_{1} X_{t} + \epsilon_{t},
+Y_{t} = \beta_{0} + \beta_{1} X_{t} + \epsilon_{t},
 $$
 where $Y_{t}$ is the dependent variable and $X_{t}$ is the regressor (independent, predictor) variable, $t = 1,\ldots,n$, and $n$ is the sample size.
 
@@ -48,7 +48,7 @@ Thus, the ordinary least squares (OLS) assumptions are:
 1. the residuals $\epsilon_{t}$ are normally distributed ($\epsilon_{t} \sim N (0, \sigma^{ 2} )$).
 
 ::: {.callout-note}
-If the residuals are independent and identically distributed and normal ($\epsilon_{t} \sim$ i.i.d.  $N(0, \sigma^{2}$)), then all three above properties are automatically satisfied. In this case, $\epsilon_{t}$ are not only uncorrelated, $\epsilon_{t}$ are independent. To be independent is a much stronger property than to be uncorrelated.
+If the residuals are independent and identically distributed and normal ($\epsilon_{t} \sim$ i.i.d. $N(0, \sigma^{2}$)), then all three above properties are automatically satisfied. In this case, $\epsilon_{t}$ are not only uncorrelated, $\epsilon_{t}$ are independent. To be independent is a much stronger property than to be uncorrelated.
 :::
 
 ::: {.callout-note}
@@ -169,7 +169,7 @@ When dealing with real data, the positive autocorrelation is usually the case.
 
 The Durbin--Watson test statistic DW is based on the differences between the adjacent residuals, $\epsilon_{t} - \epsilon_{t - 1}$, and is of the following form:
 $$
-\text{DW} = \frac{\sum^{n}_{t = 2} \left( \epsilon_{t} - \epsilon_{t - 1}  \right)^{2}}{\sum^{n}_{t = 1} \epsilon^{2}_{t}},
+\text{DW} = \frac{\sum^{n}_{t = 2} \left( \epsilon_{t} - \epsilon_{t - 1} \right)^{2}}{\sum^{n}_{t = 1} \epsilon^{2}_{t}},
 $$
 where $\epsilon_{t}$ is the regression residual at time $t$ and $n$ is the number of observations.
 
@@ -187,7 +187,7 @@ We may use @tbl-DW as a rule of thumb.
 
 | from 0 to $d_{L}$ | from $d_{L}$ to $d_{U}$ | from $d_{U}$ to $4 - d_{U}$ | from $4 - d_{U}$ to $4 - d_{L}$ | from $4 - d_{L}$ to 4 |
 |------|------|------|------|------|
-| Reject $H_{0}$, positive autocorrelation | Neither accept  $H_{1}$ or reject $H_{0}$ | Do not reject $H_{0}$ | Neither accept  $H_{1}$ or reject $H_{0}$ | Reject $H_{0}$, negative autocorrelation |
+| Reject $H_{0}$, positive autocorrelation | Neither accept $H_{1}$ or reject $H_{0}$ | Do not reject $H_{0}$ | Neither accept $H_{1}$ or reject $H_{0}$ | Reject $H_{0}$, negative autocorrelation |
 
 : Regions of rejection of the null hypothesis for the Durbin--Watson test {#tbl-DW}
 
@@ -306,7 +306,7 @@ $${#eq-prob}
 and no other value of $x$ satisfies @eq-prob. Then we will call $x_{(\alpha)}$ the $\alpha$th *(population) quantile* of $X$. Note that any normal distribution has this uniqueness property. If we consider a standard normal $Z \sim N(0, 1)$, then some well-known quantiles are:
 
 * $z_{(0.5)} = 0$ (the median, \texttt{qnorm(0.5, mean = 0, sd = 1)})
-* $z_{(0.05)} =  -1.645$  and $z_{(0.95)} = 1.645$
+* $z_{(0.05)} = -1.645$ and $z_{(0.95)} = 1.645$
 * $z_{(0.025)} = -1.96$ and $z_{(0.975)} = 1.96$
 
 We call the 0.25th, 0.5th, 0.75th quantiles the first, the second, and the third quartiles, respectively. The quartiles divide our data into 4 equal parts.
@@ -320,14 +320,14 @@ We also have $\alpha = \Pr (Z \leqslant z_{(\alpha)} )$ by definition. Thus,
 %from the uniqueness property of the $N (0, 1)$,
 it follows that
 $$
-z_{(\alpha)} = \frac{x_{(\alpha)} - \mu}{ \sigma} ~~~~ \mbox{and hence} ~~~~  x_{(\alpha)} = \sigma z_{(\alpha)} + \mu.
+z_{(\alpha)} = \frac{x_{(\alpha)} - \mu}{ \sigma} ~~~~ \mbox{and hence} ~~~~ x_{(\alpha)} = \sigma z_{(\alpha)} + \mu.
 $$
 
 Thus, if $X$ is truly normal, a plot of the quantiles of $X$ vs. the quantiles of the standard normal distribution should yield a straight line. A plot of the quantiles of $X$ vs. the quantiles of $Z$ is called a Q-Q plot.
 
 **Estimating quantiles from data** Let $X_{1}, \ldots, X_{n}$ be a sequence of observations. Ideally, $X_{1}, \ldots, X_{n}$ should represent i.i.d.\ observations but we will be happy if preliminary tests indicate that they are homoscedastic and uncorrelated (see the previous sections). We order them from the smallest to the largest and indicate this using the notation
 $$
-X_{(1/n)} < X_{(2/n)} < X_{(3/n)} <  \ldots < X_{\left((n - 1)/n\right)} < X_{(n/n)}.
+X_{(1/n)} < X_{(2/n)} < X_{(3/n)} < \ldots < X_{\left((n - 1)/n\right)} < X_{(n/n)}.
 $$
 
 The above ordering assumes no ties, but ties can be quite common in data, even continuous data, because of rounding. As long as the proportion of ties is small, this method can be used.
@@ -404,14 +404,14 @@ This can be expressed more compactly in a matrix notation as
 $$
 \boldsymbol{Y} = \boldsymbol{X} \boldsymbol{\beta} + \boldsymbol{\epsilon},
 $$
-where $\boldsymbol{Y} = (Y_{1}, \ldots, Y_{n})^{\top}$,  $\boldsymbol{\beta} = (\beta_{0} , \ldots, \beta_{p})^{\top}$, $\boldsymbol{\epsilon} = (\epsilon_{1} , \ldots, \epsilon_{n})^{\top}$;  $\boldsymbol{X}$ is an $n \times (p + 1)$ design matrix
+where $\boldsymbol{Y} = (Y_{1}, \ldots, Y_{n})^{\top}$, $\boldsymbol{\beta} = (\beta_{0} , \ldots, \beta_{p})^{\top}$, $\boldsymbol{\epsilon} = (\epsilon_{1} , \ldots, \epsilon_{n})^{\top}$; $\boldsymbol{X}$ is an $n \times (p + 1)$ design matrix
 $$
 \boldsymbol{X} = \left(
 \begin{array}{cccc}
-1 & X_{1,1} &  \ldots & X_{1,p} \\
-1 & X_{2,1}&  \ldots & X_{2,p} \\
+1 & X_{1,1} & \ldots & X_{1,p} \\
+1 & X_{2,1}& \ldots & X_{2,p} \\
 \vdots & \vdots & \ddots & \vdots \\
-1 & X_{n,1}&  \ldots & X_{n,p}
+1 & X_{n,1}& \ldots & X_{n,p}
 \end{array}
 \right).
 $$
@@ -438,7 +438,7 @@ where the $\left( \boldsymbol{X}^{\top} \boldsymbol{X} \right)^{-1}_{jj}$ denote
 
 This yields
 $$
-s.e. \left( \hat{\beta}_{j} \right) = \hat{\sigma}  \sqrt{ \left( \boldsymbol{X }^{\top} \boldsymbol{X} \right)^{-1}_{jj}}.
+s.e. \left( \hat{\beta}_{j} \right) = \hat{\sigma} \sqrt{ \left( \boldsymbol{X }^{\top} \boldsymbol{X} \right)^{-1}_{jj}}.
 $$
 
 Note that here the degrees of freedom (d.f.)\ are $n - (p + 1) = n - p - 1$. (The number of estimated parameters for the independent variables is $p$, plus one for the intercept, i.e., $p + 1$.)
@@ -455,7 +455,7 @@ Typically, $s.e.(\hat{\beta}_{j})$ is available directly from the R output, so @
 
 Under the OLS assumptions it can be shown that
 $$
-\mathrm{var} \left( Y_{t} - \hat{Y}_{t} \right) = \sigma^{2} \left( \boldsymbol{x}^{\top}_{t} \left( \boldsymbol{X}^{\top} \boldsymbol{X} \right)^{- 1}  \boldsymbol{x}_{t} + 1 \right),
+\mathrm{var} \left( Y_{t} - \hat{Y}_{t} \right) = \sigma^{2} \left( \boldsymbol{x}^{\top}_{t} \left( \boldsymbol{X}^{\top} \boldsymbol{X} \right)^{- 1} \boldsymbol{x}_{t} + 1 \right),
 $$
 yielding a $100(1 - \alpha)$\% prediction interval for $Y_{t}$:
 $$
@@ -471,8 +471,8 @@ As in SLR, we will look for the $t$-statistics and $p$-values to get an idea abo
 We can also make use of the $F$-test. The $F$-test considers *all* parameters (other than the intercept $\beta_{0}$) simultaneously, testing
 $$
 \begin{split}
-H_{0}{:} ~ \beta_{1} &=  \ldots  = \beta_{p} = 0 ~~~ \text{vs.} \\
-H_{1}{:} ~ \beta_{j} &\neq 0 ~~~ \mbox{for at least one} ~~~  j \in \{1, \ldots, p \}.
+H_{0}{:} ~ \beta_{1} &= \ldots = \beta_{p} = 0 ~~~ \text{vs.} \\
+H_{1}{:} ~ \beta_{j} &\neq 0 ~~~ \mbox{for at least one} ~~~ j \in \{1, \ldots, p \}.
 \end{split}
 $$
 
