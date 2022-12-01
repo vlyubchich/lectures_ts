@@ -1,6 +1,8 @@
 Todo
 - check presence of comments "<!--" in QMD files to fix that.
 
+a.k.a.
+changepoint
 nonlinear
 nonparametric
 $p$-value
