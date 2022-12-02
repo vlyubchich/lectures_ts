@@ -75,7 +75,7 @@ In this course, we will be interested in constructing time series models to lear
 
 A time series can generally be expressed as a sum or product of four distinct components:
 $$
-Y_t = M_t + S_t + C_t + \epsilon_t,
+Y_t = M_t + S_t + C_t + \epsilon_t
 $$
 or
 $$
@@ -491,18 +491,6 @@ p1 + p2 +
     plot_annotation(tag_levels = 'A')
 ```
 :::
-
-
-## Detrending
-
-How do we get to stationary models when most of the time series have some sort of trends? We can detrend time series (i.e., eliminate the trend) using either
-
-1. Moving average smoothing
-1. Exponential smoothing
-1. Polynomial fitting (analytical smoothing) to extract deterministic trend
-1. Differencing: eliminate the (stochastic) trend using consecutive differencing
-
-Very rarely, a time series may contain both deterministic and stochastic trends that need to be modeled or removed for further analysis.
 
 
 ## Conclusion

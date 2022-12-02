@@ -800,6 +800,7 @@ We will discuss formal tests to identify an appropriate order of differences in 
 
 ::: {.callout-note}
 A nonstationary time series that can be converted to stationary by taking differences is also sometimes called a *difference-stationary time series* or a time series with a *stochastic trend*. 
+Very rarely, a time series may contain both deterministic and stochastic trends that need to be modeled or removed for further analysis.
 :::
 
 ::: {.callout-note icon=false}
