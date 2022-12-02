@@ -29,11 +29,11 @@ The goal of this lecture is to introduce time series and their common components
 
 ## Time series and its components
 
-A *time series* is a set of observations $Y_t$, each one being recorded at a specific time $t$ @Brockwell:Davis:2002. The index $t$ will typically refer to some standard unit of time, e.g., seconds, hours, days, weeks, months, or years.
+A *time series* is a set of observations $Y_t$, each one being recorded at a specific time $t$ [@Brockwell:Davis:2002]. The index $t$ will typically refer to some standard unit of time, e.g., seconds, hours, days, weeks, months, or years.
 
-A *time series* is a collection of observations made sequentially through time @Chatfield:2000.
+A *time series* is a collection of observations made sequentially through time [@Chatfield:2000].
 
-A *stochastic process* is sequence of random variables $Y_t$, $t = 1, 2, 3, \ldots$ indexed by time $t$, can be written as $\{Y_t, t\in[1,T]\}$. A time series is a realization of a stochastic process.
+A *stochastic process* is sequence of random variables $Y_t$, $t = 1, 2, \ldots$ indexed by time $t$, can be written as $\{Y_t, t\in[1,T]\}$. A time series is a realization of a stochastic process.
 
 We shall frequently use the term *time series* to mean both the data and the process.
 
@@ -415,16 +415,16 @@ frequency(births)
 ```
 
 You don't have to convert data to this format. If you plot ACF of just a vector without these attributes, the values are the same, just the labels on the horizontal axis are different (@fig-ACFs). 
-For monthly data, as in the example here, frequency is 12. Hence, here ACF at lag 0.5 means autocorrelation with the lag $h=6$ months; lag 1 corresponds to one whole period $h=12$ months (one year), and so on (@fig-ACFs A).
+For monthly data, as in the example here, frequency is 12. Hence, here ACF at lag 0.5 (@fig-ACFs A) means autocorrelation with the lag $h=6$ months (@fig-ACFs B); lag 1 (@fig-ACFs A) corresponds to one whole period of $h=12$ months (@fig-ACFs B), and so on.
 ```{r}
 #| label: fig-ACFs
-#| fig-cap: "In base-R graphics, ACF plots the x-axis labels differ depending on the data format."
+#| fig-cap: "In base-R graphics, the x-axis labels in ACF plots differ depending on the input format."
 
-par(mar = c(4, 5, 3, 1) + 0.1, mgp = c(3, 1, 0), mfrow = c(1, 2))
+par(mar = c(4, 4, 3, 1) + 0.1, mfrow = c(1, 2))
 par(pty = "m")
 
-acf(births, lag.max = 37, las = 1, main = "A) Using ts format")
-acf(as.numeric(births), lag.max = 37, las = 1, main = "B) Using just a numeric vector")
+acf(births, lag.max = 37, las = 1, main = "A) Input is a ts object")
+acf(as.numeric(births), lag.max = 37, las = 1, main = "B) Input is a numeric vector")
 ```
 :::
 
@@ -440,7 +440,7 @@ Contributed R packages offer additional formats for time series, e.g., see packa
 
 ## Partial autocorrelation function
 
-@Shumway:Stoffer:2011 @Shumway:Stoffer:2014 provide the following explanation of the concept.
+@Shumway:Stoffer:2011 and @Shumway:Stoffer:2014 provide the following explanation of the concept.
 
 Recall that if $X$, $Y$, and $Z$ are random variables, then the partial correlation
 between $X$ and $Y$ given $Z$ is obtained by regressing $X$ on $Z$ to obtain $\hat{X}$,
