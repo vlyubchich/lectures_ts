@@ -1,5 +1,8 @@
 Todo
 - check presence of comments "<!--" in QMD files to fix that.
+- check grammar
+- check :: and library() calls and add packages to the software list
+- add an empty line between :| and code or comments in each chunk
 
 a.k.a.
 changepoint

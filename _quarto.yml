@@ -19,7 +19,7 @@ book:
   chapters:
     - index.qmd
     # - l01_regression.qmd
-    - l02_tsintro.qmd
+    # - l02_tsintro.qmd
     # - l03_smoothing.qmd
     - software.qmd
     - references.qmd
