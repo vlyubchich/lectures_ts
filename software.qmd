@@ -6,13 +6,16 @@ The R packages used in this book include (in alphabetic order):
 
 * `car` [@R-car]
 * `dplyr` [@R-dplyr]
+* `Ecdat` [@R-Ecdat]
 * `fma` [@R-fma]
 * `forecast` [@R-forecast]
+* `funtimes` [@R-funtimes]
 <!-- * `ggfortify` [@R-ggfortify] -->
 * `ggplot2` [@R-ggplot2]
 * `lawstat` [@R-lawstat]
 * `lmtest` [@R-lmtest]
 * `patchwork` [@R-patchwork]
+* `plotly` [@R-plotly]
 * `pracma` [@R-pracma]
 * `randtests` [@R-randtests]
 
@@ -22,34 +25,27 @@ The R packages used in this book include (in alphabetic order):
 # Automatically create a bib database for R packages
 knitr::write_bib(c(
     .packages(), 'base', 'knitr'
-    ,'car' # l01
-    ,'dplyr' # l01
-    ,'fma' # l03
-    ,'forecast' # l01, l03    
-    # ,'ggfortify' # l01
+    ,'car'
+    ,'dplyr'
+    ,'Ecdat'
+    ,'fma'
+    ,'forecast' 
+    ,'funtimes'
+    # ,'ggfortify'
     ,'ggplot2'
     ,'lawstat'
     ,'lmtest'
     ,'patchwork'
-    ,'pracma' # l03
-    ,'randtests' # l01
-), 'refPackages.bib')
+    ,'plotly'
+    ,'pracma'
+    ,'randtests'
+), 'refpackages.bib')
 ```
 
 
-<!-- ```{r, eval = FALSE, include=FALSE} -->
-<!-- # TS intro -->
-<!-- library(Ecdat) -->
-<!-- # ARMA -->
-<!-- library(funtimes) -->
-<!-- library(forecast) -->
 <!-- # Reg1 -->
 <!-- library(tseries) -->
 <!-- library(dynlm) -->
 <!-- library(urca) -->
 <!-- library(dplyr) -->
 <!-- library(ecm) -->
-<!-- # Reg2 -->
-<!-- # plotting -->
-<!-- library(plotly) -->
-<!-- ``` -->
