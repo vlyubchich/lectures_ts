@@ -228,19 +228,16 @@ div.csl-indent {
    
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="toc-section-number">4.1</span>  Introduction</a></li>
-  <li><a href="#ar-and-ma" id="toc-ar-and-ma" class="nav-link" data-scroll-target="#ar-and-ma"><span class="toc-section-number">4.2</span>  AR and MA</a>
+  <li><a href="#autoregressive-ar-models" id="toc-autoregressive-ar-models" class="nav-link" data-scroll-target="#autoregressive-ar-models"><span class="toc-section-number">4.2</span>  Autoregressive (AR) models</a></li>
+  <li><a href="#the-yulewold-representation-and-linear-processes" id="toc-the-yulewold-representation-and-linear-processes" class="nav-link" data-scroll-target="#the-yulewold-representation-and-linear-processes"><span class="toc-section-number">4.3</span>  The Yule–Wold representation and linear processes</a></li>
+  <li><a href="#moving-average-ma-models" id="toc-moving-average-ma-models" class="nav-link" data-scroll-target="#moving-average-ma-models"><span class="toc-section-number">4.4</span>  Moving average (MA) models</a></li>
+  <li><a href="#arma" id="toc-arma" class="nav-link" data-scroll-target="#arma"><span class="toc-section-number">4.5</span>  ARMA</a></li>
+  <li><a href="#summary-of-armaarma-models" id="toc-summary-of-armaarma-models" class="nav-link" data-scroll-target="#summary-of-armaarma-models"><span class="toc-section-number">4.6</span>  Summary of AR/MA/ARMA models</a></li>
+  <li><a href="#example-analysis" id="toc-example-analysis" class="nav-link" data-scroll-target="#example-analysis"><span class="toc-section-number">4.7</span>  Example analysis</a>
   <ul class="collapse">
-  <li><a href="#autoregressive-ar-models" id="toc-autoregressive-ar-models" class="nav-link" data-scroll-target="#autoregressive-ar-models"><span class="toc-section-number">4.2.1</span>  Autoregressive (AR) models</a></li>
-  <li><a href="#the-yulewold-representation-and-linear-processes" id="toc-the-yulewold-representation-and-linear-processes" class="nav-link" data-scroll-target="#the-yulewold-representation-and-linear-processes"><span class="toc-section-number">4.2.2</span>  The Yule–Wold representation and linear processes</a></li>
-  <li><a href="#moving-average-ma-models" id="toc-moving-average-ma-models" class="nav-link" data-scroll-target="#moving-average-ma-models"><span class="toc-section-number">4.2.3</span>  Moving average (MA) models</a></li>
+  <li><a href="#automatic-model-selection" id="toc-automatic-model-selection" class="nav-link" data-scroll-target="#automatic-model-selection"><span class="toc-section-number">4.7.1</span>  Automatic model selection</a></li>
   </ul></li>
-  <li><a href="#arma" id="toc-arma" class="nav-link" data-scroll-target="#arma"><span class="toc-section-number">4.3</span>  ARMA</a></li>
-  <li><a href="#summary-of-armap-q-models" id="toc-summary-of-armap-q-models" class="nav-link" data-scroll-target="#summary-of-armap-q-models"><span class="toc-section-number">4.4</span>  Summary of ARMA(<span class="math inline">\(p, q\)</span>) models</a></li>
-  <li><a href="#example-analysis" id="toc-example-analysis" class="nav-link" data-scroll-target="#example-analysis"><span class="toc-section-number">4.5</span>  Example analysis</a>
-  <ul class="collapse">
-  <li><a href="#automatic-model-selection" id="toc-automatic-model-selection" class="nav-link" data-scroll-target="#automatic-model-selection"><span class="toc-section-number">4.5.1</span>  Automatic model selection</a></li>
-  </ul></li>
-  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="toc-section-number">4.6</span>  Conclusion</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="toc-section-number">4.8</span>  Conclusion</a></li>
   </ul>
 </nav>
     </div>
@@ -464,10 +461,8 @@ S_t = \sum_{i = 1}^t X_i,\; \text{where}\; X_t \sim \mathrm{i.i.d.}(a, \sigma^2)
 </div>
 </div>
 </section>
-<section id="ar-and-ma" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="ar-and-ma"><span class="header-section-number">4.2</span> AR and MA</h2>
-<section id="autoregressive-ar-models" class="level3" data-number="4.2.1">
-<h3 data-number="4.2.1" class="anchored" data-anchor-id="autoregressive-ar-models"><span class="header-section-number">4.2.1</span> Autoregressive (AR) models</h3>
+<section id="autoregressive-ar-models" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="autoregressive-ar-models"><span class="header-section-number">4.2</span> Autoregressive (AR) models</h2>
 <p><strong>AR(1) model</strong></p>
 <p>We are already familiar with an AR(1) model <span class="math display">\[
 Y_{t} = \phi_{1}  Y_{t -1} + \epsilon_{t},
@@ -693,8 +688,8 @@ X_t = \phi_1 X_{t-1} + \epsilon_t;\; \epsilon_t \sim N(0,\sigma^2);\; \phi_1=-0.
 <p>ACF of AR(1) model takes two graphical forms depending on whether the coefficient <span class="math inline">\(\phi_{1}\)</span> is positive or negative. In the first case, the decay occurs through the positive axis only (<a href="#fig-ar1">Figure&nbsp;<span>4.4</span></a>). In the second case, the decay alternates between the negative and positive axes (<a href="#fig-ar2">Figure&nbsp;<span>4.5</span></a>). This is so-called <em>mixed exponential decay</em>. Although both forms are examples of exponential decay, they appear different visually and you must learn to recognize both.</p>
 <p>As the order <span class="math inline">\(p\)</span> of an AR(<span class="math inline">\(p\)</span>) model increases, the number of different visual presentations of the ACF increases as well. The ACF of an AR(<span class="math inline">\(p\)</span>) model can take <span class="math inline">\(2^{p}\)</span> different graphical forms, depending on the signs (positive or negative) of the parameters <span class="math inline">\(\phi_{1} , \phi_{2}, \ldots, \phi_{p}\)</span>. Thus, the ACF of an AR(2) model can take <span class="math inline">\(2^{2} = 4\)</span> different graphical forms.</p>
 </section>
-<section id="the-yulewold-representation-and-linear-processes" class="level3" data-number="4.2.2">
-<h3 data-number="4.2.2" class="anchored" data-anchor-id="the-yulewold-representation-and-linear-processes"><span class="header-section-number">4.2.2</span> The Yule–Wold representation and linear processes</h3>
+<section id="the-yulewold-representation-and-linear-processes" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="the-yulewold-representation-and-linear-processes"><span class="header-section-number">4.3</span> The Yule–Wold representation and linear processes</h2>
 <p>A process <span class="math inline">\(X_{t}\)</span>, (<span class="math inline">\(t = 0, \pm 1, \pm 2, \ldots\)</span>) is said to be linear if it has a representation of the form <span class="math display">\[
 X_{t} = \mu + \sum^{\infty}_{r = - \infty} c_{r} \epsilon_{t - r},
 \]</span> where</p>
@@ -710,8 +705,8 @@ X_{t} = \mu + \sum^{\infty}_{r = - \infty} c_{r} \epsilon_{t - r},
 X_{t} = \sum^{\infty}_{r = 0}  c_{r} \epsilon_{t - r},
 \tag{4.8}\]</span></span> where <span class="math inline">\(\epsilon_{t} \sim \mathrm{WN}(0, \sigma^{2}\)</span>) and <span class="math inline">\(\sum c^{2}_{r} &lt; \infty\)</span>, is sometimes called <em>the Yule–Wald representation</em>.</p>
 </section>
-<section id="moving-average-ma-models" class="level3" data-number="4.2.3">
-<h3 data-number="4.2.3" class="anchored" data-anchor-id="moving-average-ma-models"><span class="header-section-number">4.2.3</span> Moving average (MA) models</h3>
+<section id="moving-average-ma-models" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="moving-average-ma-models"><span class="header-section-number">4.4</span> Moving average (MA) models</h2>
 <p><strong>MA(1) model</strong></p>
 <p>A zero mean stationary process <span class="math inline">\(Y_{t}\)</span> is called a moving average process of order 1, or <em>an MA(1) model</em>, if <span class="math inline">\(Y_{t}\)</span> satisfies <span class="math display">\[
 Y_{t} = \epsilon_{t} + \theta_{1}  \epsilon_{t - 1},
@@ -923,9 +918,8 @@ X_t = \theta_1 \epsilon_{t-1} + \epsilon_t;\; \epsilon_t \sim N(0,\sigma^2);\; \
 </div>
 </div>
 </section>
-</section>
-<section id="arma" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="arma"><span class="header-section-number">4.3</span> ARMA</h2>
+<section id="arma" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="arma"><span class="header-section-number">4.5</span> ARMA</h2>
 <p>An ARMA(<span class="math inline">\(p, q\)</span>) is a mixture of <span class="math inline">\(p\)</span> autoregressive components and <span class="math inline">\(q\)</span> moving average components. It can be expressed as <span class="math display">\[
 \phi^{p} (B)Y_{t} = \theta^{q} (B) \epsilon_{t},
 \]</span> where <span class="math inline">\(\epsilon_{t}\)</span> is white noise, <span class="math inline">\(\phi^{p}(\lambda)\)</span> and <span class="math inline">\(\theta^{q}(\lambda)\)</span> are the polynomials of degree <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span>, respectively.</p>
@@ -949,8 +943,8 @@ Y_{t} = \phi_{1} Y_{t - 1} + \phi_{2} Y_{t - 2} + \phi_{3} Y_{t - 3} + \epsilon_
 \]</span></p>
 <p>In a mixed ARMA(<span class="math inline">\(p, q\)</span>) process (that is, <span class="math inline">\(p &gt; 0\)</span>, <span class="math inline">\(q &gt; 0\)</span>), neither the ACF nor the PACF cuts off abruptly. Both the ACF and PACF exhibit mixed exponential decay. This occurs because the AR component introduces mixed exponential decay into the ACF, while the MA component introduces mixed exponential decay into the PACF.</p>
 </section>
-<section id="summary-of-armap-q-models" class="level2" data-number="4.4">
-<h2 data-number="4.4" class="anchored" data-anchor-id="summary-of-armap-q-models"><span class="header-section-number">4.4</span> Summary of ARMA(<span class="math inline">\(p, q\)</span>) models</h2>
+<section id="summary-of-armaarma-models" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="summary-of-armaarma-models"><span class="header-section-number">4.6</span> Summary of AR/MA/ARMA models</h2>
 <p>Use the following list or <a href="#tbl-arma">Table&nbsp;<span>4.1</span></a> to decide on appropriate model specification for your data.</p>
 <p>AR(<span class="math inline">\(p\)</span>) models: <span class="math inline">\(\phi^{p} (B)Y_{t} = \epsilon_{t}\)</span></p>
 <ul>
@@ -997,8 +991,8 @@ Y_{t} = \phi_{1} Y_{t - 1} + \phi_{2} Y_{t - 2} + \phi_{3} Y_{t - 3} + \epsilon_
 </table>
 </div>
 </section>
-<section id="example-analysis" class="level2" data-number="4.5">
-<h2 data-number="4.5" class="anchored" data-anchor-id="example-analysis"><span class="header-section-number">4.5</span> Example analysis</h2>
+<section id="example-analysis" class="level2" data-number="4.7">
+<h2 data-number="4.7" class="anchored" data-anchor-id="example-analysis"><span class="header-section-number">4.7</span> Example analysis</h2>
 <div class="cell">
 
 </div>
@@ -1068,8 +1062,8 @@ Y_{t} = \phi_{1} Y_{t - 1} + \phi_{2} Y_{t - 2} + \phi_{3} Y_{t - 3} + \epsilon_
 #&gt; 9 2 2 842 864</code></pre>
 </div>
 </div>
-<section id="automatic-model-selection" class="level3" data-number="4.5.1">
-<h3 data-number="4.5.1" class="anchored" data-anchor-id="automatic-model-selection"><span class="header-section-number">4.5.1</span> Automatic model selection</h3>
+<section id="automatic-model-selection" class="level3" data-number="4.7.1">
+<h3 data-number="4.7.1" class="anchored" data-anchor-id="automatic-model-selection"><span class="header-section-number">4.7.1</span> Automatic model selection</h3>
 <p>For example, the function <code>stats::ar()</code> by default uses the Yule–Walker method to estimate the coefficients and AIC to select the best order for AR(<span class="math inline">\(p\)</span>) model, where the maximum of <span class="math inline">\(p\)</span> can be set by user.</p>
 <div class="cell">
 <details>
@@ -1229,8 +1223,8 @@ Note
 </div>
 </section>
 </section>
-<section id="conclusion" class="level2" data-number="4.6">
-<h2 data-number="4.6" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">4.6</span> Conclusion</h2>
+<section id="conclusion" class="level2" data-number="4.8">
+<h2 data-number="4.8" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">4.8</span> Conclusion</h2>
 <p>We defined AR, MA, and ARMA models and showed that time series processes corresponding to such models satisfy the conditions of weak stationarity.</p>
 <p>Using ACF and PACF plots, we can select the orders <span class="math inline">\(p\)</span> and <span class="math inline">\(q\)</span> to specify an ARMA model, but we also can use a variety of functions running different evaluations and tests for competitive models.</p>
 <p>We face the choice of different methods to estimate (i.e., estimators) and methods to compare models.</p>

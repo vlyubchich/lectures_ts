@@ -191,9 +191,7 @@ p3 + p4 + p5 +
 ```
 
 
-## AR and MA
-
-### Autoregressive (AR) models
+## Autoregressive (AR) models
 
 **AR(1) model** 
 
@@ -435,7 +433,7 @@ can take $2^{p}$ different graphical forms, depending on the signs (positive or 
 $2^{2} = 4$ different graphical forms.
 
 
-### The Yule--Wold representation and linear processes
+## The Yule--Wold representation and linear processes
 
 A process $X_{t}$, ($t = 0, \pm 1, \pm 2, \ldots$) is said to be linear if it has a
 representation of the form
@@ -464,7 +462,7 @@ $${#eq-YuleWald}
 where $\epsilon_{t} \sim \mathrm{WN}(0, \sigma^{2}$) and $\sum c^{2}_{r} < \infty$, is sometimes called *the Yule--Wald representation*.
 
 
-### Moving average (MA) models
+## Moving average (MA) models
 
 **MA(1) model**
 
@@ -750,7 +748,7 @@ decay into the ACF, while the MA component introduces mixed exponential decay
 into the PACF.
 
 
-## Summary of ARMA($p, q$) models
+## Summary of AR/MA/ARMA models
 
 Use the following list or @tbl-arma to decide on appropriate model specification for your data.
 
