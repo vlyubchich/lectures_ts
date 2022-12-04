@@ -22,6 +22,7 @@ packages2cite <- sort(c(
     ,'funtimes'
     # ,'ggfortify'
     ,'ggplot2'
+    ,'knitr'
     ,'lawstat'
     ,'lmtest'
     ,'patchwork'
@@ -30,8 +31,8 @@ packages2cite <- sort(c(
     ,'randtests'))
 
 # Create a bib database for R packages
-knitr::write_bib(c(
-    .packages(), 'base', 'knitr'
+knitr::write_bib(c(.packages()
+    ,'base'
     ,packages2cite
 ), 'refpackages.bib')
 
@@ -39,7 +40,7 @@ knitr::write_bib(c(
 tmp <- paste0("* `", packages2cite, "` [@R-", packages2cite, "]")
 ```
 
-`r paste(tmp, collapse = " \n")`
+`r paste(tmp, collapse = "\n")`
 
 <!-- # Reg1 -->
 <!-- library(tseries) -->

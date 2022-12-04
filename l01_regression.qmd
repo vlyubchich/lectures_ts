@@ -69,6 +69,7 @@ If the (linear) model is not appropriate, the mean of the residuals may be non-c
 ```{r}
 #| label: fig-IdealResiduals
 #| fig-cap: "A time series plot of 'ideal' residuals. These residuals $x_t$ are simulated i.i.d. normal."
+
 set.seed(1)
 n = 26; m = 0; s = 522
 x <- ts(rnorm(n, mean = m, sd = s))
@@ -100,6 +101,7 @@ How different are the patterns in @fig-DishResiduals from those in @fig-IdealRes
 ```{r}
 #| label: fig-DishResiduals
 #| fig-cap: "Estimated residuals plotted vs. time, fitted values, and predictor."
+
 D <- read.delim("./data/dish.txt") %>% 
     rename(Year = YEAR)
 mod1 <- lm(DISH ~ RES, data = D)
@@ -247,6 +249,7 @@ Runs test is very easy to interpret. Runs test allows to assess only the first o
 ```{r}
 #| label: fig-Runs
 #| fig-cap: "Runs tests and plots of independent normally distributed simulations $x_t$ and the `DISH` residuals."
+
 par(mar = c(4, 5, 1, 1) + 0.1, mgp = c(3, 1, 0), mfrow = c(1, 2))
 par(pty = "m")
 lawstat::runs.test(x, plot.it = TRUE)
@@ -269,6 +272,7 @@ Graphical methods visualize the data using graphs, such as histograms, stem-and-
 ```{r}
 #| label: fig-Histograms
 #| fig-cap: "Histograms of the simulated normally distributed values and estimated regression residuals."
+
 p1 <- ggplot(data.frame(x = x), aes(x = x)) + 
     geom_histogram(aes(y = ..density..), binwidth = 300, fill = "grey50") +
     stat_function(fun = dnorm, 
@@ -345,6 +349,7 @@ The normal Q-Q plot is obtained by plotting the sample quantiles vs. the quantil
 ```{r}
 #| label: fig-QQ
 #| fig-cap: "Normal Q-Q plots of the normally distributed simulated values $x_t$ and the dishwasher residuals."
+
 par(mar = c(4, 5, 1, 1) + 0.1, mgp = c(3, 1, 0), mfrow = c(1, 2))
 par(pty = "m")
 car::qqPlot(x, las = 1, id = FALSE,
@@ -538,6 +543,7 @@ Plot of the estimated residuals $\hat{\epsilon}_{t} = \hat{Y}_{t} - Y_{t}$ vs. t
 ```{r}
 #| label: fig-DishResiduals2
 #| fig-cap: "Residuals vs. time and vs. fitted values."
+
 p1 <- ggplot(D, aes(x = Year, y = mod2$residuals)) + 
     geom_line() + 
     geom_hline(yintercept = 0, lty = 2, col = 4) + 
@@ -572,6 +578,7 @@ shapiro.test(mod2$residuals)
 ```{r}
 #| label: fig-QQ2
 #| fig-cap: "Normal Q-Q plot of the multiple regression residuals."
+
 ggplot(D, aes(sample = mod2$residuals)) +
     stat_qq() +
     stat_qq_line() +

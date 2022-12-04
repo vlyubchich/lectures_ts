@@ -92,6 +92,7 @@ shampoo
 ```{r}
 #| label: fig-shampoo
 #| fig-cap: "Monthly shampoo sales over three years and a corresponding sample ACF."
+
 pshampoo <- ggplot2::autoplot(shampoo, col = "grey50") + 
     xlab("Year") + 
     ylab("Sales") + 
@@ -145,6 +146,7 @@ See @fig-shampoo-movavg and @fig-shampoo-movavg2 for the effects of the window s
 ```{r}
 #| label: fig-shampoo-movavg
 #| fig-cap: "Shampoo sales over three years smoothed with *centered* moving average filters, where the window size is $w = 2q+1$."
+
 ps <- lapply(c(1, 2, 3, 5), function(q){
     w <- 2 * q + 1
     Wt <- forecast::ma(shampoo, order = w)
@@ -159,6 +161,7 @@ wrap_plots(ps, ncol = 2) +
 ```{r}
 #| label: fig-shampoo-movavg2
 #| fig-cap: "Shampoo sales over three years smoothed with *non-centered* moving average filters, where the window size is $w = 2q+1$."
+
 ps <- lapply(c(1, 2, 3, 5), function(q){
     w <- 2 * q + 1
     Wt <- stats::filter(shampoo, filter = 1/rep(w, w), sides = 1)
@@ -204,6 +207,7 @@ Consider monthly data of Secchi disk depth measured at the station CB1.1 in Ches
 ```{r}
 #| label: fig-Secchi
 #| fig-cap: "Monthly average Secchi disk depth at station CB1.1 and its ACF."
+
 load("./data/Secchi_CB1.1.RData")
 pSecchi <- ggplot2::autoplot(Secchi, col = "grey50") + 
     xlab("Year") + 
@@ -220,6 +224,7 @@ pSecchi + p2 +
 ```{r}
 #| label: fig-SecchiDecompose
 #| fig-cap: "Trend-seasonal decomposition of monthly average Secchi disk depth at station CB1.1."
+
 ggplot2::autoplot(stats::decompose(Secchi))  + 
     theme_light()
 ```
@@ -245,6 +250,7 @@ By selecting large bandwidth $f$ in the lowess algorithm, we can obtain greater 
 ```{r}
 #| label: fig-lowess
 #| fig-cap: "A lowess illustration, adapted from @Berk:2016."
+
 data(WWWusage)
 ps <- lapply(c(0.1, 0.3, 0.5, 0.75), function(w){
     ggplot2::autoplot(WWWusage, colour = "grey50")  + 
@@ -294,6 +300,7 @@ See @fig-SecchiDeseas for the results.
 ```{r}
 #| label: fig-SecchiDeseas
 #| fig-cap: "Detrending using lowess and deseasonalizing the Secchi depth data."
+
 p1 <- pSecchi + 
     geom_line(aes(y = Mt_star), col = 4, lwd = 1.5) + 
     ggtitle("Trend estimate: Mt_star")
@@ -317,6 +324,7 @@ In @fig-SecchiDeseas2, we use the decomposition function `stl()` forced to have 
 ```{r}
 #| label: fig-SecchiDeseas2
 #| fig-cap: "Detrending and deseasonalizing the Secchi depth data using lowess within the function `stl()` forced to behave similarly to @fig-SecchiDeseas."
+
 # Span we used above (the fraction)
 span = 0.25 
 # Window size in number of lags (observations)
@@ -343,6 +351,7 @@ p4 <- forecast::ggAcf(D$time.series[,"remainder"]) +
 ```{r}
 #| label: fig-SecchiDeseas3
 #| fig-cap: "Detrending and deseasonalizing the Secchi depth data using lowess within the function `stl()` with default settings."
+
 D <- stl(Yt, s.window = 24, s.degree = 1, t.window = w)
 p1 <- pSecchi +
     geom_line(aes(y = D$time.series[,"trend"]), col = 4, lwd = 1.5) + 
@@ -433,6 +442,7 @@ See an example in @fig-shampoo-ses.
 ```{r}
 #| label: fig-shampoo-ses
 #| fig-cap: "Shampoo sales over three years smoothed with different exponential smoothing filters."
+
 clrs <- c("0.3" = 4, "0.7" = 2)
 m1 <- HoltWinters(shampoo, alpha = 0.3, beta = FALSE, gamma = FALSE)
 m2 <- HoltWinters(shampoo, alpha = 0.7, beta = FALSE, gamma = FALSE)
@@ -516,6 +526,7 @@ Monthly totals of international airline passengers, 1949--1960 (see @fig-airpass
 ```{r}
 #| label: fig-airpassangers
 #| fig-cap: "Monthly `AirPassengers` data and a corresponding sample ACF."
+
 pAirPassengers <- ggplot2::autoplot(AirPassengers, col = "grey50") + 
     xlab("Year") + 
     ylab("Airline passengers (thousand)") + 
@@ -553,6 +564,7 @@ The last multiplicative model is the best one, based on the sum of squared error
 ```{r}
 #| label: fig-airpassangersHW
 #| fig-cap: "Plots of the observed, fitted, and predicted `AirPassengers` data, using various smoothing procedures."
+
 k = 12
 fm1 <- predict(m1, n.ahead = k)
 fm2 <- predict(m2, n.ahead = k)
@@ -618,6 +630,7 @@ After estimating the trend coefficients with OLS, visualize the results (@fig-ai
 ```{r}
 #| label: fig-airpassangersRegTrend
 #| fig-cap: "The plots of the `AirPassengers` data with estimated parametric linear and quadratic trends."
+
 p1 <- pAirPassengers + 
     geom_line(aes(y = tm1$fitted.values), col = 4, lwd = 1.5) + 
     ggtitle("Linear trend")
@@ -671,6 +684,7 @@ If we were doing the regression analysis by hand, we would create a design matri
 
 ```{r}
 #| echo: false
+
 months <- as.vector(cycle(AirPassengers))
 tmp <- sapply(2:12, function(x) as.numeric(months == x))
 colnames(tmp) <- paste0("X", 2:12)
@@ -689,6 +703,7 @@ summary(m)
 ```{r}
 #| label: fig-airpassangersRegTrendSeas
 #| fig-cap: "Plot of the `AirPassengers` data, with estimated parametric quadratic trend and seasonality (modeled using *dummy variables*), and ACF of the residuals. Since the model was fitted on the log scale, the trend-cycle estimates need to be exponentiated to match the original scale of the data."
+
 p1 <- pAirPassengers + 
     geom_line(aes(y = exp(m$fitted.values)), col = 4, lwd = 1.5)
 p2 <- forecast::ggAcf(m$residuals) + 
@@ -748,6 +763,7 @@ summary(m)
 ```{r}
 #| label: fig-airpassangersRegTrendFourier
 #| fig-cap: "Plot of the `AirPassengers` data, with estimated parametric quadratic trend and seasonality (modeled using *trigonometric functions*), and ACF of the residuals. Since the model was fitted on the log scale, the trend-cycle estimates need to be exponentiated to match the original scale of the data."
+
 p1 <- pAirPassengers + 
     geom_line(aes(y = exp(m$fitted.values)), col = 4, lwd = 1.5)
 p2 <- forecast::ggAcf(m$residuals) + 
@@ -817,6 +833,7 @@ $$
 ```{r}
 #| label: fig-shampooDiff
 #| fig-cap: "Time series plot of shampoo sales with an estimated ACF and the differenced series with their ACFs."
+
 p1 <- pshampoo +
     ggtitle("Yt")
 p2 <- forecast::ggAcf(shampoo) + 
@@ -863,6 +880,7 @@ $$
 ```{r}
 #| label: fig-AirPassengersDiff
 #| fig-cap: "Time series plot of shampoo sales with an estimated ACF and the detrended (differenced) series with their ACFs."
+
 Yt <- log10(AirPassengers)
 # Apply first-order (non-seasonal) differences
 D1 <- diff(Yt)
@@ -941,6 +959,7 @@ We see that lowess estimates *smooth* trends. If we assume that trends are not s
 ```{r}
 #| label: fig-blocks
 #| fig-cap: "Smoothing block-like data $X_t$."
+
 t <- c(1:length(Xt))
 ggplot(data.frame(t = t, Xt = Xt), aes(x = t, y = Xt)) + 
     geom_line() + 
