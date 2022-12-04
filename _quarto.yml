@@ -21,7 +21,8 @@ book:
     # - l01_regression.qmd
     # - l02_tsintro.qmd
     # - l03_smoothing.qmd
-    - software.qmd
+    - l04_arma.qmd
+    # - software.qmd
     - references.qmd
 
 bibliography:
