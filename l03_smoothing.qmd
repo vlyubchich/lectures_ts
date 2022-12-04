@@ -692,7 +692,11 @@ tmp <- cbind(t, t2, tmp)
 head(tmp, 13)
 ```
 
-In R, it is enough to have *one* variable representing the seasons. This variable should be saved as `factor`. Then we apply the OLS method to find the model coefficients (see results in @fig-airpassangersRegTrendSeas):
+::: {.callout-note}
+The way the months are represented above as separate columns of 0s and 1s is called *one-hot encoding* in the field of machine learning.
+:::
+
+In R, it is enough to have *one* variable representing the seasons. This categorical variable should be saved as `factor`. Then we apply the OLS method to find the model coefficients (see results in @fig-airpassangersRegTrendSeas):
 
 ```{r}
 Month <- as.factor(cycle(AirPassengers))
