@@ -110,6 +110,10 @@ p5 <- forecast::ggAcf(X, type = "partial") +
     plot_annotation(tag_levels = 'A')
 ```
 
+::: {.callout-note}
+Remember that ACF(0) = PACF(0) = 1 always. Some R plotting functions show results for the zero lag (e.g., `acf()`), some do not (e.g., `pacf()`  and the function `forecast::ggAcf()` used here).
+:::
+
 ::: {.callout-note icon=false}
 
 ## Example: Check stationarity of random walk
@@ -136,8 +140,7 @@ Random walk patterns are widely found in nature, for example, in the phenomenon 
 Notice the linear decay in ACF of non-stationary time series (@fig-rw).
 
 $$
-S_t = \sum_{i = 1}^t X_i,\; \text{where}
-$X_t \sim \mathrm{i.i.d.}(0, \sigma^2);\; \sigma = 2.
+S_t = \sum_{i = 1}^t X_i,\; \text{where}\; X_t \sim \mathrm{i.i.d.}(0, \sigma^2);\; \sigma = 2.
 $${#eq-rw}
 
 ```{r}
@@ -163,8 +166,7 @@ p3 + p4 + p5 +
 Random walk may look very different if the i.i.d. process has non-zero mean. 
 Here is a random walk with drift (@fig-rw2):
 $$
-S2_t = \sum_{i = 1}^t X_i,\; \text{where}\;
-$X_t \sim \mathrm{i.i.d.}(a, \sigma^2);\; a = 0.2,\; \sigma = 2.
+S_t = \sum_{i = 1}^t X_i,\; \text{where}\; X_t \sim \mathrm{i.i.d.}(a, \sigma^2);\; a = 0.2,\; \sigma = 2.
 $${#eq-rw2}
 
 
@@ -423,7 +425,9 @@ p5 <- forecast::ggAcf(X, type = "partial") +
     plot_annotation(tag_levels = 'A')
 ```
 
-ACF of AR(1) model takes two graphical forms depending on whether the coefficient $\phi_{1}$ is positive or negative. In the first case, the decay occurs through the positive axis only (@fig-ar1). In the second case, the decay alternates between the negative and positive axes (@fig-ar2). Although both forms are examples of exponential decay, they appear different visually and you must learn to recognize both.
+ACF of AR(1) model takes two graphical forms depending on whether the coefficient $\phi_{1}$ is positive or negative. In the first case, the decay occurs through the positive axis only (@fig-ar1). In the second case, the decay alternates between the negative and positive axes (@fig-ar2).
+This is so-called *mixed exponential decay*.
+Although both forms are examples of exponential decay, they appear different visually and you must learn to recognize both.
 
 As the order $p$ of an AR($p$) model increases, the number of different visual
 presentations of the ACF increases as well. The ACF of an AR($p$) model
@@ -699,293 +703,256 @@ p5 <- forecast::ggAcf(X, type = "partial") +
 ```
 
 
-<!-- ## ARMA} -->
+## ARMA
 
-<!-- An ARMA($p, q$) is a mixture of $p$ autoregressive components and $q$ moving average components. It can be expressed as -->
-<!-- $$ -->
-<!-- \phi^{p} (B)Y_{t} = \theta^{q} (B) \epsilon_{t}, -->
-<!-- $$ -->
-<!-- where $\epsilon_{t}$ is white noise, $\phi^{p}(\lambda)$ and $\theta^{q}(\lambda)$ are the polynomials of degree $p$ and $q$, respectively. -->
+An ARMA($p, q$) is a mixture of $p$ autoregressive components and $q$ moving average components. It can be expressed as
+$$
+\phi^{p} (B)Y_{t} = \theta^{q} (B) \epsilon_{t},
+$$
+where $\epsilon_{t}$ is white noise, $\phi^{p}(\lambda)$ and $\theta^{q}(\lambda)$ are the polynomials of degree $p$ and $q$, respectively.
 
-<!-- Examples of ARMA models and their expansions: -->
-<!-- \begin{itemize} -->
-<!-- \item -->
-<!-- \textbf{ARMA(1,2)}: short hand notation $\phi^{1} (B)Y_{t} = \theta^{2} (B) \epsilon_{t}$. Therefore -->
-<!-- $$ -->
-<!-- \left(1 - \phi_{1} B \right) Y_{t} = \left( 1 + \theta_{1} B + \theta_{2} B^{2} \right) \epsilon_{t}, -->
-<!-- $$ -->
-<!-- giving -->
-<!-- $$ -->
-<!-- Y_{t} - \phi_{1} Y_{t - 1} = \epsilon_{t} + \theta_{1} \epsilon_{t - 1} + \theta_{2}\epsilon_{t - 2}. -->
-<!-- $$ -->
+**ARMA(1,2)**
 
-<!-- Isolating $Y_{t}$ on the left side of the equation gives the final form of the expansion -->
-<!-- $$ -->
-<!-- Y_{t} = \phi_{1} Y_{t -1} + \epsilon_{t} + \theta_{ 1} \epsilon_{t - 1} + \theta_{2} \epsilon_{t-2}. -->
-<!-- $$ -->
+Short notation $\phi^{1} (B)Y_{t} = \theta^{2} (B) \epsilon_{t}$ expands to
+$$
+\left(1 - \phi_{1} B \right) Y_{t} = \left( 1 + \theta_{1} B + \theta_{2} B^{2} \right) \epsilon_{t}
+$$
+and gives
+$$
+Y_{t} - \phi_{1} Y_{t - 1} = \epsilon_{t} + \theta_{1} \epsilon_{t - 1} + \theta_{2}\epsilon_{t - 2}.
+$$
 
-<!-- \item -->
-<!-- \textbf{ARMA(3,1)}: short hand notation $\phi^{3} (B)Y_{t} = \theta^{1} (B) \epsilon_{t}$. Therefore -->
-<!-- $$ -->
-<!-- \left( 1 -  \phi_{1} B - \phi_{2} B^{2}  - \phi_{3} B^{3} \right) Y_{t} = \left( 1 + \theta_{1} B \right) \epsilon_{t} -->
-<!-- $$ -->
-<!-- or -->
-<!-- $$ -->
-<!-- Y_{t} - \phi_{1} Y_{t - 1} - \phi_{2} Y_{t - 2} - \phi_{3} Y_{t - 3} = \epsilon_{t} + \theta_{1} \epsilon_{t-1}. -->
-<!-- $$ -->
+Isolate $Y_{t}$ on the left side of the equation to get the final form of the expansion
+$$
+Y_{t} = \phi_{1} Y_{t -1} + \epsilon_{t} + \theta_{ 1} \epsilon_{t - 1} + \theta_{2} \epsilon_{t-2}.
+$$
 
-<!-- Isolating $Y_{t}$ gives the final form -->
-<!-- $$ -->
-<!-- Y_{t} = \phi_{1} Y_{t - 1} + \phi_{2} Y_{t - 2} + \phi_{3} Y_{t - 3} + \epsilon_{t} + \theta_{1} \epsilon_{t-1}. -->
-<!-- $$ -->
-<!-- \end{itemize} -->
+**ARMA(3,1)**
 
-<!-- In a mixed model ARMA($p, q$) process (that is, $p > 0$, $q > 0$), neither the ACF -->
-<!-- nor the PACF cuts off abruptly. Both the ACF and PACF exhibit mixed exponential -->
-<!-- decay. This occurs because the AR component introduces mixed exponential -->
-<!-- decay into the ACF, while the MA component introduces mixed exponential decay -->
-<!-- into the PACF. -->
+Short notation $\phi^{3} (B)Y_{t} = \theta^{1} (B) \epsilon_{t}$ expands to
+$$
+\left( 1 -  \phi_{1} B - \phi_{2} B^{2}  - \phi_{3} B^{3} \right) Y_{t} = \left( 1 + \theta_{1} B \right) \epsilon_{t}
+$$
+or
+$$
+Y_{t} - \phi_{1} Y_{t - 1} - \phi_{2} Y_{t - 2} - \phi_{3} Y_{t - 3} = \epsilon_{t} + \theta_{1} \epsilon_{t-1}.
+$$
 
+Isolating $Y_{t}$ gives the final form
+$$
+Y_{t} = \phi_{1} Y_{t - 1} + \phi_{2} Y_{t - 2} + \phi_{3} Y_{t - 3} + \epsilon_{t} + \theta_{1} \epsilon_{t-1}.
+$$
 
-<!-- **Summary of ARMA($p, q$) models} -->
-
-<!-- \begin{itemize} -->
-
-<!-- \item -->
-<!-- AR($p$) models: $\phi^{p} (B)Y_{t}  = \epsilon_{t}$ -->
-<!-- \begin{itemize} -->
-<!-- \item {\bf ACF:} $p$ initial spikes, then damps out as a mixed exponential decay of order $p$ (never 0) -->
-<!-- \item {\bf PACF:} $p$ initial spikes, then cuts off; PACF($h$) = 0 for $h > p$ -->
-<!-- \end{itemize} -->
-
-<!-- \item -->
-<!-- MA($q$) models: $Y_{t} = \theta^{q} (B) \epsilon_{t}$ -->
-<!-- \begin{itemize} -->
-<!-- \item {\bf ACF:} $q$ initial spikes, then cuts off; ACF($h$) = 0 for $h > q$ -->
-<!-- \item {\bf PACF:} $q$ initial spikes, then damps out as a mixed exponential decay of -->
-<!-- order $q$ (never 0) -->
-<!-- \end{itemize} -->
-
-<!-- \item -->
-<!-- ARMA($p,q$) models ($p>0$, $q>0$): $\phi^{p} (B)Y_{t} = \theta^{q} (B) \epsilon_{t}$ -->
-<!-- \begin{itemize} -->
-<!-- \item {\bf ACF:} has max ($p, q$) initial spikes, then damps out as a mixed exponential -->
-<!-- decay driven by the AR($p$) component (never 0). -->
-<!-- \item {\bf PACF:} has max($p, q$) initial spikes, then damps out as a mixed exponential -->
-<!-- decay driven by the MA($q$) component (never 0). -->
-<!-- \end{itemize} -->
-<!-- \end{itemize} -->
+In a mixed ARMA($p, q$) process (that is, $p > 0$, $q > 0$), neither the ACF
+nor the PACF cuts off abruptly. Both the ACF and PACF exhibit mixed exponential
+decay. This occurs because the AR component introduces mixed exponential
+decay into the ACF, while the MA component introduces mixed exponential decay
+into the PACF.
 
 
-<!-- \begin{table} -->
-<!-- \caption{Summary of ARMA($p, q$) models} -->
-<!-- {#tab:summaryARMA} -->
-<!-- \centering -->
-<!-- \begin{tabular}{c c c} -->
-<!-- \toprule -->
-<!-- \textbf{Model}& \textbf{ACF} & \textbf{PACF} \\ \midrule -->
-<!-- MA($q$)&zero after lag $q$ & exponential decay \\ -->
-<!-- AR($p$)& exponential decay & zero after lag $p$\\ -->
-<!-- ARMA($p$,$q$)&  mixed exponential decay & mixed exponential decay \\ -->
-<!-- \bottomrule -->
-<!-- \end{tabular} -->
-<!-- \end{table} -->
+## Summary of ARMA($p, q$) models
+
+Use the following list or @tbl-arma to decide on appropriate model specification for your data.
+
+AR($p$) models: $\phi^{p} (B)Y_{t}  = \epsilon_{t}$
+
+* ACF: $p$ initial spikes, then damps out as a mixed exponential decay of order $p$ (never 0)
+* PACF: $p$ initial spikes, then cuts off; PACF($h$) = 0 for $h > p$
+
+MA($q$) models: $Y_{t} = \theta^{q} (B) \epsilon_{t}$
+
+* ACF: $q$ initial spikes, then cuts off; ACF($h$) = 0 for $h > q$
+* PACF: $q$ initial spikes, then damps out as a mixed exponential decay of
+order $q$ (never 0)
+
+ARMA($p,q$) models ($p>0$, $q>0$): $\phi^{p} (B)Y_{t} = \theta^{q} (B) \epsilon_{t}$
+
+* ACF: has max ($p, q$) initial spikes, then damps out as a mixed exponential
+decay driven by the AR($p$) component (never 0)
+* PACF: has max($p, q$) initial spikes, then damps out as a mixed exponential
+decay driven by the MA($q$) component (never 0)
+
+Model | ACF | PACF |
+|------|------|------|
+MA($q$) | Zero after lag $q$ | Exponential decay |
+AR($p$) | Exponential decay | Zero after lag $p$ |
+ARMA($p$,$q$) | Mixed exponential decay | Mixed exponential decay |
+
+: Summary of ARMA($p, q$) models {#tbl-arma}
 
 
-<!-- ## Example of choosing a model} -->
+## Example analysis
 
-<!-- <<echo=F>>= -->
-<!-- set.seed(1) -->
-<!-- Yt <- arima.sim(list(order = c(2, 0, 1), ar = c(0.5, 0.3), ma = c(0.2)), n = T) -->
-<!-- @ -->
+```{r}
+#| echo: false
 
-<!-- Suppose you are given some data (a univariate time series) $Y_t$. -->
+set.seed(1)
+Y <- arima.sim(list(order = c(2, 0, 1), ar = c(0.5, 0.3), ma = c(0.2)), n = T)
+```
 
-<!-- First, plot the data (@fig-simYt). -->
+Suppose you are given a univariate time series $Y_t$.
 
+First, plot the data (@fig-simYt).
 
-<!-- <<echo = FALSE>>= -->
-<!-- par(mar = c(4, 5, 1, 1) + 0.1, mgp = c(3, 1, 0), mfrow = c(1, 1)) -->
-<!-- par(pty = "m") -->
-<!-- @ -->
-<!-- \begin{figure}[h] -->
-<!-- ```{r} -->
-<!-- plot.ts(Yt, las = 1) -->
-<!-- @ -->
-<!-- \caption{Time series plot of $Y_t$.} -->
-<!-- {#fig-simYt} -->
-<!-- \end{figure} -->
+```{r}
+#| label: fig-simYt
+#| fig-cap: "Plot of the time series $Y_t$."
 
-<!-- If no obvious trend, plot sample ACF and PACF (@fig-simYtacf}). -->
+ggplot2::autoplot(Y) +
+    theme_light()
+```
 
-<!-- <<echo = FALSE>>= -->
-<!-- par(mar = c(4, 5, 1, 1) + 0.1, mgp = c(3, 1, 0), mfrow = c(1, 2)) -->
-<!-- par(pty = "m") -->
-<!-- @ -->
-<!-- \begin{figure}[h!] -->
-<!-- ```{r} -->
-<!-- acf(Yt, las = 1) -->
-<!-- pacf(Yt, las = 1) -->
-<!-- @ -->
-<!-- \caption{Estimated ACF and PACF of $Y_t$.} -->
-<!-- {#fig-simYtacf} -->
-<!-- \end{figure} -->
+If no obvious trend, plot sample ACF and PACF (@fig-simYtacf).
 
-<!-- \paragraph{Note} By default, R plots ACF starting from lag 0, and plots PACF starting from lag 1. Of course, ACF(0) = PACF(0) = 1. -->
+```{r}
+#| label: fig-simYtacf
+#| fig-cap: "Estimated ACF and PACF of $Y_t$."
 
-<!-- Based on the plots (@fig-simYtacf}), \textbf{ACF decays faster than linear} (some indication of stationarity),\textbf{ PACF is non-zero up to lag~2} (cuts off after lag~2). Knowing the expected behavior of ACF and PACF for ARMA models (see Table~\ref{tab:summaryARMA}), ARMA(2,0) can be suggested in this case. Additionally, we can check (not too many) other combinations within the maximal lag you identified (2). Thus, we can check ARMA(1,0), (2,0), (0,1), (1,1), (2,1), (0,2), (1,2), and ARMA(2,2): -->
+p1 <- forecast::ggAcf(Y) +
+    ggtitle("") +
+    theme_light()
+p2 <- forecast::ggAcf(Y, type = "partial") +
+    ggtitle("") +
+    theme_light()
+p1 + p2 +
+    plot_annotation(tag_levels = 'A')
+```
 
-<!-- ```{r} -->
-<!-- Results <- expand.grid(p = c(0,1,2), q = c(0,1,2))[-1,] #combinations of p and q, without p=q=0 -->
-<!-- for(i in 1:nrow(Results)) { -->
-<!-- mod <- arima(Yt, order = c(Results$p[i], 0, Results$q[i])) -->
-<!-- Results$aic[i] <- mod$aic -->
-<!-- Results$bic[i] <- BIC(mod) -->
-<!-- } -->
-<!-- Results -->
-<!-- @ -->
+Based on the plots (@fig-simYtacf), *ACF decays faster than linearly* (some indication of stationarity), *PACF is non-zero up to lag 2* (cuts off after lag 2). Knowing the expected behavior of ACF and PACF for ARMA models (see @tbl-arma), ARMA(2,0) can be suggested in this case. 
 
-<!-- The model with the lowest AIC uses the following $p$ and $q$: -->
+Given the potential sample variability affecting the estimates of ACF and PACF, there could be other model specifications close to the selected one that may perform similarly or even slightly better when compared to the selected based on the visual analysis. For example, we can check other suitable combinations within the maximal lag of 2 we identified: ARMA(1,0), (2,0), (0,1), (1,1), (2,1), (0,2), (1,2), and ARMA(2,2). 
+With so many choices, we need some quantitative criteria to select the best model.
 
-<!-- ```{r} -->
-<!-- m <- which.min(Results$aic) -->
-<!-- p <- Results$p[m] -->
-<!-- q <- Results$q[m] -->
-<!-- c(p, q) -->
-<!-- @ -->
+The code below uses a 'manual' approach of calculating Akaike and Bayesian information criteria (AIC and BIC) to select the model from the specified set, but see the next section for R functions that do it more automatically.
+
+```{r}
+# Combinations of p and q, without p = q = 0
+results <- expand.grid(p = c(0, 1, 2), q = c(0, 1, 2))[-1, ] 
+for (i in 1:nrow(results)) {
+    mod <- arima(Y, order = c(results$p[i], 0, results$q[i]))
+    results$aic[i] <- mod$aic
+    results$bic[i] <- BIC(mod)
+}
+results
+```
 
 
-<!-- Get the estimates of this model once again: -->
+### Automatic model selection
 
-<!-- ```{r} -->
-<!-- mod2 <- arima(Yt, order = c(p, 0, q)) -->
-<!-- mod2 -->
-<!-- ls(mod2) -->
-<!-- @ -->
+For example, the function `stats::ar()` by default uses the Yule--Walker method to estimate the coefficients and AIC to select the best order for AR($p$) model, where the maximum of $p$ can be set by user.
 
+```{r}
+ar(Y, order.max = 11)
+```
 
-<!-- Using the estimated residuals, $\hat{\epsilon}_t = Y_t - \hat{Y}_t$, -->
-<!-- we can get the 'fitted' values, $\hat{Y}_t$ (technically, those are one-step-ahead predictions): -->
+The function `funtimes::ARest()` is a wrapper for `stats::ar()`. 
+It adds a difference-based estimator by @Hall:VanKeilegom:2003, which is now used by default, and also switches to BIC as the model selection criterion. The selection is still done only for the order $p$ in AR($p$), without considering the possibility of MA terms.
 
-<!-- ```{r} -->
-<!-- e <- mod2$residuals -->
-<!-- Yhat <- Yt - e -->
-<!-- @ -->
+```{r}
+# Order selection with BIC and estimation with HVK
+funtimes::ARest(Y)
+# To check the correspondence with ar(), change the method and fix the ar.order
+# (turn off automatic selection):
+funtimes::ARest(Y, ar.method = "yw", ar.order = 2, BIC = FALSE)
+```
 
-<!-- Plot the observed and fitted values (@fig-simYtfit}). -->
+::: {.callout-note}
+BIC selects more parsimonious models than AIC does. Such simpler models are usually preferred for forecasting tasks.
+:::
 
+The function `fable::ARIMA()` searches over possible ARMA models within some order constraints (the default maximal orders and search strategy are different from the two functions above -- see help files for each function in R). This function is a successor of the function `forecast::auto.arima()` and is probably the most comprehensive R function for estimating and selecting ARMA models. It allows to fit and select not only ARMA($p,q$) models, but also more complex models that will be described later in the course.
 
-<!-- <<echo = FALSE>>= -->
-<!-- par(mar = c(4, 5, 1, 1) + 0.1, mgp = c(3, 1, 0), mfrow = c(1, 1)) -->
-<!-- par(pty = "m") -->
-<!-- @ -->
-<!-- \begin{figure}[h] -->
-<!-- ```{r} -->
-<!-- plot.ts(Yt, las = 1, col = "grey50", lwd = 2, type = "o") -->
-<!-- lines(Yhat, col = "blue", lwd = 2) -->
-<!-- @ -->
-<!-- \caption{Observed time series $Y_t$ (gray) and one-step-ahead predictions from ARMA(\Sexpr{p},\Sexpr{q}) model.} -->
-<!-- {#fig-simYtfit} -->
-<!-- \end{figure} -->
+```{r}
+library(fable)
+m <- as_tsibble(Y) %>% 
+    model(ARIMA(Y ~ 1, ic = "bic"))
+report(m)
+```
 
+In all considered cases the model ARMA(2,0), which is equivalent to AR(2), was selected. Our next step is the residual diagnostics -- check the residuals for homoscedasticity, uncorrelatedness, and normality (@fig-resfable).
 
-<!-- Model diagnostics are same as for usual regression: check residuals for homoskedasticity, uncorrelatedness, and normality (Figures~@fig-simYtdiag1}--@fig-simYtdiag3}). -->
+```{r}
+#| label: fig-resfable
+#| fig-cap: "Residual diagnostics for the ARMA(2,0) model estimated using the package `fable`."
 
-<!-- \begin{figure}[h] -->
-<!-- <<echo = FALSE>>= -->
-<!-- par(mar = c(4, 5, 1, 1) + 0.1, mgp = c(3, 1, 0), mfrow = c(1, 1)) -->
-<!-- par(pty = "m") -->
-<!-- @ -->
-<!-- <<fig.dim = c(9, 8)>>= -->
-<!-- tsdiag(mod2) -->
-<!-- @ -->
-<!-- \caption{Check residuals for homoskedasticity (top) and uncorrelatedness (middle and bottom).} -->
-<!-- {#fig-simYtdiag1} -->
-<!-- \end{figure} -->
+feasts::gg_tsresiduals(m)
+```
 
+Based on the plots, the residuals do not violate the assumptions, so proceed with forecasting (@fig-fcstfable).
 
-<!-- \begin{figure}[h] -->
-<!-- <<echo = FALSE>>= -->
-<!-- par(mar = c(4, 5, 1, 1) + 0.1, mgp = c(3, 1, 0), mfrow = c(1, 2)) -->
-<!-- par(pty = "m") -->
-<!-- @ -->
-<!-- ```{r} -->
-<!-- acf(e, las = 1) -->
-<!-- pacf(e, las = 1) -->
-<!-- @ -->
-<!-- \caption{Check residuals for uncorrelatedness, using ACF and PACF plots.} -->
-<!-- {#fig-simYtdiag2} -->
-<!-- \end{figure} -->
+```{r}
+#| label: fig-fcstfable
+#| fig-cap: "Predictions 10 steps ahead from the ARMA(2,0) model estimated using the package `fable`."
 
+m %>%
+    forecast(h = 10) %>%
+    autoplot(Y) + 
+    theme_light()
+```
 
-<!-- \begin{figure}[h] -->
-<!-- <<echo = FALSE>>= -->
-<!-- par(mar = c(4, 5, 1, 1) + 0.1, mgp = c(3, 1, 0), mfrow = c(1, 1)) -->
-<!-- par(pty = "s") -->
-<!-- @ -->
-<!-- ```{r} -->
-<!-- qqnorm(e, las = 1) -->
-<!-- qqline(e) -->
-<!-- @ -->
-<!-- \caption{Check residuals for normality.} -->
-<!-- {#fig-simYtdiag3} -->
-<!-- \end{figure} -->
-<!-- \FloatBarrier -->
+However, the syntax of the package `fable` is quite different from its alternatives.
+See @fig-res with results still plotted using the package `ggplot2`, but obtained using the base-R functions. Also see the base-R function `tsdiag()` for residual diagnostics.
 
-<!-- Forecast $h = 10$ steps ahead, with 95\% prediction intervals (@fig-simYtfcst}). -->
+```{r}
+#| label: fig-res
+#| fig-cap: "Residual diagnostics and predictions 10 steps ahead from the ARMA(2,0) model estimated using the base-R function `stats::arima()`."
 
-<!-- <<echo = FALSE>>= -->
-<!-- par(mar = c(4, 5, 1, 1) + 0.1, mgp = c(3, 1, 0), mfrow = c(1, 1)) -->
-<!-- par(pty = "m") -->
-<!-- @ -->
-<!-- \begin{figure}[h] -->
-<!-- ```{r} -->
-<!-- h = 10 -->
-<!-- alpha = 0.05 #significance level alpha = 1 - confidence -->
-<!-- PredObject <- predict(mod2, n.ahead = h) -->
-<!-- pr_low <- PredObject$pred - qnorm(1 - alpha/2) * PredObject$se -->
-<!-- pr_up  <- PredObject$pred + qnorm(1 - alpha/2) * PredObject$se -->
-<!-- plot.ts(c(Yt, rep(NA, h)), las = 1, col = "grey50", lwd = 2, type = "o", ylab = "Yt") -->
-<!-- lines(PredObject$pred, col = "red", lwd = 1) -->
-<!-- lines(pr_low, col = "blue") -->
-<!-- lines(pr_up, col = "blue") -->
-<!-- @ -->
-<!-- \caption{Observed time series $Y_t$ (gray) and predictions from ARMA(\Sexpr{p},\Sexpr{q}) model.} -->
-<!-- {#fig-simYtfcst} -->
-<!-- \end{figure} -->
+m <- arima(Y, order = c(2, 0, 0))
+e <- m$residuals
+p1 <- ggplot2::autoplot(e) + 
+    ylab("Residuals") +
+    theme_light()
+p2 <- forecast::ggAcf(e) +
+    ggtitle("") +
+    theme_light()
+p3 <- ggplot(data.frame(e = e), aes(sample = e)) + 
+    stat_qq() + 
+    stat_qq_line() +
+    xlab("Quantiles of N(0,1)") +
+    ylab("Sample quantiles") +
+    theme_light()
+p4 <- ggplot2::autoplot(forecast(m, h = 10)) + 
+    theme_light()
+p1 / (p2 + p3) / p4 +
+    plot_annotation(tag_levels = 'A')
+```
 
-<!-- \FloatBarrier -->
-<!-- ### More R functions} -->
+Using the estimated residuals, $\hat{\epsilon}_t = Y_t - \hat{Y}_t$,
+we can get the 'fitted' values, $\hat{Y}_t$ (technically, these are one-step-ahead predictions),
+see @fig-simYtfit.
 
-<!-- We face the choice of different methods to estimate (i.e., estimators) and methods to compare models. Most often used estimators for ARMA models are maximum likelihood, Yule--Walker, and Burg; OLS is used less frequently. Methods to compare competing models may involve log-likelihood, MAE, RMSE and information criteria to assess in-sample (training) goodness-of-fit; diagnostics checks of residuals (discard models if their residuals do not pass the tests); comparisons of models on a testing set (PMAE, PRMSE, coverage and width of prediction intervals). For each of these options, there are multiple R functions available or can be written from scratch. -->
+```{r}
+#| label: fig-simYtfit
+#| fig-cap: "Oberved time series (black) and one-step-ahead predictions (red) from the ARMA(2,0) model."
 
-<!-- We have just considered a thorough approach to identifying the orders $p$ and $q$ using the ACF and PACF plots. The initially suggested model is compared with alternative plausible specifications (other $p$ and $q$ that may correspond to the same sample ACF and PACF). The resulting model can be selected using some quantitative criterion, such as AIC, BIC, or log-likelihood. This is a correct approach, but if many time series shall be processed at the same time, we can opt for using automatic model selection. -->
-
-<!-- For example, \texttt{stats::ar} function by default uses Yule--Walker estimator and AIC to select the best order for AR($p$) model, where maximum of $p$ can be set by user: -->
-
-<!-- ```{r} -->
-<!-- ar(Yt, order.max = 11) -->
-<!-- @ -->
-
-<!-- The function \texttt{funtimes::ARest} \citep{R-funtimes} is a wrapper for \texttt{ar}. It makes the choice using BIC and has an additional method for estimating the coefficients, difference-based estimator by \citet{Hall:VanKeilegom:2003}, which is used by default: -->
-
-<!-- ```{r} -->
-<!-- funtimes::ARest(Yt) -->
-<!-- # To compare with ar estimates, change the method and fix the order -->
-<!-- # (turn off automatic selection): -->
-<!-- funtimes::ARest(Yt, ar.method = "yw", ar.order = 2, BIC = FALSE) -->
-<!-- @ -->
-
-<!-- \paragraph{Note} Remember that BIC selects more parsimonious models than AIC does. Such simpler models are usually preferred for forecasting tasks. -->
-
-<!-- Another useful function is \texttt{forecast::auto.arima} \citep{R-forecast}, which searches over possible models within the order constraints provided (the default maximal orders and search strategy are different from the two functions above -- see help files for each function in R): -->
-
-<!-- ```{r} -->
-<!-- library(forecast) -->
-<!-- auto.arima(Yt) -->
-<!-- auto.arima(Yt, ic = "bic") -->
-<!-- @ -->
-
-<!-- The function \texttt{forecast::auto.arima} is probably the most comprehensive among the mentioned R functions for estimating and selecting ARMA models. -->
+Fit <- Y - e
+ggplot2::autoplot(Y) + 
+    autolayer(Fit) +
+    ylab("Y") +
+    theme_light()
+```
 
 
+## Conclusion
+
+We defined AR, MA, and ARMA models and showed that time series processes corresponding to such models satisfy the conditions of weak stationarity.
+
+Using ACF and PACF plots, we can select the orders $p$ and $q$ to specify an ARMA model, but we also can use a variety of functions running different evaluations and tests for competitive models.
+
+We face the choice of different methods to estimate (i.e., estimators) and methods to compare models. 
+
+Most often used estimators for ARMA models are 
+
+* maximum likelihood, 
+* Yule--Walker, and 
+* Burg.
+
+The OLS-based estimator is used less frequently. 
+
+Methods to compare competing models may involve 
+
+* log-likelihood, MAE, RMSE and information criteria to assess in-sample (training) goodness-of-fit;
+* diagnostics checks of residuals (discard models if their residuals do not pass the tests);
+* comparisons of models on a testing set (PMAE, PRMSE, coverage and width of prediction intervals). 
+
+For each of these options, there are multiple R functions available or can be written from scratch.

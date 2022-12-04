@@ -17,6 +17,8 @@ packages2cite <- sort(c(
     'car'
     ,'dplyr'
     ,'Ecdat'
+    ,'fable'
+    ,'feasts'
     ,'fma'
     ,'forecast' 
     ,'funtimes'

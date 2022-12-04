@@ -15,6 +15,7 @@ a.k.a.
 changepoint
 nonlinear
 nonparametric
+homoscedasticity
 $p$-value
 $\mathrm{WN}(0,s^2)$ -- have WN in math env
 
@@ -66,6 +67,15 @@ text
 ::: {.callout-note}
 text
 :::
+
+
+
+| from 0 to $d_{L}$ | from $d_{L}$ to $d_{U}$ | from $d_{U}$ to $4 - d_{U}$ | from $4 - d_{U}$ to $4 - d_{L}$ | from $4 - d_{L}$ to 4 |
+|------|------|------|------|------|
+| Reject $H_{0}$, positive autocorrelation | Neither accept $H_{1}$ or reject $H_{0}$ | Do not reject $H_{0}$ | Neither accept $H_{1}$ or reject $H_{0}$ | Reject $H_{0}$, negative autocorrelation |
+
+: Regions of rejection of the null hypothesis for the Durbin--Watson test {#tbl-DW}
+
 
 ```
 git checkout gh-pages # not used
