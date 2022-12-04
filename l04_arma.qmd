@@ -849,8 +849,10 @@ It adds a difference-based estimator by @Hall:VanKeilegom:2003, which is now use
 ```{r}
 # Order selection with BIC and estimation with HVK
 funtimes::ARest(Y)
-# To check the correspondence with ar(), change the method and fix the ar.order
-# (turn off automatic selection):
+```
+
+To check the correspondence with `stats::ar()`, change the method and fix the `ar.order` (turn off its automatic selection):
+```{r}
 funtimes::ARest(Y, ar.method = "yw", ar.order = 2, BIC = FALSE)
 ```
 
@@ -888,7 +890,7 @@ m %>%
     theme_light()
 ```
 
-However, the syntax of the package `fable` is quite different from its alternatives.
+However, the syntax and outputs of the package `fable` are quite different from typical R alternatives.
 See @fig-res with results still plotted using the package `ggplot2`, but obtained using the base-R functions. Also see the base-R function `tsdiag()` for residual diagnostics.
 
 ```{r}
