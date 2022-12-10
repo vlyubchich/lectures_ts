@@ -1,5 +1,6 @@
 Todo
 - check presence of comments "<!--" in QMD files to fix that.
+- check comments from past PDFs to fix typos
 - check that all labels # are cited (figures, tables)
 - check grammar
 - check :: and library() calls and add packages to the software list
@@ -8,14 +9,19 @@ Todo
 # Format
 
 Replace  
-\boldsymbol with \bm  
+\bm with \boldsymbol    
 Figure~\ref{fig: with @fig-
+\begin{equation} with $$
+\end{equation}
+\citet{ with @
+vs.\ with vs. 
 
 a.k.a.
 changepoint
 nonlinear
 nonparametric
 homoscedasticity
+heteroscedasticity
 $p$-value
 $\mathrm{WN}(0,s^2)$ -- have WN in math env
 

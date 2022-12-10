@@ -27,6 +27,7 @@ packages2cite <- sort(c(
     ,'knitr'
     ,'lawstat'
     ,'lmtest'
+    ,'nlme'
     ,'patchwork'
     ,'plotly'
     ,'pracma'

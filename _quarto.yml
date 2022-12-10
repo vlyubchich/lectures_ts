@@ -13,22 +13,28 @@ book:
   # repo-actions: [edit]
   # downloads: [pdf, epub]
   # sharing: [twitter, facebook]
+  page-navigation: true
   reader-mode: true
   sidebar:
     search: true
   chapters:
     - index.qmd
     - l01_regression.qmd
-    - l02_tsintro.qmd
-    - l03_smoothing.qmd
-    - l04_arma.qmd
+    # - l02_tsintro.qmd
+    # - l03_smoothing.qmd
+    # - l04_arma.qmd
     - software.qmd
     - references.qmd
+  appendices:
+    - s1_wls.qmd
+    - s2_gls.qmd
 
 bibliography:
     - references.bib
     - refpackages.bib
 csl: springer-basicVL.csl
+
+appendix-style: default
 
 format:
   html:
@@ -37,7 +43,7 @@ format:
     fig-width: 8
     fig-height: 6
   pdf:
-    documentclass: scrbook
+    documentclass: scrreprt
     fig-width: 8
     fig-height: 6
 
@@ -49,4 +55,3 @@ knitr:
     comment: "#>"
     R.options:
       knitr.graphics.auto_pdf: true
-
