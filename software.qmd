@@ -24,6 +24,7 @@ packages2cite <- sort(c(
     ,'funtimes'
     # ,'ggfortify'
     ,'ggplot2'
+    ,'ggpubr'
     ,'knitr'
     ,'lawstat'
     ,'lmtest'

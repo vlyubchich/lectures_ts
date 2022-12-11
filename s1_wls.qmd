@@ -189,6 +189,6 @@ However, autocorrelation is still present, which violates another assumption of 
 ```{r}
 lawstat::runs.test(rstandard(modDish_wls))
 ```
+:::
 
 See @sec-gls on the method of generalized least squares (GLS) that allows to account for autocorrelation in regression modeling.
-:::

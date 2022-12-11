@@ -338,7 +338,7 @@ The above ordering assumes no ties, but ties can be quite common in data, even c
 
 Note that the proportion of observations less than or equal to $X_{(k/n)}$ is exactly $k/n$. Hence $X_{(k/n)}$, called the $k$th {\em sample quantile}, is an estimate of the population quantile $x_{(k/n)}$.
 
-The normal Q-Q plot is obtained by plotting the sample quantiles vs. the quantiles of the standard normal distribution. The base-R function `qqnorm()` produces a normal Q-Q plot of data and the function `qqline()` adds a line that passes through the first and third quartiles. The R package `ggplot2` has analogous functions `ggplot2::stat_qq()` and `ggplot2::stat_qq_line()`. The R package `car` also draws Q-Q plots and adds a point-wise confidence envelope with its function `car::qqPlot()`. 
+The normal Q-Q plot is obtained by plotting the sample quantiles vs. the quantiles of the standard normal distribution. The base-R function `qqnorm()` produces a normal Q-Q plot of data and the function `qqline()` adds a line that passes through the first and third quartiles. The R package `ggplot2` has analogous functions `ggplot2::stat_qq()` and `ggplot2::stat_qq_line()`. The R packages `car` and `ggpubr` also draw Q-Q plots and add a point-wise confidence envelope with their functions `car::qqPlot()` (base-R plot) and `ggpubr::ggqqplot()` (ggplot2-type plot). 
 
 ::: {.callout-note icon=false}
 
@@ -350,14 +350,16 @@ The normal Q-Q plot is obtained by plotting the sample quantiles vs. the quantil
 #| label: fig-QQ
 #| fig-cap: "Normal Q-Q plots of the normally distributed simulated values $x_t$ and the dishwasher residuals."
 
-par(mar = c(4, 5, 1, 1) + 0.1, mgp = c(3, 1, 0), mfrow = c(1, 2))
-par(pty = "m")
-car::qqPlot(x, las = 1, id = FALSE,
-    xlab = "Standard normal quantiles", 
-    main = "Random normal values")
-car::qqPlot(mod1$residuals, las = 1, id = FALSE,
-    xlab = "Standard normal quantiles", 
-    main = "Model residuals")
+p1 <- ggpubr::ggqqplot(x) + 
+    ggtitle("Random normal values") +
+    xlab("Standard normal quantiles") +
+    theme_light()
+p2 <- ggpubr::ggqqplot(mod1$residuals) + 
+    ggtitle("Model residuals") +
+    xlab("Standard normal quantiles") +
+    theme_light()
+p1 + p2 +
+    plot_annotation(tag_levels = 'A')
 ```
 :::
 
@@ -579,12 +581,8 @@ shapiro.test(mod2$residuals)
 #| label: fig-QQ2
 #| fig-cap: "Normal Q-Q plot of the multiple regression residuals."
 
-ggplot(D, aes(sample = mod2$residuals)) +
-    stat_qq() +
-    stat_qq_line() +
+ggpubr::ggqqplot(mod2$residuals) + 
     xlab("Standard normal quantiles") +
-    ylab("Sample quantiles") +
-    ggtitle("Model residuals") +
     theme_light()
 ```
 :::

@@ -905,11 +905,8 @@ p1 <- ggplot2::autoplot(e) +
 p2 <- forecast::ggAcf(e) +
     ggtitle("") +
     theme_light()
-p3 <- ggplot(data.frame(e = e), aes(sample = e)) + 
-    stat_qq() + 
-    stat_qq_line() +
-    xlab("Quantiles of N(0,1)") +
-    ylab("Sample quantiles") +
+p3 <- ggpubr::ggqqplot(e) + 
+    xlab("Standard normal quantiles") +
     theme_light()
 p4 <- ggplot2::autoplot(forecast(m, h = 10)) + 
     theme_light()
