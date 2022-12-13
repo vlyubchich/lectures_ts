@@ -1,0 +1,302 @@
+---
+output: html_document
+editor_options:
+    chunk_output_type: console
+---
+
+```{r, echo=FALSE}
+library(dplyr)
+library(ggplot2)
+library(patchwork)
+options(digits = 3)
+```
+
+# Autoregressive Integrated Moving Average (ARIMA) Models
+
+\section{Box--Jenkins methodology}
+
+Below is a general algorithm used to fit autoregressive models, not only the stationary (ARMA), but also those with stochastic trend:
+\begin{enumerate}
+\item Postulate general class of models
+\item Identify model to be tentatively entertained \textbf{SL: Check if it is right terminology}
+\item Estimate parameters in tentatively entertained model
+\item Diagnostic checking: is model adequate?\\
+YES $\rightarrow$ 5\\
+NO $\rightarrow$ 2
+\item Forecast with the resultant model
+\end{enumerate}
+
+Using the Box--Jenkins methodology, the linear predictor approximately follows a normal distribution, i.e.,
+\begin{equation}
+\hat{X}_{n+h} \sim N\left( X_{n+h}, \mathrm{var}(\hat{X}_{n+h}) \right).
+\end{equation}
+
+Therefore, a $(100 - \alpha)$\% prediction interval is
+\begin{equation}
+\hat{X}_{n+h} \pm z_{1-\alpha/2} \sqrt{\mathrm{var}(\hat{X}_{n+h})}.
+\end{equation}
+
+
+
+\section{ARIMA}
+
+If $d$ is a nonnegative integer, then $X_t$ is an ARIMA($p, d, q$) process if $Yt=(1 - B)^d X_t$ is a causal ARMA($p, q$) process.
+
+$X_t$ is an ARIMA(1,1,0) process if for some $\phi \in (-1, 1)$,
+\begin{equation}
+Y_t = (1 - B)X_t = \sum_{j=0}^{\infty} \phi^j Z_{t-j}.
+\end{equation}
+
+<<>>=
+x <- dget('x.txt') # Reading x into R
+par(mfrow=c(3,1)) # Dividing the page into 3 panels
+plot(x) # Time serie plot of x
+acf(x) # ACF plot of x
+pacf(x) # PACF plot of x
+
+
+
+Bx <- diff(x) # Differencing x once
+par(mfrow=c(3,1))
+plot(Bx)
+acf(Bx)
+pacf(Bx)
+
+
+
+fit1 <- arima(x, c(2, 1, 0)) # Fitting an ARIMA(2,1,0) to the data x
+u <- residuals(fit1) # Extracting the residuals of the model above
+par(mfrow=c(2,2))
+plot(u) # Time series plot of the residuals
+acf(u) # ACF plot of the residuals
+pacf(u) # PACF plot of the residuals
+qqnorm(u) # normal qq plot of the reisiduals
+qqline(u) # fitting the line through the qq plot
+
+
+a <- predict(fit1,n.ahead=5) # predicting 5 steps ahead based on model fit1
+lower <- a$pred-1.96*a$se # lower bound of prediction
+upper <- a$pred+1.96*a$se # upper bound of prediction
+fit <- a$pred # Extracting the predicted values
+
+xmax <- 115
+ts.plot(x,xlim=c(0,xmax)) # Plotting the data x
+lines(fit,col='red') # plotting the 5-step prediction
+lines(lower,col='green') # plotting the lower bound of prediction interval
+lines(upper,col='green') # plotting the upper bound of prediction interval
+@
+
+\section{SARIMA}
+
+
+
+
+\section{Equivalences}
+
+Mathematically, some models are equivalent one to another. Linear exponential smoothing models are all special cases of ARIMA models, but non-linear exponential smoothing models have no equivalent ARIMA counterparts.
+
+Simple exponential smoothing
+\begin{itemize}
+\item Forecasts equivalent to ARIMA(0,1,1).
+\item Parameters: $\theta_1 = \alpha - 1$.
+\end{itemize}
+
+Holt's method
+\begin{itemize}
+\item Forecasts equivalent to ARIMA(0,2,2).
+\item Parameters: $\theta_1 = \alpha + \beta - 2$ and $\theta_2 = 1 - \alpha$.
+\end{itemize}
+
+Damped Holt's method
+\begin{itemize}
+\item Forecasts equivalent to ARIMA(1,1,2).
+\item Parameters: $\phi_1 = \phi$, $\theta_1 = \alpha + \phi\beta - 2$, $\theta_2 = (1 - \alpha)\phi$.
+\end{itemize}
+
+Holt--Winters' additive method
+\begin{itemize}
+\item Forecasts equivalent to ARIMA(0,1,$m+1$)(0,1,0)$_m$.
+\item Parameter restrictions because ARIMA has $m + 1$ parameters whereas HW uses only three parameters.
+\end{itemize}
+
+Holt--Winters' multiplicative method
+\begin{itemize}
+\item No ARIMA equivalence.
+\end{itemize}
+
+The goal of this lecture is to introduce SARIMA Modelling, learn the step-by-step process to identify $p,d,q,P,D,Q,s$ in $ SARIMA(p,d,q)(P,D,Q)_m $, and illustrate the process using the wine data as an example. 
+
+\section{Introduction}
+
+Recall that \textbf{ARIMA} (\textbf{A}uto \textbf{R}egressive, \textbf{I}ntegrated, \textbf{M}oving \textbf{A}verage) is represented by $(p,d,q)$ respectively. ARIMA model is used when a series does not have a constant mean and
+shows a moving average. Now say your series is about ice cream sales, and you noticed every summer of the year sales spike up and drops down every winter. This is an example of a seasonality where we see \textbf{predictable repeating patterns within a year} and happens every year. This given series is not stationary; therefore, ARIMA and earlier models cannot be used unless we remove the seasonal portion of the series. Note that seasonality is not strictly referring to the four seasons of the year,i.e., spring, summer, winter, fall. Seasonality can occur at a specific period within a year. e.g., every weekend, every month, or every quarter. SARIMA Model is denoted $SARIMA(p,d,q) (P,D,Q)_m$ where $m$ is the period. 
+
+\section{Identification of p,d,q,P,D,Q,s in SARIMA(p,d,q) (P,D,Q)m}
+
+Steps are as follows:
+
+\begin{enumerate}
+\item Check for stationarity
+\item Check for seasonality
+\item Remove trend by $ Y^*_t = (1-B)^d X_t $
+\item Remove seasonality by  $Y_t = (1-B^s)^D Y^*_t $
+\item Identify p, q, P, Q
+\end{enumerate}
+
+\section {Example: Wine Data}
+12 years of monthly consumption in a country shown by $X_{t}$
+
+One of the assumptions made about residuals in OLS
+regression is that the errors have the same but unknown variance. This is
+known as constant variance or homoscedasticity. When this assumption is
+violated, the problem is known as heteroscedasticity.\footnote{
+https://cran.r-project.org/web/packages/olsrr/vignettes/heteroskedasticity.html}
+\begin{figure}[h!]
+\subsection*{Check for stationarity}
+<<>>=
+library(itsmr)
+w = itsmr::wine
+wine = ts(w, start =c(1980,1), frequency = 12)
+plot.ts(wine, xlab = "Years" , ylab = "Wine")
+@
+\caption{Data shows trend, periodic, and have non-constant variance.
+Therefore, we start from the variance-stabilizing transformation, in particular square root and log. See Figure~\ref{fig:winelog}.}
+\label{fig:wine}
+\end{figure}
+
+\begin{figure}[h!]
+\subsection*{Check for seasonality} 
+<<>>=
+sqrt.wine=sqrt(wine)
+plot.ts(sqrt(wine), main = "sqrt.wine=sqrt(wine)", xlab= "Years", ylab="sqrt.wine", las = 1)
+
+log.wine=log(wine)
+plot.ts(log.wine, main = "log.wine=log(wine)", xlab= "Years", ylab="log.wine", las = 1)
+@
+\caption{Both square and log transformations have removed some heteroscedaticity of the data. At this point, we do not choose the best variance stabilizing transformation yet. We will use {\bfseries seasonal differencing.}}
+\label{fig:winelog}
+\end{figure}
+
+
+\begin{figure}[h!]
+\subsection*{Trend Removal} 
+Here we used {\bfseries seasonal differencing}. If $Y_{t}$ has a seasonal period $m$, then the {\bfseries first seasonal difference} is defined to be
+\begin{equation}
+D_{m,t} = Y_{t}-Y_{t-m}
+\end{equation}
+
+for $t=m+1,m+2,\ldots,n.$
+In this way we compare seasons with seasons. Seasonal differencing will (at least approximately) remove the seasonal component.
+<<>>=
+B.datasqrt = diff(sqrt.wine, , lag = 1)
+plot(B.datasqrt, main = "B.data = diff(sqrt.wine, difference = 1)", las = 1)
+B.datalog = diff(log.wine, lag = 1)
+plot(B.datalog, main = "B.data = diff(log.wine, difference = 1)", las = 1 )
+@
+\caption{Seasonally differenced sqrt shows much heteroscedastic. In contrast, seasonally differenced log is almost homoscedastic. Thus, we shall utilize the log transformation.}
+\label{fig:B.datasqrtlog}
+\end{figure}
+
+\begin{figure}[h!]
+\subsection*{Removing Seasonality}
+<<>>=
+B.datalog=diff(log.wine)
+acf(B.datalog, lag.max = 36, las = 1)
+acf(B.datalog, lag.max = 36, type='p', las = 1)
+@
+\label{fig:B.data}
+\caption{Presents the ACF and PACF of the seasonaly differenced log transformed wine data. Notice that there are still minor trend going on.}
+
+
+\label{fig:Differencing}
+\end{figure}
+
+\begin{figure}[h!]
+\subsection*{Seasonal Effect Removal (D,m)}
+<<fig.dim = c(12,3)>>=
+B12.B.data = diff(B.datalog, lag = 12)
+plot(B12.B.data, main = "B12.B.datalog = diff(B.datalog, lag = 12)", las = 1)
+par(mfrow=c(1,1))
+acf(B12.B.data, lag.max = 36, las = 1)
+acf(B12.B.data, lag.max = 36, type='p', las = 1)
+@
+\caption{Here we use ordinary differencing.}
+\label{fig:wn}
+\end{figure}
+
+\begin{figure}[h!]
+\subsection*{Identify p, q, P, Q}
+\subsection*{Fitting $ARIMA(0,1,1)x(0,1,1)_12$}
+<<>>=
+fit1 <- arima(log.wine, c(0, 1, 1),seasonal = list(order = c(0, 1, 1), period = 12))
+
+print(summary(fit1))
+
+u <- residuals(fit1)
+@
+\caption{Fitting an $ARIMA(0,1,1)x(0,1,1)_{12}$ to the data and extracting the residuals of the model.}
+\label{fig:identification}
+\end{figure}
+
+\begin{figure}[h!]
+\subsection*{Diagnostics}
+<<fig.dim = c(12,3)>>=
+par(mfrow=c(1,1))
+plot(u)
+acf(u)
+pacf(u)
+qqnorm(u)
+qqline(u)
+
+@
+\caption{Residual Diagnostics}
+\label{fig:identification}
+\end{figure}
+
+\begin{figure}[h!]
+<<>>=
+fitted.values <- log.wine-u
+plot(log.wine,main='SARIMA model')
+lines(fitted.values,col='red')
+
+@
+\caption{Defining the fitted values}
+\label{fig:identification}
+\end{figure}
+
+\begin{figure}[h!]
+\subsection*{Prediction}
+<<>>=
+a <- predict(fit1,n.ahead=24)
+lower <- a$pred-1.96*a$se #lower bound of prediction interval
+upper <- a$pred+1.96*a$se # upper bound of prediction interval
+fit <- a$pred # predicted values
+
+@
+\caption{Prediction of 2 years ahead}
+\label{fig:identification}
+\end{figure}
+
+
+
+\begin{figure}[h!]
+<<>>=
+yband <- c(0,4500)
+ts.plot(exp(log.wine),xlim=c(1980,1994),ylim=yband)
+lines(exp(fit),col='red')		
+lines(exp(lower),col='green')
+lines(exp(upper),col='green')
+
+@
+\caption{Plotting the data along with the prediction.}
+\label{fig:identification}
+\end{figure}
+
+
+\section{Conclusion}
+
+In this lecture, we discovered the Seasonal Autoregressive Integrated Moving Average, or SARIMA, method for time series forecasting with  data containing trends and seasonality. We also learned that limitations of ARIMA when it comes to seasonal data and that SARIMA is an extension of ARIMA that models the seasonal element in our data. This lecture also demonstrated the very basics of SARIMA modeling with residual diagnostics and evaluation on a testing set, and prediction. 
+
+Please note that there are different methods to use and choosing between them can be challenging. While this step by step method is fairly easy for beginners, there are many more methods that can be applied to time series: splines (such as used in generalized additive models, GAMs), kernels, machine learning techniques, etc. 
+
+

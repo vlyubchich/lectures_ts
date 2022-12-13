@@ -1,0 +1,379 @@
+---
+output: html_document
+editor_options:
+    chunk_output_type: console
+---
+
+```{r, echo=FALSE}
+library(dplyr)
+library(ggplot2)
+library(patchwork)
+options(digits = 3)
+```
+
+#
+
+\section{Introduction}
+
+In contrast to the traditional time series analysis that focuses on modelling
+the conditional first moment, models of \emph{autoregressive conditional heteroscedasticity} (ARCH) and \emph{generalized autoregressive conditional heteroscedasticity} (GARCH) specifically take the dependency of the conditional second moment into modelling consideration and accommodate the increasingly important need to explain and model risk and uncertainty in, for example, financial time series.
+
+The ARCH models were introduced in 1982 by the Nobel Prize winner in
+Economics\footnote{Official name of the prize is \emph{Sveriges Riksbank Prize in Economic Sciences in Memory of Alfred Nobel}. Although it is not one of the prizes that Alfred Nobel established in his will in 1895, it is referred to along with the other Nobel Prizes by the Nobel Foundation.
+\url{http://www.nobelprize.org/nobel_prizes/economic-sciences/laureates/2003/engle-facts.html}}
+of 2003 Robert Engle in order to model varying (conditional) variance
+or volatility of time series. It is often found in economy and finance that the
+larger values of time series also lead to larger instability (i.e., larger variances),
+which is termed as {\bf (conditional) heteroscedasticity}. Standard examples of time series with ARCH or GARCH effects are stock prices, interest rates and foreign exchange rates as well as some environmental processes: high-frequency data on wind speed, energy production, air quality, etc. (see details in \citealp{Marinova:McAleer:2003,Cripps:Dunsmuir:2003,Campbell:Diebold:2005,Taylor:Buizza:2004}).
+
+
+
+\section{Some real data examples}
+
+Since financial data typically have the autocorrelation coefficient close to 1 at lag 1
+(e.g., the exchange rate between the US and Canadian dollar hardly changes
+from today to tomorrow), it is much more interesting and also practically more relevant to model the returns of a financial time series rather than the series 
+itself.
+Let $\{Y_{t} \}$ be a stock price series, for example. The {\bf returns} are typically defined as
+\begin{equation}  \label{18.1}
+X_{t} = \mbox{log} Y_{t} - \mbox{log} Y_{t-1} ~~~~ \mbox{or} ~~~~ X_{t} = \frac{Y_{t} - Y_{t-1}}{ Y_{t -1} },
+\end{equation}
+which measure the relative changes of price. Note that the two forms above are
+approximately the same as
+\begin{equation}  \label{18.2}
+\mbox{log} Y_{t} - \mbox{log}  Y_{t-1} = \mbox{log}  \left(1 + \frac{Y_{t} - Y_{t-1}}{Y_{t -1}} \right) \approx \frac{ Y_{t} - Y_{t-1}}{ Y_{t -1} }.
+\end{equation}
+
+\begin{figure}[h!]
+\centering
+<<>>=
+CAD <- read.csv("./data/CAD.csv", skip = 11, na.strings = " Bank holiday", header = TRUE)
+par(mfrow = c(1, 2))
+plot.ts(CAD$USD, las = 1, ylab = "CAD/USD")
+plot.ts(diff(log(CAD$USD)), las = 1)
+@
+\caption{CAD per USD daily (noon) exchange rates and log returns, from 22/2/2006 to 22/2/2016.
+\url{http://www.bankofcanada.ca/rates/exchange/10-year-lookup/}}
+\label{fig:CAD}
+\end{figure}
+
+\citet{Rydberg:2000} summarizes some important {\bf stylized features} of financial
+return series, which have been repeatedly observed in all kinds of assets including
+stock prices, interest rates, and foreign exchange rates:
+\begin{enumerate}
+\item {\em Heavy tails}. It has been generally accepted that the distribution and the
+return $X_{t}$ has tails heavier than the tails of a normal distribution.
+
+\item {\em Volatility clustering}. The term volatility clustering refers to the fact that large price changes occur in clusters. Indeed, large volatility changes tend to
+be followed by large volatility changes, and periods of tranquility alternate
+with periods of high volatility. 
+
+\item {\em Asymmetry}. There is evidence that the distribution of stock returns is
+slightly negatively skewed. One possible explanation could be that trades
+react more strongly to negative information than positive information.
+
+\item {\em Aggregational Gaussianity}. When the sampling frequency decreases, the
+central limit law sets in and the distribution of the returns over a long
+time-horizon tends toward a normal distribution.
+<!-- decreases -->
+<!-- (Eberlein & Keller -->
+<!-- (1995), Rydberg (2000) -->
+<!-- T.H. Rydberg (2000), \Realistic statistical modelling of financial data", International Statistical Review, 68(3):233-258 -->
+
+\item {\em Long range dependence}. The returns themselves of all kinds of assets hardly
+show any serial correlation, which, however, does not mean that they are independent. In fact, both squared returns and absolute returns often exhibit persistent autocorrelations, indicating possible long-memory dependence in those transformed return series. \end{enumerate}
+
+
+\begin{figure}[h!]
+\centering
+<<>>=
+par(mfrow=c(1, 2))
+acf(diff(log(CAD$USD)), las = 1, na.action = na.pass)
+acf(diff(log(CAD$USD))^2, las = 1, na.action = na.pass)
+@
+\caption{ACF of returns and squared returns}
+\label{fig:CAD:ACF}
+\end{figure}
+
+Figure~\ref{fig:CAD:ACF} is the simplest check for GARCH-effects: when time series itself is not autocorrelated, but is autocorrelated if squared. 
+
+
+\begin{figure}[h!]
+\centering
+<<>>=
+set.seed(1)
+WN <- rnorm(length(CAD$USD))
+par(mfrow=c(1, 2))
+acf(WN, las = 1)
+acf(WN^2, las = 1)
+@
+\caption{ACF of simulated white noise and squared white noise} 
+\label{fig:WN:ACF}
+\end{figure}
+
+
+\FloatBarrier
+\section{Models}
+
+\citet{Engle:1982} defines an autoregressive conditional heteroscadastic (ARCH) model as
+\begin{eqnarray} \label{18.3}
+X_{t}  &=&  \sigma_{t} \varepsilon_{t}, \\
+\sigma^{2}_{t}  &= & a_{0} + a_{1} X^{2}_{t - 1} + \ldots+ a_{p} X^{2}_{ t  - p} , \nonumber
+\end{eqnarray}
+where $a_{0} > 0$,   $a_{j} \geqslant 0$,  $\{ \varepsilon_{t} \} \sim \mbox{IID}(0,1)$, and $\varepsilon_{t}$ is independent of $\{ X_{t - j} , ~ j \geqslant 1 \} $. We write $\{ X_{t} \} \sim \mbox{ARCH} (p)$.
+
+
+It is easy to see that
+\begin{eqnarray} \label{18.5}
+E X_{t} & = & 0,  \\
+\mbox{Var} \left( X_{t} | X_{t - 1} , \ldots , X_{t - p} \right) &=& \sigma^{2}_{t} , \nonumber \\
+\mbox{Cov} \left( X_{t} , X_{k} \right) &=& 0 ~~~ \mbox{for all} ~~~  t \neq k.\nonumber
+\end{eqnarray}
+
+
+{\bf Remark.} Stationary ARCH is white noise.
+
+{\bf Basic idea:} the predictive distribution of $X_{t}$ based on its past is a scale-transform of the distribution of $\varepsilon_{t}$ with the scaling constant $\sigma_{t}$ depending on the
+past of the process.
+
+\citet{Bollerslev:1986} introduced a generalized autoregressive conditional heteroscedastic\\ 
+(GARCH) model by replacing the second equation in (\ref{18.3}) by
+\begin{eqnarray} \label{18.6}
+\sigma^{2}_{t} &=& a_{0}  + a_{1} X^{2}_{ t  - 1} + \ldots + a_{p} X^{2}_{ t  - p} + b_{1} \sigma^{2}_{t - 1} + \ldots + b_{q} \sigma^{2}_{t  - q}\\
+&=& a_0  + \sum_{i=1}^p a_{i} X^{2}_{ t  - i} + \sum_{j=1}^q b_{j} \sigma^{2}_{ t  - j}, \nonumber
+\end{eqnarray}
+where $a_{0} > 0$, $a_{i} \geqslant 0$, and $b_{j} \geqslant 0$. We write $\{ X_{t} \}  \sim  GARCH(p, q)$.
+
+
+Notice the similarity between ARMA models and GARCH models. 
+
+The parameters of ARCH/GARCH models are estimated by the conditional
+maximum likelihood method. There exist a number of tests for ARCH/GARCH effects (e.g., analyzing time series and ACF plots, the Engle's Lagrange Multiplier test).
+
+
+\subsection{Lagrange Multiplier test}
+Lagrange Multiplier (LM) test is equivalent to testing the significance of the least squares regression on squared values, using $F$ statistic:
+\begin{equation}\label{eq:LMtregression}
+X^{2}_{t} = \alpha_{0}  + \alpha_1 X^{2}_{ t  - 1} + \ldots + \alpha_m X^{2}_{t  - m} + e_t, \quad t=m+1,\ldots,T,
+\end{equation}
+where $e_t$ denotes the error term, $m$ is prespecified positive integer, and $T$ is the sample size.
+
+Specifically, the null hypothesis is
+$$H_0:\quad \alpha_1 = \cdots = \alpha_m = 0.$$
+Let the sum of squares total
+$$SST = \sum_{t=m+1}^T(X_t^2 - \overline{X_t^2})^2,$$
+where $\overline{X_t^2} = T^{-1}\sum_{t=1}^T X_t^2$ is the sample mean of $X_t^2$, and sum of squares of the errors
+$$SSE = \sum_{t=m+1}^T \hat{e}_t^2,$$
+where $\hat{e}_t$ is the least squares residual of the linear regression (\ref{eq:LMtregression}). Then, 
+\begin{equation}\label{eq:LMFtest}
+F = \frac{(SST - SSE)/m}{SSE/(T-2m-1)}.
+\end{equation}
+which is asymptotically distributed as a chi-squared distribution with $m$ degrees of
+freedom under the null hypothesis.
+
+
+\newpage
+\subsection{DAX example}
+Daily closing values of German Stock Index (DAX), 1991--1998.
+The data are sampled in business time, i.e., weekends and holidays are omitted (see Figure~\ref{fig:DAX}).
+
+\begin{figure}[h!]
+\centering
+<<>>=
+data(EuStockMarkets) 
+str(EuStockMarkets)
+DAX <- EuStockMarkets[,"DAX"]
+par(mfrow = c(1, 2))
+plot.ts(DAX, las = 1)
+plot.ts(diff(log(DAX)), las = 1)
+@
+\caption{Time series plot of the daily DAX index and log returns in 1991--1998.} 
+\label{fig:DAX}
+\end{figure}
+
+\FloatBarrier
+Here we produce histogram and overlapping normal curve with the same mean and standard deviation as the log DAX returns (see Figure~\ref{fig:DAX:hist}).
+
+\begin{figure}[h!]
+\centering
+<<>>=
+hist(diff(log(DAX)), br = 100, col = "gray", freq = FALSE, las = 1)
+curve(dnorm(x, mean = mean(diff(log(DAX))), sd = sd(diff(log(DAX)))), 
+      add = TRUE, col = "black", lwd = 2)
+@
+\caption{Histogram of the log DAX returns. Notice heavy (long) asymmetric tails in this data set.} \label{fig:DAX:hist}
+\end{figure}
+
+\FloatBarrier
+
+An easy way to spot (G)ARCH effect is to compare ACF plots of original and squared data (Figure~\ref{fig:DAX:ACF}). The effect is present when uncorrelated series appear to be autocorrelated when squared. 
+
+\begin{figure}[h!]
+\centering
+<<>>=
+par(mfrow=c(1, 2))
+acf(diff(log(DAX)), lag.max = 367)
+acf(diff(log(DAX))^2, lag.max = 367)
+@
+
+<<>>=
+par(mfrow=c(1,2))
+pacf(diff(log(DAX)), lag.max = 367)
+pacf(diff(log(DAX))^2, lag.max = 367)
+@
+\caption{ACF and PACF of the log DAX returns and squared log returns} 
+\label{fig:DAX:ACF}
+\end{figure}
+
+Compare with white noise in Figure~\ref{fig:WN:ACF} (no ARCH effects).
+
+\FloatBarrier
+\newpage
+Apply Lagrange Multiplier (LM) test on ARCH effects.
+
+<<>>=
+library(FinTS)
+ArchTest(diff(log(DAX)), lags = 12, demean = TRUE)
+@
+
+
+LM test is equivalent to testing the significance of the least squares regression on squared values. To check that, fit the regression (\ref{eq:LMtregression}) and apply the $F$ test (\ref{eq:LMFtest}):
+
+<<>>=
+X2 <- diff(log(DAX))^2
+T <- length(X2)
+m <- 12
+mod <- ar(X2, order.max = m, aic = FALSE, method = "ols", demean = TRUE)
+res <- mod$resid[(m + 1):T]
+
+# Alternative way of estimation:
+#mod <- arima(X2, order = c(m, 0, 0))
+#res <- mod$residuals[(m + 1):T]
+
+SSE <- sum(res^2)
+SST <- sum((X2[(m + 1):T] - mean(X2))^2)
+Fobs <- ((SST - SSE)/m)  /  (SSE/(T - 2*m - 1))
+pf(Fobs, m, (T - 2*m - 1), lower.tail = FALSE)
+
+
+# Alternative way of estimation:
+mat <- embed(X2, m + 1)
+mod <- lm(mat[,1] ~ mat[,-1])
+#summary(mod)$fstatistic
+tmp <- anova(mod)
+tmp$`Pr(>F)`[1]
+@
+
+\FloatBarrier
+Now let's fit a GARCH(1,1) model to our data. We estimate GARCH(1,1) model using conditional ML method:
+
+<<>>=
+library(tseries)
+garch11 <- garch(diff(log(DAX)), order = c(1, 1), trace = FALSE)
+summary(garch11)
+@
+
+The command \texttt{plot(garch11)} provides some diagnostics of the
+fitted model, i.e., whether the residuals $\varepsilon_{t}$ are white noise and are normally distributed. The output contains the scatter plots, histograms, QQ plots, and ACF plots of the actual data and the obtained residuals. 
+
+<<>>=
+#plot(garch11)
+@
+
+The analysis also can be performed with separate commands:
+<<>>=
+plot(garch11$residuals)
+hist(garch11$residuals, col = "blue", br = 100, main = "")
+
+qqnorm(garch11$residuals)
+qqline(garch11$residuals)
+
+par(mfrow=c(1,2))
+acf(garch11$residuals, na.action = na.pass)
+acf(garch11$residuals^2, na.action = na.pass)
+
+shapiro.test(garch11$residuals)
+@
+
+Remove the outlier and refit the model
+<<>>=
+dlDAX <- diff(log(DAX))
+dlDAXout <- dlDAX[-which.min(dlDAX)]
+garch11out <- garch(dlDAXout, order = c(1, 1), trace = FALSE)
+
+summary(garch11out)
+
+#plot(garch11out)
+
+plot.ts(garch11out$residuals, las = 1)
+@
+
+<<>>=
+res <- na.omit(garch11out$residuals)
+hist(res, col = "gray", br = 100, main = "", freq = FALSE, xlab = "Residuals", las = 1)
+curve(dnorm(x, mean = mean(res), sd = sd(res)), add = TRUE, col = "black", lwd = 3)
+curve(dt(x - mean(res), df = 5), add = TRUE, col = "red", lwd = 3)
+@
+
+<<>>=
+qqnorm(garch11out$residuals)
+qqline(garch11out$residuals)
+
+par(mfrow=c(1, 2))
+acf(garch11out$residuals, na.action = na.pass)
+acf(garch11out$residuals^2, na.action = na.pass)
+
+shapiro.test(garch11out$residuals)
+@
+
+
+<<>>=
+library(fGarch)
+G <- garchFit(formula = ~ garch(1, 1), data = dlDAXout, trace = FALSE)
+G
+
+alpha <- 0.05
+predict(G, n.ahead = 30, crit_val = qt(alpha/2, df = 5), plot = TRUE)
+@
+<!-- https://github.com/cran/fGarch/blob/master/R/methods-predict.R -->
+<!-- predict(G, n.ahead = 30, crit_val = qt(alpha/2, df = 5), plot = TRUE, nx = 1000) -->
+
+Note, that we re-estimated model in another package. Results will
+be different from the previous ones. Therefore, the model
+diagnostics should be repeated.
+
+The output of \texttt{garchFit} is a S4 object of class ``fGARCH''.
+For a list of its slots see \texttt{?garchFit}.
+
+For example, residuals (non-standardized, compared with \texttt{garch} output) can be obtained by \texttt{residuals(G)}.
+
+\section{Extensions}
+There was a boom in creating new models by adding new features to GARCH:
+\begin{itemize}
+\item IGARCH --- Integrated GARCH
+\item EGARCH --- Exponential GARCH
+\item TGARCH --- Threshold GARCH
+\item QGARCH --- Quadratic GARCH
+\item GARCH-M --- GARCH with heteroscedasticity in mean
+\item NGARCH --- Nonlinear GARCH
+\item ...
+\item MARCH --- Modified GARCH
+\item STARCH --- Structural ARCH
+\item ...
+\end{itemize}
+
+Thus, the papers by  \citet{Hansen:Lunde:2001} and \citet{Bollerslev:2009} had to appear.
+
+\section{Model building}
+Adapted from Chapter~3.3 by \cite{Tsay:2005}:
+\begin{enumerate}
+\item Specify a mean equation by testing for serial dependence in the data and, if
+necessary, building a time series model (e.g., an ARMA model) to remove any linear dependence.
+\item Use the residuals of the mean equation to test for ARCH effects.
+\item Specify a volatility model if ARCH effects are statistically significant and
+perform a \textbf{joint estimation}\footnote{The joint estimation can be done in R using the function 
+\texttt{garchFit} from the package \textbf{fGarch} and specifying, e.g., 
+\texttt{formula = \textasciitilde arma(2, 1) + garch(1, 1)}.} of the mean and volatility equations.
+\item Check the fitted model carefully and refine it if necessary.
+\end{enumerate}
+

@@ -5,6 +5,9 @@ Todo
 - check grammar
 - check :: and library() calls and add packages to the software list
 - add an empty line between :| and code or comments in each chunk
+- in Trend tests, add Chapter~8 of \citet{Chatterjee:Hadi:2006} and Chapter~5 of \citet{Chatterjee:Simonoff:2013} about the effects of autocorrelation.
+- add that tsa::arimax is a tranfrer function, not ARIMAX model
+- add a section on panel data analysis
 
 # Format
 

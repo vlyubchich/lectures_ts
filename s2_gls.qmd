@@ -109,7 +109,7 @@ $$
 $${#eq-gls}
 where $\boldsymbol{\Sigma}$ is the covariance matrix. The weighted least squares (WLS; @sec-wls) is just a special case of the GLS. In the WLS approach, all the off-diagonal entries of $\boldsymbol{\Sigma}$ are 0.
 
-We can use the function `nlme::gls()` and specify the `correlation` structure to avoid iterating the above steps manually:
+We can use the function `nlme::gls()` and specify the `correlation` structure to avoid iterating the steps from the previous example manually:
 
 ```{r}
 modDish_ar1_v2 <- nlme::gls(DISH ~ RES

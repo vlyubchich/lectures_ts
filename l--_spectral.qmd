@@ -1,0 +1,271 @@
+---
+output: html_document
+editor_options:
+    chunk_output_type: console
+---
+
+```{r, echo=FALSE}
+library(dplyr)
+library(ggplot2)
+library(patchwork)
+options(digits = 3)
+```
+
+#
+\section{Introduction}
+
+By now, we have been working in the \emph{time domain}, such that our analysis could be seen as a regression of present on the past (for example, ARIMA models). We have been using many time series plots with time on the x-axis.
+
+An alternative approach is to analyze time series in a \emph{spectral domain}, such that use a regression of present on a linear combination of sine and cosine functions. In this type of analysis, we will often use periodogram plots, with frequency or period on the x-axis.
+
+
+
+\section{Regression on sinusoidal components}
+The simplest form of spectral analysis consists of regression on a periodic component:
+\begin{equation}\label{eq:regr}
+Y_t = A\cos \omega t + B \sin \omega t + C + \epsilon_t,
+\end{equation}
+where $t =1,\ldots,T$; $\epsilon_t \sim WN(0, \sigma^2)$. Without loss of generality, we assume $0 \leqslant \omega \leqslant \pi$. In fact, for discrete data, frequencies outside this range are aliased into this range. For example, suppose that $-\pi < (\omega = \pi - \delta) < 0$, then 
+$$\cos(\omega t) = \cos((\pi - \delta)t) = \cos(\pi t) \cos(\delta t) + \sin(\pi t) \sin(\delta t) = \cos(\delta t).$$
+Hence, a sampled sinusoid with frequency smaller than 0, appears to coincide
+with a sinusoid with frequency from $[0, \pi]$.
+
+\textbf{Remark} The term $A\cos \omega t + B \sin \omega t$ is a periodic function with period $\frac{2\pi}{\omega}$. The period $\frac{2\pi}{\omega}$ represents the number of time units that it takes for the function to take the same value again, i.e., to complete a cycle. The frequency, measured in cycles per time unit, is given by the inverse $\frac{\omega}{2\pi}$. The angular frequency,
+measured in radians per time unit, is given by $\omega$. Because of its convenience, the angular frequency $\omega$ will be used to describe periodicity of the function, and its name is shortened to frequency, when there is no danger of confusion.
+
+\textbf{Example} 
+Consider the monthly data that exhibit a 12-month seasonality.
+Hence, the period $\frac{2\pi}{\omega}$ is equal to 12, which implies that the angular frequency $\omega = \frac{\pi}{6}$.  The frequency, measured in cycles per time unit, is given by the inverse $\frac{\omega}{2\pi} = \frac{1}{12} \approx 0.08$.
+
+The formulas to estimate parameters of regression~(\ref{eq:regr}) take a much simpler form if $\omega$ is one of the Fourier frequencies,
+defined by
+$$\omega_j=\frac{2\pi j}{T}, \quad  j=0,\ldots, \frac{T}{2},$$
+then 
+\begin{eqnarray*}
+\hat{A}&=&\frac{2}{T}\sum_t Y_t\cos \omega_jt,\\
+\hat{B}&=&\frac{2}{T}\sum_t Y_t\sin \omega_jt,\\
+\hat{C}&=&\overline{Y}=\frac{1}{T}\sum_tY_t.
+\end{eqnarray*}
+
+A suitable way of testing the significance of the sinusoidal component with
+frequency $\omega_j$ is using its contribution to the sum of squares
+$$R_T(\omega_j)=\frac{T}{2}\left( \hat{A}^2+\hat{B}^2 \right).$$
+If the $\epsilon_t \sim N(0, \sigma^2)$, then it follows that $\hat{A}$ and $\hat{B}$ are also independent normal
+each with variance $2\sigma^2/T$, so under the null hypothesis $A = B = 0$, we find that
+$$\frac{R_T(\omega_j)}{\sigma^2}\sim \chi_2^2$$
+or equivalently that $R_T(\omega_j)/(2\sigma^2)$ has an exponential distribution with mean 1.
+The above theory is easily extended to simultaneous estimation of several
+periodic components.
+
+
+
+
+\section{Periodogram}
+
+The periodogram is
+defined as
+\begin{equation}
+I_T(\omega) = \frac{1}{2\pi T}\left| \sum_{t=1}^T Y_te^{i\omega t} \right|^2,
+\end{equation}
+that it is an approximately unbiased
+estimator of the spectral density $f$.
+
+Some undesirable features of the periodogram:
+\begin{itemize}
+\item $I_T(\omega)$ for fixed $\omega$ is not a consistent estimate of $f(\omega)$, since 
+$$
+I_T(\omega_j) \sim \frac{f(\omega_j)}{2} \chi^2_2
+$$
+Therefore variance of $f^2(\omega)$ does not tend to 0 as $T \rightarrow \infty$.
+
+\item Also, the independence of periodogram ordinates at different Fourier frequencies
+suggests that the sample periodogram, plotted as a function of $\omega$,
+will be extremely irregular.
+\end{itemize}
+
+Suppose that $\gamma(h)$ is the autocovariance function of a stationary process and that $f (\omega)$ is the spectral density for the same process.  %In the notation of the previous sentence, $h$ = time lag and $\omega$ = frequency.
+The autocovariance and the spectral density have the following relationships:
+
+$$\gamma(h) = \int_{-1/2}^{1/2} e^{2\pi i \omega h} f(\omega) d \omega,$$
+and
+$$f(\omega) = \sum_{h=-\infty}^{h=\infty} \gamma(h) e^{-2\pi i \omega h}$$
+
+In the language of advanced calculus, the autocovariance and spectral density are Fourier transform pairs.  %We won’t worry about the calculus of the situation.  We’ll focus on the estimation of the spectral density – the frequency domain characterization of a series.  
+The Fourier transform equations show that there is a direct link between the time domain representation and the frequency domain representation of a time series.
+
+\section{Smoothing}
+The idea behind smoothing is to take weighted averages over neighboring frequencies in order to reduce the variability associated with individual
+periodogram values. However, such an operation necessarily introduces some bias into the estimation procedure. Theoretical studies focus on the amount
+of smoothing that is required to obtain an optimum trade-off between bias and
+variance. In practice, this usually means that choice of a kernel and amount of smoothing is somewhat subjective.
+
+The main form of smoothed estimator is given by
+\begin{equation}
+\hat{f}(\lambda) = \int^{\pi}_{-\pi}\frac{1}{h}K\left( \frac{\omega-\lambda}{h}\right)I_T(\omega)d\omega,
+\end{equation}
+where $I_T(\cdot)$ is the periodogram based on $T$ observations, $K(\cdot)$ is a kernel function
+and $h$ is the bandwidth. We usually take $K(\cdot)$ to be a non-negative function, symmetric about 0, and integrating to 1. Thus, any symmetric density, such as the normal, will work. In practice, however, it is more usual to take a kernel of finite range, such as the \emph{Epanechnikov kernel}
+\begin{equation}
+K(x)=\frac{3}{4\sqrt{5}}\left(1-\frac{x^2}{5} \right), \quad -\sqrt{5}\leq x \leq \sqrt{5},
+\end{equation}
+that is 0 outside $[-\sqrt{5}, \sqrt{5}]$. This choice of kernel function has some optimality
+properties. However, in practice this optimality is less important than the choice
+of bandwidth $h$, which effectively controls the range over which the periodogram
+is smoothed.
+
+
+There are some additional difficulties with the performance of the sample periodogram in the presence of a sinusoidal variation whose frequency is not one of
+the Fourier frequencies. This effect is known as \emph{leakage.} The reason of leakage is that we always consider a truncated periodogram. Truncation implicitly
+assumes that the time series is periodic with period $T$, which, of course, is not
+always true. So we artificially introduce non-existent periodicities into the estimated
+spectrum, i.e., cause ``leakage'' of the spectrum. (If time series is perfectly
+periodic over $T$ then there is no leakage.) The leakage can be treated using an operation of tapering on the periodogram, i.e., by choosing appropriate periodogram
+windows.
+
+\textbf{Remark.} When we work with periodograms, we lose all phase (relative location/time origin) information: the periodogram will be the same if all the
+data were circularly rotated to a new time origin, i.e., the observed data are treated as perfectly periodic.
+
+\subsection{Example: Monthly production of chocolate confectionery in Australia (tonnes). July 1957 -- Aug 1995.}
+<<>>=
+  Choc <- read.csv("./data/monthly-production-of-chocolate-.csv")
+  Choc <- ts(Choc[,2], start=c(1957, 7), end=c(1995, 8), frequency=12)
+  plot.ts(Choc, ylab="Chocolate production (tonnes)")
+  spectrum(Choc, detrend=T)
+@
+
+By default, Daniell kernel (with parameter $m$) is used.   
+For time series, it is a centered moving average that creates a smoothed value at time $t$ by averaging all values between times $t- m$ and $t+m$ (inclusive).  For example, the smoothing formula for a Daniell kernel with $m = 2$ is
+$$
+\hat{x}_t = \frac{x_{t-2}+x_{t-1}+x_t + x_{t+1}+x_{t+2}}{5}
+$$
+
+In R, the weighting coefficients for a Daniell kernel with $m = 2$ can be generated with the command 
+<<>>=
+kernel("daniell", 2)
+@
+
+The subscripts for \texttt{coef[ ]} refer to the time difference from the center of the average at time $t$. Thus, the smoothing formula in this instance is
+$$\hat{x}_t = 0.2x_{t-2} + 0.2x_{t-1} +0.2x_t + 0.2x_{t+1} +0.2x_{t+2},$$
+which is the same as the formula given above.
+
+The modified Daniell kernel is such that the two endpoints in the averaging receive half the weight that the interior points do.  For a modified Daniell kernel with $m = 2$, the smoothing is
+$$\hat{x}_t = \frac{x_{t-2}+2x_{t-1}+2x_t + 2x_{t+1} + x_{t+2}}{8} = 0.125x_{t-2} +0.25x_{t-1}+0.25x_t+0.25x_{t+1}+0.125x_{t+2}$$
+
+List the weighting coefficients in R:
+<<>>=
+  kernel("modified.daniell", 2)
+@
+
+Either the Daniell kernel or the modified Daniell kernel can be convoluted (repeated) so that the smoothing is applied again to the smoothed values.  This produces a more extensive smoothing by averaging over a wider time interval.  For instance, to repeat a Daniell kernel with $m = 2$ on the smoothed values that resulted from a Daniell kernel with $m = 2$, the formula would be
+$$\hat{\hat{x}}_t = \frac{\hat{x}_{t-2}+\hat{x}_{t-1}+\hat{x}_t +\hat{x}_{t+1}+\hat{x}_{t+2}}{5}$$
+
+This is the average of the smoothed values within two time periods of time $t$, in either direction.
+
+In R, the command 
+<<>>=
+  kernel("daniell", c(2,2))
+@
+supplies the coefficients that would be the weights in averaging the original data for a convoluted Daniell kernel with $m = 2$ in both smoothings. This generates the smoothing formula
+$$\hat{x}_t = 0.04x_{t-4} + 0.08x_{t-3} +0.12x_{t-2} +0.16x_{t-1} +0.20x_t +0.16x_{t+1} +0.12x_{t+2} +0.08x_{t+3}+0.04x_{t+4}.$$
+
+A convolution of the modified method in which the end points have less weight is also possible, with the command 
+<<>>=
+  kernel("modified.daniell",c(2,2)) 
+@
+
+Thus, the center values are weighted slightly more heavily than in the unmodified Daniell kernel.
+
+When we smooth a periodogram, we are smoothing across a frequency interval rather than a time interval. 
+
+<<>>=
+  par(mfrow=c(2,2))
+  spectrum(Choc, spans=c(3,3))
+  spectrum(Choc, spans=c(5,5))
+  spectrum(Choc, spans=c(7,7))
+  spectrum(Choc, spans=c(21,21))
+@
+
+The x-axis corresponds to $\frac{\omega}{2\pi}$. Notice that we have a very large peak at an
+approximate frequency 1, which implies one cycle per year (if the frequency of 12 was not specifically stated as in the R code above, the frequency axis would be different, and spectrum peak would correspond to $\approx 0.08$). 
+
+Notice that you can use the confidence band in the upper right corner to get
+an approximate idea how significant the peak is.
+
+Another method of testing the reality of a peak is to look at its harmonics. It
+is extremely unlikely that a true cycle will be shaped perfectly as a sine curve
+and at least the first few harmonics will show up as well. For example, if we
+have monthly data with annual seasonality (12 months period) then almost certainly the periodogram will not look as a perfect sine function. In contrast, the peaks at 6-, 4-, 3-months and possibly others will show up and
+will be also of importance if 12-month peak is important (see Granger, 1964 for
+more discussion). It is interesting that this is exactly the pattern that we see in the figures above.
+
+We can try to approximate our data with an AR model and then plot the approximating periodogram of an AR model.
+<<>>=
+  spectrum(Choc, method="ar")
+@
+
+The series should be detrended prior to a spectral analysis.  A trend will cause such a dominant spectral density at a low frequency that other peaks won't be seen.  By default, the R command \texttt{spec.pgram} performs detrending using a linear trend model.  That is, the spectral density is estimated using the residuals from a regression done where the y-variable is observed data and the x-variable is time $t$.  If a different type of trend is present, a quadratic for instance, then a polynomial regression could be used to detrend the data before the estimated spectral density is explored.  Note, that the R command \texttt{spec.ar}, does not detrend time series.
+
+<<>>=
+  t <- time(Choc)+1/12
+  t <- as.vector(t)
+  sin2pit <- sin(2*pi*t)
+  cos2pit <- cos(2*pi*t)
+  #sin4pit <- sin(4*pi*t)
+  #cos4pit <- cos(4*pi*t)
+  
+  cor.test(sin2pit, cos2pit)
+@
+
+<<>>=
+  library(MASS)
+  boxcox(Choc~t)
+  sqrt_Choc <- sqrt(Choc)
+  plot.ts(sqrt_Choc)
+  M1 <- lm(sqrt_Choc~poly(as.vector(t), 5))
+  plot.ts(M1$residuals)
+  acf(M1$residuals)
+@
+
+<<>>=
+  mod1 <- lm(sqrt_Choc~poly(as.vector(t), 5)+sin2pit+cos2pit)
+  summary(mod1)
+  #plot(mod1)
+  acf(mod1$residuals)
+  plot.ts(mod1$residuals)
+  plot.ts(Choc)
+  pred <- (mod1$fitted.values)^2
+  points(y=pred, x=time(Choc), type="l", col=4, lwd=2)
+@
+
+
+
+Unequally spaced time series:
+<<>>=
+  library(lomb)
+  #With the following 4 lines, we artificially create unequally 
+  #spaced time series (and corresponding time), just as an example:
+  set.seed(2)
+  Stimes <- sample(1:length(t), length(t)/2, replace=F)
+  Choc_UnSpaced <- sqrt_Choc[Stimes]
+  t_UnSpaced <- t[Stimes]
+  #Plot the periodogram
+  lsp(Choc_UnSpaced, times=t_UnSpaced, type = "period", las=1, main="")
+  lsp(Choc_UnSpaced, times=t_UnSpaced, type = "frequency", las=1, main="")
+
+@
+
+\section{Conclusion}
+For challenging problems, smoothing, multitapering, linear
+filtering, (repeated) pre-whitening and Lomb--Scargle can be
+used together. Beware that aperiodic but autoregressive
+processes produce peaks in the spectral densities. Harmonic
+analysis is a complicated `art' rather than a straightforward
+`procedure'.
+
+It is extremely difficult to derive the significance of a weak
+periodicity from harmonic analysis. Do not believe analytical
+estimates (e.g., exponential probability), as they rarely apply to
+real data. It is essential to make simulations, typically
+permuting or bootstrapping the data keeping the observing
+times fixed. Simulations of the final model with the
+observation times is also advised.
