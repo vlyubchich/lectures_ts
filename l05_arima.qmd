@@ -13,7 +13,7 @@ options(digits = 3)
 
 # Autoregressive Integrated Moving Average (ARIMA) Models
 
-\section{Box--Jenkins methodology}
+## Box--Jenkins methodology
 
 Below is a general algorithm used to fit autoregressive models, not only the stationary (ARMA), but also those with stochastic trend:
 \begin{enumerate}
@@ -38,7 +38,7 @@ $$
 
 
 
-\section{ARIMA}
+## ARIMA
 
 If $d$ is a nonnegative integer, then $X_t$ is an ARIMA($p, d, q$) process if $Yt=(1 - B)^d X_t$ is a causal ARMA($p, q$) process.
 
@@ -86,12 +86,10 @@ lines(lower,col='green') # plotting the lower bound of prediction interval
 lines(upper,col='green') # plotting the upper bound of prediction interval
 @
 
-\section{SARIMA}
+## SARIMA
 
 
-
-
-\section{Equivalences}
+## Equivalences
 
 Mathematically, some models are equivalent one to another. Linear exponential smoothing models are all special cases of ARIMA models, but non-linear exponential smoothing models have no equivalent ARIMA counterparts.
 
@@ -126,12 +124,12 @@ Holt--Winters' multiplicative method
 
 The goal of this lecture is to introduce SARIMA Modelling, learn the step-by-step process to identify $p,d,q,P,D,Q,s$ in $ SARIMA(p,d,q)(P,D,Q)_m $, and illustrate the process using the wine data as an example. 
 
-\section{Introduction}
+## Introduction
 
 Recall that \textbf{ARIMA} (\textbf{A}uto \textbf{R}egressive, \textbf{I}ntegrated, \textbf{M}oving \textbf{A}verage) is represented by $(p,d,q)$ respectively. ARIMA model is used when a series does not have a constant mean and
 shows a moving average. Now say your series is about ice cream sales, and you noticed every summer of the year sales spike up and drops down every winter. This is an example of a seasonality where we see \textbf{predictable repeating patterns within a year} and happens every year. This given series is not stationary; therefore, ARIMA and earlier models cannot be used unless we remove the seasonal portion of the series. Note that seasonality is not strictly referring to the four seasons of the year,i.e., spring, summer, winter, fall. Seasonality can occur at a specific period within a year. e.g., every weekend, every month, or every quarter. SARIMA Model is denoted $SARIMA(p,d,q) (P,D,Q)_m$ where $m$ is the period. 
 
-\section{Identification of p,d,q,P,D,Q,s in SARIMA(p,d,q) (P,D,Q)m}
+## Identification of p,d,q,P,D,Q,s in SARIMA(p,d,q) (P,D,Q)m
 
 Steps are as follows:
 
@@ -293,7 +291,7 @@ lines(exp(upper),col='green')
 \end{figure}
 
 
-\section{Conclusion}
+## Conclusion
 
 In this lecture, we discovered the Seasonal Autoregressive Integrated Moving Average, or SARIMA, method for time series forecasting with  data containing trends and seasonality. We also learned that limitations of ARIMA when it comes to seasonal data and that SARIMA is an extension of ARIMA that models the seasonal element in our data. This lecture also demonstrated the very basics of SARIMA modeling with residual diagnostics and evaluation on a testing set, and prediction. 
 

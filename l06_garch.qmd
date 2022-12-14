@@ -11,9 +11,9 @@ library(patchwork)
 options(digits = 3)
 ```
 
-#
+# Generalized Autoregressive Conditional Heteroscedasticity (GARCH) Models
 
-\section{Introduction}
+## Introduction
 
 In contrast to the traditional time series analysis that focuses on modelling
 the conditional first moment, models of \emph{autoregressive conditional heteroscedasticity} (ARCH) and \emph{generalized autoregressive conditional heteroscedasticity} (GARCH) specifically take the dependency of the conditional second moment into modelling consideration and accommodate the increasingly important need to explain and model risk and uncertainty in, for example, financial time series.
@@ -28,7 +28,7 @@ which is termed as {\bf (conditional) heteroscedasticity}. Standard examples of 
 
 
 
-\section{Some real data examples}
+## Some real data examples
 
 Since financial data typically have the autocorrelation coefficient close to 1 at lag 1
 (e.g., the exchange rate between the US and Canadian dollar hardly changes
@@ -112,8 +112,7 @@ acf(WN^2, las = 1)
 \end{figure}
 
 
-\FloatBarrier
-\section{Models}
+## Models
 
 @Engle:1982} defines an autoregressive conditional heteroscadastic (ARCH) model as
 \begin{eqnarray} \label{18.3}
@@ -151,7 +150,7 @@ The parameters of ARCH/GARCH models are estimated by the conditional
 maximum likelihood method. There exist a number of tests for ARCH/GARCH effects (e.g., analyzing time series and ACF plots, the Engle's Lagrange Multiplier test).
 
 
-\subsection{Lagrange Multiplier test}
+### Lagrange Multiplier test
 Lagrange Multiplier (LM) test is equivalent to testing the significance of the least squares regression on squared values, using $F$ statistic:
 $$\label{eq:LMtregression}
 X^{2}_{t} = \alpha_{0}  + \alpha_1 X^{2}_{ t  - 1} + \ldots + \alpha_m X^{2}_{t  - m} + e_t, \quad t=m+1,\ldots,T,
@@ -173,7 +172,7 @@ freedom under the null hypothesis.
 
 
 \newpage
-\subsection{DAX example}
+### DAX example
 Daily closing values of German Stock Index (DAX), 1991--1998.
 The data are sampled in business time, i.e., weekends and holidays are omitted (see @fig-DAX}).
 
@@ -347,7 +346,7 @@ For a list of its slots see \texttt{?garchFit}.
 
 For example, residuals (non-standardized, compared with \texttt{garch} output) can be obtained by \texttt{residuals(G)}.
 
-\section{Extensions}
+## Extensions
 There was a boom in creating new models by adding new features to GARCH:
 \begin{itemize}
 \item IGARCH --- Integrated GARCH
@@ -364,7 +363,7 @@ There was a boom in creating new models by adding new features to GARCH:
 
 Thus, the papers by  @Hansen:Lunde:2001} and @Bollerslev:2009} had to appear.
 
-\section{Model building}
+## Model building
 Adapted from Chapter~3.3 by \cite{Tsay:2005}:
 \begin{enumerate}
 \item Specify a mean equation by testing for serial dependence in the data and, if

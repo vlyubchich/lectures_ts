@@ -11,24 +11,22 @@ library(patchwork)
 options(digits = 3)
 ```
 
-#
+# Time Series Regression with Trends
+
 The goal of this lecture is to introduce common methods of handling nonstationary time series in regression models. You should become familiar with the problem of spurious correlation (regression) and approaches helping to avoid this problem.
 
-\paragraph{Objectives}
-\begin{enumerate}
-\item Learn three alternative ways of handling trends and/or seasonality to avoid spurious results: incorporate time effects into regression model, use deviations from trend or differenced series.
-\item Introduce the concept of cointegration, learn how to detect it and model using an error correction model.
-\end{enumerate}
+**Objectives**
+
+1. Learn three alternative ways of handling trends and/or seasonality to avoid spurious results: incorporate time effects into regression model, use deviations from trend or differenced series.
+1. Introduce the concept of cointegration, learn how to detect it and model using an error correction model.
+
+**Reading materials**
+
+* 
+* Chapter 6 in @Kirchgassner:Wolters:2007 on cointegration
 
 
-\paragraph{Reading materials}
-\begin{itemize}
-\item Earlier materials on detrending individual time series
-\item Chapter 6 in @Kirchgassner:Wolters:2007} on cointegration
-\end{itemize}
-
-
-\section{Spurious correlation}
+## Spurious correlation}
 
 Using the standard normal distribution, $N(0,1)$, simulate two series of length $T=300$ (Figure~\ref{f:orig}):
 <<>>=
@@ -88,7 +86,7 @@ Not only common increasing/decreasing trends, but also other systematic changes 
 Sometimes, some simple tricks might be applicable to avoid spurious results. For example, analyze not the raw numbers, but the \emph{rates} that remove the effect of population growth in a city: crime rate per 100,000 inhabitants, number of people older 70 per 1,000 inhabitants, etc. For more general approaches, see the next section.
 
 
-\section{Common approaches to regressing time series with trends}
+## Common approaches to regressing time series with trends}
 
 What if we are given time series with trends (like in Figure~\ref{f:TSwithTrends}), we do not know the data generating process (DGP), and we want to use these series in regression analysis.
 
@@ -102,7 +100,7 @@ In general, there are three alternative ways of dealing with trends in regressio
 After these three approaches, we consider a special case of cointegration (Section~\ref{sec:cointegration}).
 
 
-\subsection{Incorporate time effects}
+### Incorporate time effects}
 \label{sec:incorporateTime}
 
 Based on the time series plots (Figure~\ref{f:TSwithTrends}), linear time trend would fit these data, since we see a linear increase of values with time (so we add linear time effect $t$ in our model). Alternatively, e.g., if we observed parabolic structure, we could include $t+t^2$ or other form of trend.
@@ -123,7 +121,7 @@ estimated as:
 
 In the above model, the (highly statistically significant) time term took over the trend influence, thus, the coefficient for $X$ shows the `real' relationship between $Y$ and $X$. Notice, the coefficient $\beta_1$ is not statistically significant, what we expected.
 
-\subsection{Use deviations from trends}
+### Use deviations from trends}
 
 Here we fit a separate time trend (may be of different form for each time series: linear, quadratic, log, etc.) for each variable and find deviations from these trends. Based on the plots (Figure~\ref{f:TSwithTrends}), linear trends are appropriate here:
 $$
@@ -172,7 +170,7 @@ summary(mod_devTrend)
 We got the result (the relationship between the variables is not statistically significant) similar to running the model incorporating time trends in Section~\ref{sec:incorporateTime}. Again, it is a reasonable result judging based on how the time series were simulated (independent, although with trends in the same direction).
 
 
-\subsection{Use differenced series}
+### Use differenced series}
 \label{sec:RegTrendDiff}
 
 Instead of assuming a deterministic trend as in the previous subsections, we can try to eliminate a stochastic trend by differencing the time series. We define the lag-1 difference operator $\Delta$ by
@@ -215,7 +213,7 @@ summary(mod_diff)
 
 As expected (since the original series $X$ and $Y$, before adding the trend, are uncorrelated), the coefficient $\beta_1$ and the whole model are not statistically significant.
 
-\subsection{Wrong approach (do not repeat at home): spurious regression}
+### Wrong approach (do not repeat at home): spurious regression}
 
 What if we forget about the three approaches above and just use the time series with trends in a regression model:
 $$
@@ -233,7 +231,7 @@ The bad model shows spurious `statistically significant' effects, which are not 
 
 
 
-\subsection{Example: predicting sales of home appliances}
+### Example: predicting sales of home appliances}
 \label{s:EXappl_regTS1}
 Recall the dishwashers example from the first lecture. Let's use the above methods for a regression of time series of dishwasher shipments ($DISH_t$) and residential investments ($RES_t$).
 
@@ -349,7 +347,7 @@ lawstat::runs.test(M_diff$residuals, plot.it = FALSE)
 \paragraph{Conclusion} Now we can incorporate trend effects into our models, using the three considered approaches. Next step would be also to incorporate autocorrelation structure in the residuals (the simulated example considered here used independent normally distributed noise, so it was an artificial ideal case of no autocorrelation -- we usually encounter autocorrelations, e.g., see residual diagnostics in Section~\ref{sec:ExTimeEff}).
 
 
-\section{Cointegration}
+## Cointegration}
 \label{sec:cointegration}
 
 Generally, cointegration might be characterized by two or more I(1)
@@ -365,7 +363,7 @@ $$
 
 Cointegration means a common stochastic trend. The vector $(1, -\beta)^{\top}$ is called the cointegration vector.
 
-\subsection{Two-step Engle--Granger method}
+### Two-step Engle--Granger method}
 
 \begin{enumerate}
 \item Estimate long-run relationship, i.e., regression in levels as in~\eqref{eq:longrun}, and
@@ -464,7 +462,7 @@ adf.test(U2)
 The linear combination of individually integrated $W_t$ and $X_t$ does not produce a stationary time series, thus, $W_t$ and $X_t$ are not cointegrated.
 
 
-\subsection{Johansen test}
+### Johansen test}
 
 This test allows for more than one cointegrating relationship. The null hypothesis for the trace test is that the number of cointegration vectors is $r<k$, vs. the alternative that $r=k$. Testing proceeds sequentially for $k=1,2,\ldots$; and the first non-rejection of the null hypothesis is taken as an estimate of $r$.
 

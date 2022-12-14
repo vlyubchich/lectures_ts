@@ -11,8 +11,9 @@ library(patchwork)
 options(digits = 3)
 ```
 
-#
-\section{Introduction}
+# Spectral Analysis
+
+## Introduction}
 
 By now, we have been working in the \emph{time domain}, such that our analysis could be seen as a regression of present on the past (for example, ARIMA models). We have been using many time series plots with time on the x-axis.
 
@@ -20,7 +21,7 @@ An alternative approach is to analyze time series in a \emph{spectral domain}, s
 
 
 
-\section{Regression on sinusoidal components}
+## Regression on sinusoidal components}
 The simplest form of spectral analysis consists of regression on a periodic component:
 $$\label{eq:regr}
 Y_t = A\cos \omega t + B \sin \omega t + C + \epsilon_t,
@@ -60,7 +61,7 @@ periodic components.
 
 
 
-\section{Periodogram}
+## Periodogram}
 
 The periodogram is
 defined as
@@ -93,7 +94,7 @@ $$f(\omega) = \sum_{h=-\infty}^{h=\infty} \gamma(h) e^{-2\pi i \omega h}$$
 In the language of advanced calculus, the autocovariance and spectral density are Fourier transform pairs.  %We won’t worry about the calculus of the situation.  We’ll focus on the estimation of the spectral density – the frequency domain characterization of a series.  
 The Fourier transform equations show that there is a direct link between the time domain representation and the frequency domain representation of a time series.
 
-\section{Smoothing}
+## Smoothing}
 The idea behind smoothing is to take weighted averages over neighboring frequencies in order to reduce the variability associated with individual
 periodogram values. However, such an operation necessarily introduces some bias into the estimation procedure. Theoretical studies focus on the amount
 of smoothing that is required to obtain an optimum trade-off between bias and
@@ -125,7 +126,7 @@ windows.
 \textbf{Remark.} When we work with periodograms, we lose all phase (relative location/time origin) information: the periodogram will be the same if all the
 data were circularly rotated to a new time origin, i.e., the observed data are treated as perfectly periodic.
 
-\subsection{Example: Monthly production of chocolate confectionery in Australia (tonnes). July 1957 -- Aug 1995.}
+### Example: Monthly production of chocolate confectionery in Australia (tonnes). July 1957 -- Aug 1995.}
 <<>>=
   Choc <- read.csv("./data/monthly-production-of-chocolate-.csv")
   Choc <- ts(Choc[,2], start=c(1957, 7), end=c(1995, 8), frequency=12)
@@ -254,7 +255,7 @@ Unequally spaced time series:
 
 @
 
-\section{Conclusion}
+## Conclusion}
 For challenging problems, smoothing, multitapering, linear
 filtering, (repeated) pre-whitening and Lomb--Scargle can be
 used together. Beware that aperiodic but autoregressive

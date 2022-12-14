@@ -11,24 +11,11 @@ library(patchwork)
 options(digits = 3)
 ```
 
-#
-\title{Trend Detection (Trend Tests)}
-\author{}
-\date{}
+# Trend Detection
 
-\begin{document}
-\maketitle %This command creates title for the document with default fonts, spacing, etc.
-    
-%This is to setup R 'behavior':
-<<setup0,echo=FALSE>>=
-  options(width=120) #width of text output from R
-  opts_chunk$set(size = 'scriptsize',echo=TRUE, eval=TRUE, fig.width=8, fig.height=5.5, 
-                 out.width='\\textwidth', fig.show='hold', fig.align="center", 
-                 message = FALSE, warning = FALSE)
-@
+Reading: Chapter 6.3 in @Brockwell:Davis:2002
 
-
-\section{Introduction}
+## Introduction
 
 The majority of studies focus on detection of linear or monotonic trends, using
 
@@ -52,8 +39,10 @@ Hence, the interest in developing reliable tests for non-monotonic trends under 
 
 
 
-\section{`Traditional' tests}
-\subsection{How the $t$-test fails}
+## 'Traditional' tests
+
+### How the $t$-test fails
+
 $H_0$: no trend
 
 $H_1$: linear trend
@@ -75,7 +64,8 @@ Apply the $t$-test
 
 Type I error (false positives) of this test is inflated due to dependence effect. Additionally, this test is limited only to detecting linear trends (see the alternative hypothesis $H_1$).
 
-\subsection{Non-parametric Mann--Kendall test}
+### Non-parametric Mann--Kendall test
+
 This test is based on Kendall rank correlation and is used to determine if a nonseasonal time series has a monotonic trend over time. 
 
 $H_0$: no trend
@@ -105,9 +95,9 @@ MannKendall(Y)
 @
 
 
-\section{Bootstrap enhancements}
+## Bootstrap enhancements
 
-\subsection{What is bootstrap?}
+### What is bootstrap?
 
 The seminal paper by @Efron:1979} describes bootstrap for i.i.d. data. In two words, the idea is the following: we can relax distributional assumptions and reconstruct distribution of the sample statistic by \emph{resampling data with replacement} and recalculating the statistic over and over.
 
@@ -137,7 +127,8 @@ t.test(Hg)
 
 We cannot apply this approach directly to time series or spatial data, because these data are not i.i.d. and resampling will break the order and dependence structure. To account for the dependence structure, a number of modifications to the bootstrap procedure were proposed, including block bootstrap and sieve bootstrap \citep[see][and references therein]{Buhlmann:2002}. 
 
-\subsection{Bootstrapped $t$-test and Mann--Kendall test}
+
+### Bootstrapped $t$-test and Mann--Kendall test
 
 $H_0$: no trend
 
@@ -171,7 +162,7 @@ Notice the different $p$-values from the first time we applied the tests.
 
 
 
-\section{Detecting non-monotonic trends}
+## Detecting non-monotonic trends
 
 
 Consider a time series $$Y_t = \mu(t/n) + \epsilon_t, \quad t=1,\ldots,n,$$
@@ -249,8 +240,9 @@ The following steps are wrapped in the \texttt{wavk.test()} function:
 
 
 
-\section{Unit roots}
-Reading: Chapter 6.3 in @Brockwell:Davis:2002}.
+## Unit roots
+
+
 
 By today, we have been identifying the order of integration (if a process $\{X_t\}\sim I(d)$) by looking at the time series plot of $\{X_t\}$ and (largely) by looking at the plot of sample ACF. We would difference time series again and again, until we see a stable mean at the time series plot and a rapid (compared with linear), exponential-like decline in ACF. Here we present a hypothesis testing approach originally suggested by @Dickey:Fuller:1979} (\textbf{Dickey--Fuller test}).
 
@@ -322,7 +314,8 @@ In this simulated example, misspecification of the testing model did not change 
 
 
 
-\subsection{ADF and PP test problems}
+### ADF and PP test problems
+
 The ADF and PP tests are asymptotically equivalent but may differ substantially in finite samples due to the different ways in which they correct
 for serial correlation in the test regression.
 
