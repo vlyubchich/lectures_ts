@@ -86,7 +86,7 @@ Test statistic:
 $$S=\sum_{k=1}^{n-1}\sum_{j=k+1}^n sgn(X_j-X_k),$$
 where $sgn(x)$ takes on the values of 1, 0, and $-1$, for $x>0$, $x=0$, and $x<0$, respectively.
 
-\citet{Kendall:1975} showed that $S$ is asymptotically normally distributed and, for the situations where there may be ties in the $X$ values, 
+@Kendall:1975} showed that $S$ is asymptotically normally distributed and, for the situations where there may be ties in the $X$ values, 
 $${\rm E}S=0,$$
 $${\rm Var} S = \left\{ n(n+1)(2n+5)-\sum_{j=1}^pt_j(t_j-1)(2t_j+5) \right\}/18$$
 
@@ -109,7 +109,7 @@ MannKendall(Y)
 
 \subsection{What is bootstrap?}
 
-The seminal paper by \citet{Efron:1979} describes bootstrap for i.i.d. data. In two words, the idea is the following: we can relax distributional assumptions and reconstruct distribution of the sample statistic by \emph{resampling data with replacement} and recalculating the statistic over and over.
+The seminal paper by @Efron:1979} describes bootstrap for i.i.d. data. In two words, the idea is the following: we can relax distributional assumptions and reconstruct distribution of the sample statistic by \emph{resampling data with replacement} and recalculating the statistic over and over.
 
 For example, we are given some values of mercury (Hg) concentration in fish. The data are not time series data, the data were collected in such a way that we can treat the samples as independent:
 <<>>=
@@ -143,7 +143,7 @@ $H_0$: no trend
 
 $H_1$: linear ($t$-test) or monotonic (Mann--Kendall test) trend
 
-\citet{Noguchi:etal:2011} enhance the classical $t$-test and Mann--Kendall trend test with sieve bootstrap approaches that take into account the serial correlation of data in order to obtain more accurate and reliable estimates.
+@Noguchi:etal:2011} enhance the classical $t$-test and Mann--Kendall trend test with sieve bootstrap approaches that take into account the serial correlation of data in order to obtain more accurate and reliable estimates.
 
 While taking into account dependence structure in the data, these tests are still limited to the linear or monotonic case.
 
@@ -189,7 +189,7 @@ where $f(\cdot, t): \mathbb{R} \to \mathbb{R}$ belongs to a known family of smoo
 
 Special cases: $f(\theta,t)\equiv 0$; \, $f(\theta,t)=\theta_0+\theta_1 t$; \, $f(\theta,t)=\theta_0+\theta_1 t+\theta_2t^2$.
 
-The following local regression or the local factor test statistic was originally developed by \citet{wang:etal:2008}
+The following local regression or the local factor test statistic was originally developed by @wang:etal:2008}
 \begin{eqnarray*}
 {\rm WAVK}_n&=& F_n=\frac{\rm{MST}}{\rm{MSE}} \\
 &=& \frac{k_n}{n-1}\sum_{i=1}^n{\left( \overline{V}_{i.}-\overline{V}_{..}\right)^2\Big/ \frac{1}{n(k_n-1)}\sum_{i=1}^n\sum_{j=1}^{k_n}{\left(V_{ij}-\overline{V}_{i.}\right)^2}},
@@ -204,7 +204,7 @@ $\overline{V}_{..}$ is the grand mean.
 Both $n\to \infty$ and $k_n\to \infty$, $\rm{MSE}\to$ constant. Hence, we can consider $\sqrt{n}(\rm{MST}-\rm{MSE})$ instead of $\sqrt{n}(F_n-1)$.
 
 
-\citet{lyubchich:etal:2013:wavk} extended the WAVK approach:
+@lyubchich:etal:2013:wavk} extended the WAVK approach:
 
 \begin{enumerate}
  \item Showed that the structure of time series errors can be
@@ -217,7 +217,7 @@ Both $n\to \infty$ and $k_n\to \infty$, $\rm{MSE}\to$ constant. Hence, we can co
  \item Developed a fully data-driven bootstrap %resampling based
   procedure to estimate the finite sample properties of WAVK under the unknown dependence structure.
 
- \item Proposed to estimate the optimal size of local windows $k_n$ by employing the nonparametric resampling $m$-out-of-$n$ selection algorithm of \citet{Bickel:etal:1997}.
+ \item Proposed to estimate the optimal size of local windows $k_n$ by employing the nonparametric resampling $m$-out-of-$n$ selection algorithm of @Bickel:etal:1997}.
 \end{enumerate}
 
 Apply the WAVK test to our simulated data:
@@ -250,9 +250,9 @@ The following steps are wrapped in the \texttt{wavk.test()} function:
 
 
 \section{Unit roots}
-Reading: Chapter 6.3 in \citet{Brockwell:Davis:2002}.
+Reading: Chapter 6.3 in @Brockwell:Davis:2002}.
 
-By today, we have been identifying the order of integration (if a process $\{X_t\}\sim I(d)$) by looking at the time series plot of $\{X_t\}$ and (largely) by looking at the plot of sample ACF. We would difference time series again and again, until we see a stable mean at the time series plot and a rapid (compared with linear), exponential-like decline in ACF. Here we present a hypothesis testing approach originally suggested by \citet{Dickey:Fuller:1979} (\textbf{Dickey--Fuller test}).
+By today, we have been identifying the order of integration (if a process $\{X_t\}\sim I(d)$) by looking at the time series plot of $\{X_t\}$ and (largely) by looking at the plot of sample ACF. We would difference time series again and again, until we see a stable mean at the time series plot and a rapid (compared with linear), exponential-like decline in ACF. Here we present a hypothesis testing approach originally suggested by @Dickey:Fuller:1979} (\textbf{Dickey--Fuller test}).
 
 Let $X_1,\ldots, X_n$ be observations from an AR(1) model:
 $$X_t-\mu=\phi_1(X_{t-1}-\mu) + Z_t, \quad \{Z_t\}\sim {\rm WN}(0,\sigma^2),$$

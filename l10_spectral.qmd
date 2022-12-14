@@ -22,9 +22,9 @@ An alternative approach is to analyze time series in a \emph{spectral domain}, s
 
 \section{Regression on sinusoidal components}
 The simplest form of spectral analysis consists of regression on a periodic component:
-\begin{equation}\label{eq:regr}
+$$\label{eq:regr}
 Y_t = A\cos \omega t + B \sin \omega t + C + \epsilon_t,
-\end{equation}
+$$
 where $t =1,\ldots,T$; $\epsilon_t \sim WN(0, \sigma^2)$. Without loss of generality, we assume $0 \leqslant \omega \leqslant \pi$. In fact, for discrete data, frequencies outside this range are aliased into this range. For example, suppose that $-\pi < (\omega = \pi - \delta) < 0$, then 
 $$\cos(\omega t) = \cos((\pi - \delta)t) = \cos(\pi t) \cos(\delta t) + \sin(\pi t) \sin(\delta t) = \cos(\delta t).$$
 Hence, a sampled sinusoid with frequency smaller than 0, appears to coincide
@@ -64,9 +64,9 @@ periodic components.
 
 The periodogram is
 defined as
-\begin{equation}
+$$
 I_T(\omega) = \frac{1}{2\pi T}\left| \sum_{t=1}^T Y_te^{i\omega t} \right|^2,
-\end{equation}
+$$
 that it is an approximately unbiased
 estimator of the spectral density $f$.
 
@@ -100,14 +100,14 @@ of smoothing that is required to obtain an optimum trade-off between bias and
 variance. In practice, this usually means that choice of a kernel and amount of smoothing is somewhat subjective.
 
 The main form of smoothed estimator is given by
-\begin{equation}
+$$
 \hat{f}(\lambda) = \int^{\pi}_{-\pi}\frac{1}{h}K\left( \frac{\omega-\lambda}{h}\right)I_T(\omega)d\omega,
-\end{equation}
+$$
 where $I_T(\cdot)$ is the periodogram based on $T$ observations, $K(\cdot)$ is a kernel function
 and $h$ is the bandwidth. We usually take $K(\cdot)$ to be a non-negative function, symmetric about 0, and integrating to 1. Thus, any symmetric density, such as the normal, will work. In practice, however, it is more usual to take a kernel of finite range, such as the \emph{Epanechnikov kernel}
-\begin{equation}
+$$
 K(x)=\frac{3}{4\sqrt{5}}\left(1-\frac{x^2}{5} \right), \quad -\sqrt{5}\leq x \leq \sqrt{5},
-\end{equation}
+$$
 that is 0 outside $[-\sqrt{5}, \sqrt{5}]$. This choice of kernel function has some optimality
 properties. However, in practice this optimality is less important than the choice
 of bandwidth $h$, which effectively controls the range over which the periodogram

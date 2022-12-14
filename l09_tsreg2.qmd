@@ -23,8 +23,8 @@ The goal of this lecture is to bring together knowledge about regression, time s
 
 \paragraph{Reading materials}
 \begin{itemize}
-\item Chapters 3.8, 5.5, and 5.6 in \citet{Shumway:Stoffer:2017}
-\item Chapter 3 in \citet{Kirchgassner:Wolters:2007} on Granger causality
+\item Chapters 3.8, 5.5, and 5.6 in @Shumway:Stoffer:2017}
+\item Chapter 3 in @Kirchgassner:Wolters:2007} on Granger causality
 \end{itemize}
 
 
@@ -52,24 +52,24 @@ satisfy the OLS assumptions and can replace the original correlated residuals
 
 We begin with the simplest case, a {\em constant mean model}, where the
 residuals are serially correlated and follow an AR(1) model, that is
-\begin{equation}
+$$
 \label{eq:constmean}
 Y_{t} = \beta_{0} + \epsilon_{t},
-\end{equation}
+$$
 where $\epsilon_{t} \sim$ AR(1), i.e.,
-\begin{equation}
+$$
 \label{eq:ar1resid}
 \epsilon_{t} = \phi \epsilon_{t - 1} + a_{t}.
-\end{equation}
+$$
 
 Here $\phi$ is a real number satisfying $ 0 < |\phi| < 1$; $a_{t}$ is white noise with zero mean and the variance $\nu^{2}$, i.e., $a_{t} \sim \mathrm{WN}(0,\nu^2)$.
 We also assume that $\mathrm{cov}(a_{t}, \epsilon_{s}) = 0$ for all $s < t$ (i.e., that the residuals $\epsilon_s$ are not correlated with the future white noise $a_t$).
 
 The equation~\eqref{eq:ar1resid} allows us to express~\eqref{eq:constmean} as
-\begin{equation}
+$$
 \label{eq:modelwithAR1}
 Y_{t} = \beta_{0} + \phi \epsilon_{t - 1} + a_{t}.
-\end{equation}
+$$
 
 The advantage of this representation is that the ``new'' residuals $a_{t}$ satisfy the
 OLS assumptions. In particular, since $a_{t}$ is white noise, $a_{t}$ is homoskedastic and
@@ -80,37 +80,37 @@ We shall also assume that $a_{t}$ are normally distributed (for justification of
 Our goal is to remove the $\epsilon_{t}$ entirely from the constant mean model and replace
 them with $a_{t}$ acting as ``new'' residuals. This can be done as follows. Note that we have~\eqref{eq:modelwithAR1}
 and, by writing~\eqref{eq:constmean} for $t-1$ and multiplying by $\phi$,
-\begin{equation}
+$$
 \phi Y_{t -1} = \phi \beta_{0} + \phi \epsilon_{t - 1}.
-\end{equation}
+$$
 
 Taking the difference eliminates $\epsilon_{t}$ from the model:
-\begin{equation}
+$$
 \begin{split}
 Y_{t} - \phi Y_{t - 1} &= \left( \beta_{0} + \phi \epsilon_{t - 1} + a_{t} \right) - \left( \phi \beta_{0} + \phi \epsilon_{t - 1}  \right) \\
 &= (1 - \phi) \beta_{0} + a_{t}.
 \end{split}
-\end{equation}
+$$
 
 Therefore we can rewrite the constant mean model~\eqref{eq:constmean} as
-\begin{equation}
+$$
 \label{eq:constmean2}
 Y_{t} = (1 - \phi) \beta_{0} + \phi Y_{t - 1} + a_{t}.
-\end{equation}
+$$
 
 In general, for any multivariate linear model
-\begin{equation}
+$$
 \label{eq:MlinModelAR1}
 Y_{t} = \beta_{0} + \sum^{k}_{j =1} \beta_{j} X_{t,j} + \epsilon_{t}, ~~~~  \text{where} ~~ \epsilon_{t} \sim \mbox{AR(1)},
-\end{equation}
+$$
 we can perform a similar procedure of eliminating $\epsilon_{t}$.
 
 
 This elimination procedure leads to the alternate expression
-\begin{equation}
+$$
 \label{eq:MlinModelAR1alt}
 Y_{t} = (1 - \phi) \beta_{0} + \phi Y_{t -1} + \sum^{k}_{j = 1} \beta_{j} (X_{t,j} - \phi X_{t-1, j}) + a_{t},
-\end{equation}
+$$
 where $a_{t} $ is white noise, i.e., homoskedastic with constant (zero) mean and uncorrelated. (See Appendix~\ref{sec:transAR} for the case of $k=1$ and Appendix~\ref{sec:GLS} on the method of generalized least squares).
 
 Note that rewriting the model in this way pulls the autocorrelation parameter
@@ -120,7 +120,7 @@ Thus there are now $k + 2$ unknown regression parameters ($\beta_{0} , \beta_{1}
 model can be regarded as the price to be paid for extracting new residuals $a_{t}$ that satisfy the OLS assumptions.
 
 Note that the ``new'' residuals $a_{t}$ have smaller variance than the $\epsilon_{t}$. In fact,
-\begin{equation}
+$$
 \begin{split}
 \sigma^{2} & = \mbox{var} (\epsilon_{t} ) = \mbox{var} (\phi \epsilon_{t - 1} + a_{t}) \\
 \\
@@ -128,12 +128,12 @@ Note that the ``new'' residuals $a_{t}$ have smaller variance than the $\epsilon
 \\
  & = \phi^{2}\sigma^{2}  + \nu^{2},
 \end{split}
-\end{equation}
+$$
 leading to the relation
-\begin{equation}
+$$
 \label{eq:varresid}
 \nu^{2} = \sigma^{2} (1 - \phi^{2} ).
-\end{equation}
+$$
 
 
 However, comparing~\eqref{eq:constmean2} with~\eqref{eq:constmean2}, and~\eqref{eq:MlinModelAR1alt} with~\eqref{eq:MlinModelAR1}, we see that the rewritten
@@ -145,26 +145,26 @@ use the method of \emph{maximum likelihood (ML)} carried out through the R funct
 The \texttt{arima} function allows us to input the model in its original form,
 as in~\eqref{eq:MlinModelAR1}. It then internally rewrites the model to put it in the form of~\eqref{eq:MlinModelAR1alt}. (So you do not have to rewrite the model!) It then makes the assumption that
 the $a_t$ are normal, and constructs the multivariate normal likelihood function
-\begin{equation}
+$$
 L (Y_{1} , \ldots , Y_{n}; Q ),
-\end{equation}
+$$
 where $n$ is the sample size and $Q$ is the vector of all unknown parameters. In general, for an AR(1) model with $k$ original predictors (regressors), we have $Q = (\phi, \beta_{0}, \beta_{1}, \ldots, \beta_{k}, \nu^{2})$. Recall that $\nu^{2} = \mathrm{var}(a_{t}) = \mathrm{cov}(a_{t} , a_{t})$.
 
 The \texttt{arima} function then uses the historical data $Y_{1}, \ldots, Y_{n}$ to find the parameter estimates
-\begin{equation}
+$$
 \hat{Q} = \left( \hat{\phi}, \hat{\beta}_{0} , \hat{\beta}_{1} , \ldots, \hat{\beta}_{k} , \hat{\nu}^2 \right),
-\end{equation}
+$$
 which maximize the likelihood function $L$. These estimates (and other things,
 such as the standard errors of the estimates) can be saved to an output file. We will use an
 example to illustrate use and interpretation of the \texttt{arima} function.
 
 Moreover, we can extend regression model~\eqref{eq:MlinModelAR1} with AR(1) errors to a model with a more general form of errors, ARMA, by assuming $\epsilon_t \sim \text{ARMA}(p,q)$ (see Chapter~6.6 of \citealp{Brockwell:Davis:2002} and \url{https://robjhyndman.com/hyndsight/arimax/}):
-\begin{equation}\label{eq:MlinModelARMA}
+$$\label{eq:MlinModelARMA}
 \begin{split}
 Y_t &= \sum^{k}_{j =1} \beta_{j} X_{t,j} + \epsilon_{t},\\
 \epsilon_{t} &= \phi_1 \epsilon_{t-1} + \ldots + \phi_p \epsilon_{t-p} + \theta_1 a_{t-1} + \ldots + \theta_q a_{t-q} + a_t.
 \end{split}
-\end{equation}
+$$
 This model~\eqref{eq:MlinModelARMA} can be specified in R functions \texttt{arima} and functions \texttt{Arima}, \texttt{auto.arima} from the package \texttt{forecast} (see the argument for external regressors; \citealp{R-forecast}).
 
 Remember that the variables $Y_t$ and $X_{t,j}$ ($j = 1,\ldots,k$) should be detrended prior the analysis (to avoid spurious regression results, see previous lecture on dealing with trends in regression). If differencing is chosen as the method of detrending (Section~\ref{sec:RegTrendDiff}), the orders of differences $d$ and $D$ can be specified directly within the mentioned ARIMA functions (so R will do differencing for you).
@@ -173,12 +173,12 @@ Remember that the variables $Y_t$ and $X_{t,j}$ ($j = 1,\ldots,k$) should be det
 \section{ARIMAX models}
 
 ARIMAX (``X'' stands for ``external regressor'') models are closely related to~\eqref{eq:MlinModelARMA}, but there is also an important difference. For simplicity of notation, we can present an ARMAX($p,q$) model that is a regular ARMA($p,q$) model for $Y_t$ plus the external regressors:
-\begin{equation}\label{eq:ARMAX}
+$$\label{eq:ARMAX}
 \begin{split}
 Y_t &= \phi_1 Y_{t-1} + \ldots + \phi_p Y_{t-p} + \theta_1 a_{t-1} + \ldots + \theta_q a_{t-q} + a_t\\
 &+\sum^{k}_{j =1} \beta_{j} X_{t,j},
 \end{split}
-\end{equation}
+$$
 where $a_t$ is still a zero-mean white noise process. Interestingly, at this time I do not know a convenient way to estimate this model in R. One could \emph{manually} write lagged values of $Y_t$ as external regressors (i.e., create new variables in R for $Y_{t-1},\ldots, Y_{t-p}$), use these variables in the R functions mentioned above, but force $p=0$~\citep[e.g.,][used the functions from R package \texttt{forecast}]{Soliman:etal:2019:influenza}.
 
 The obvious difference between~\eqref{eq:MlinModelARMA} and~\eqref{eq:ARMAX} is the presence
@@ -251,9 +251,9 @@ ccf(sqrt(land), amo, las = 1)
 
 
 Implement model
-\begin{equation}
+$$
 Landings_t = \beta_0 + \beta_{1} AMO_{t-7} + \epsilon_{t}
-\end{equation}
+$$
 where $\epsilon_{t} \sim $ARMA($p$, $q$) and the orders $p$, $q$ are selected automatically based on Akaike information criterion
 <<>>=
 m1 = auto.arima(sqrt(land), xreg = dplyr::lag(amo, 7))
@@ -261,9 +261,9 @@ m1
 @
 
 Forgot to check stationarity of time series! It seems that landings can be considered as a unit-root process, so differencing is needed, hence a modified model
-\begin{equation}
+$$
 \Delta Landings_t = \beta_0 + \beta_{1} AMO_{t-7} + \epsilon_{t}
-\end{equation}
+$$
 
 <<>>=
 m2 = auto.arima(diff(sqrt(land)), xreg = dplyr::lag(amo, 7)[-1])
@@ -271,9 +271,9 @@ m2
 @
 
 Note it is different from the implementation with \texttt{d = 1}, which differences all series:
-\begin{equation}
+$$
 \Delta Landings_t = \beta_0 + \beta_{1} \Delta AMO_{t-7} + \epsilon_{t}
-\end{equation}
+$$
 <<>>=
 auto.arima(sqrt(land), xreg = dplyr::lag(amo, 7), d = 1)
 @
@@ -340,17 +340,17 @@ pacf(log(data_weekly$wsncl + 0.01), las = 1)
 @
 
 
-Let $Y_1, \ldots, Y_t$ be the observed weekly claim counts and $\bm{X_t}$ be exogenous regressors (e.g., precipitation and wind speed). Then, we can model the conditional distribution of $Y_t$, given $Y_1,\ldots,Y_{t-1}$, $\bm{X_1,\ldots,X_{t}}$ as
-\begin{equation}
+Let $Y_1, \ldots, Y_t$ be the observed weekly claim counts and $\boldsymbol{X_t}$ be exogenous regressors (e.g., precipitation and wind speed). Then, we can model the conditional distribution of $Y_t$, given $Y_1,\ldots,Y_{t-1}$, $\boldsymbol{X_1,\ldots,X_{t}}$ as
+$$
 \label{GARMA}
 g(\mu_t)=\mathbf {X'_t}\beta+\sum_{j=1}^p\phi_j\{g(Y_{t-j})- \mathbf {X'_{t-j}}\beta\}
 +\sum_{j=1}^q\theta_j \{g(Y_{t-j})-g(\mu_{t-j})\},
-\end{equation}
+$$
 where $g(\cdot)$ is an appropriate link function; $\mu_t$ is a conditional mean of the dependent variable; $\boldsymbol{\beta}$ is a vector of regression coefficients; $\phi_j$, $j=1,\ldots, p$, are the autoregressive coefficients; $\theta_j$, $j=1,\ldots,q$, are the moving average coefficients, while $p$ and $q$ are the autoregressive and moving average orders, respectively.
 
 In certain cases, the function $g(\cdot)$ requires some transformation of the original series $Y_{t-j}$ to avoid the non-existence of $g(Y_{t-j})$~\citep{Benjamin:etal:2003} -- in the above code, we have been adding 0.01 before taking $\ln$.
 
-The generalized autoregressive moving average model~(\ref{GARMA}), GARMA($p,q$), represents a flexible observation-driven modification of the classical Box--Jenkins methodology and GLMs for integer-valued time series. GARMA further advances the classical Gaussian ARMA model to a case where the distribution of the dependent variable is not only non-Gaussian but can be discrete. The dependent variable is assumed to belong to a conditional exponential family distribution given the past information of the process and thus the GARMA can be used to model a variety of discrete distributions~\citep{Benjamin:etal:2003}. The GARMA model is also extends the work of \citet{Zeger:Qaqish:1988} who proposed an autoregressive exponential family model and \citet{Li:1994} who introduced its moving average counterpart.
+The generalized autoregressive moving average model~(\ref{GARMA}), GARMA($p,q$), represents a flexible observation-driven modification of the classical Box--Jenkins methodology and GLMs for integer-valued time series. GARMA further advances the classical Gaussian ARMA model to a case where the distribution of the dependent variable is not only non-Gaussian but can be discrete. The dependent variable is assumed to belong to a conditional exponential family distribution given the past information of the process and thus the GARMA can be used to model a variety of discrete distributions~\citep{Benjamin:etal:2003}. The GARMA model is also extends the work of @Zeger:Qaqish:1988} who proposed an autoregressive exponential family model and @Li:1994} who introduced its moving average counterpart.
 
 Since our insurance data contain a substantial number of zeros and given that we deal with counts of claims, we can use the zero-adjusted Poisson distribution to model the number of claims~\citep{Stasinopoulos:Rigby:2007,Gupta:etal:1996}.
 
@@ -389,7 +389,7 @@ summary(m50)
 plot(m50)
 @
 
-See \citet{Dunn:Smyth:1996} for the details on randomized quantile residuals. Overall, their poor correspondence with the standard normal distribution shows lack of fit of the model. See help to \texttt{gamlss.family} for other distribution families, continuous and discrete; a bit out-of-date tables with many distributions listed are available from \citet{Stasinopoulos:Rigby:2007}.
+See @Dunn:Smyth:1996} for the details on randomized quantile residuals. Overall, their poor correspondence with the standard normal distribution shows lack of fit of the model. See help to \texttt{gamlss.family} for other distribution families, continuous and discrete; a bit out-of-date tables with many distributions listed are available from @Stasinopoulos:Rigby:2007}.
 <<>>=
 set.seed(1)
 m00NBI <- garmaFit(wsncl ~ wspcp + wspcpl1, data = data_weekly, family = NBI)
@@ -482,22 +482,22 @@ Let $I_t$ be the total information set available at time $t$. This information s
 
 \begin{itemize}
 \item \textbf{Granger causality} $X$ is (simply) Granger causal to $Y$ if future values of $Y$ can be predicted better, i.e., with a smaller forecast error variance, if current and past values of $X$ are used:
-\begin{equation}\label{eq:Granger}
+$$\label{eq:Granger}
 \sigma^2(Y_{t+1}|I_t) < \sigma^2(Y_{t+1}|I_t \setminus \bar{X}_t).
-\end{equation}
+$$
 
 \item \textbf{Instantaneous Granger causality} $X$ is instantaneously Granger causal to $Y$ if the future value of $Y$, $Y_{t+1}$, can be predicted better, i.e., with a smaller forecast error variance, if the future value of $X$, $X_{t+1}$, is used in addition to the current and past values of $X$:
-\begin{equation}\label{eq:GrangerInst}
+$$\label{eq:GrangerInst}
 \sigma^2(Y_{t+1}|\{I_t, X_{t+1}\}) < \sigma^2(Y_{t+1}|I_t ).
-\end{equation}
+$$
 
 \item \textbf{Feedback} There is feedback between $X$ and $Y$ if $X$ is causal to $Y$ and $Y$ is causal to $X$. Feedback is only defined for the case of simple causal relations.
 \end{itemize}
 
 The test for (\ref{eq:Granger}) and (\ref{eq:GrangerInst}) is, essentially, an $F$-test comparing two nested models: with additional predictors $X$ and without. In other words, consider the model:
-\begin{equation}\label{eq:GrangerModel}
+$$\label{eq:GrangerModel}
 Y_t = \beta_0 + \sum_{k=1}^{k_1}\beta_k Y_{t-k} + \sum_{k=k_0}^{k_2}\alpha_k X_{t-k} + U_t
-\end{equation}
+$$
 with $k_0 = 1$. An $F$-test is applied to test the null hypothesis, H$_0$: $\alpha_1 = \alpha_2 = \ldots = \alpha_{k_2} = 0$. By switching $X$ and $Y$ in (\ref{eq:GrangerModel}), it can be tested whether a simple causal relation from $Y$ to $X$ exists. There is a feedback relation if the null hypothesis is rejected in both directions ($X\rightarrow Y$ and $Y\rightarrow X$). To test whether there is an instantaneous causality, we finally set $k_0 = 0$ and perform a $t$ or $F$-test for the null hypothesis H$_0$: $\alpha_0 = 0$.
 
 The problem with this test is that the results are strongly dependent on the number of lags of the explanatory variable, $k_2$. There is a trade-off: the more lagged values we include, the better the influence of this variable can be captured. This argues for a high maximal lag. On the other hand, the power of this test is the lower the more lagged values are included~\citep[Chapter~3 of][]{Kirchgassner:Wolters:2007}. Two general procedures can be used to select the lags: inspecting sensitivity of results to different $k_2$ (sensitivity analysis) or one of the different information criteria guiding model selection.
@@ -517,7 +517,7 @@ pcp_deseas <- s$time.series[,3]
 @
 
 
-Here we will identify the appropriate lags just by looking at the plots in Figure~\ref{fig:insCCF}.
+Here we will identify the appropriate lags just by looking at the plots in @fig-insCCF.
 
 After the lag is selected (1), apply the test.
 
@@ -578,7 +578,7 @@ The results show the presence of such causality.
 
 \section{About predictions}
 
-Let $\hat{Y}_T(h)$ be a forecast $h$ steps ahead made at time $T$. If $\hat{Y}_T(h)$ only uses information up to time $T$, the resulting forecasts are called out-of-sample forecasts. Economists call them \emph{ex-ante} forecasts. We have discussed several ways to select the optimal method or model for forecasting, e.g., using PMAE, PMSE, or coverage -- all calculated on a testing set. \citet{Chatfield:2000} mentions several ways to unfairly `improve' forecasts:
+Let $\hat{Y}_T(h)$ be a forecast $h$ steps ahead made at time $T$. If $\hat{Y}_T(h)$ only uses information up to time $T$, the resulting forecasts are called out-of-sample forecasts. Economists call them \emph{ex-ante} forecasts. We have discussed several ways to select the optimal method or model for forecasting, e.g., using PMAE, PMSE, or coverage -- all calculated on a testing set. @Chatfield:2000} mentions several ways to unfairly `improve' forecasts:
 \begin{enumerate}
 \item Fitting the model to all the data including the test set.
 

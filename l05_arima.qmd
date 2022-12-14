@@ -27,14 +27,14 @@ NO $\rightarrow$ 2
 \end{enumerate}
 
 Using the Box--Jenkins methodology, the linear predictor approximately follows a normal distribution, i.e.,
-\begin{equation}
+$$
 \hat{X}_{n+h} \sim N\left( X_{n+h}, \mathrm{var}(\hat{X}_{n+h}) \right).
-\end{equation}
+$$
 
 Therefore, a $(100 - \alpha)$\% prediction interval is
-\begin{equation}
+$$
 \hat{X}_{n+h} \pm z_{1-\alpha/2} \sqrt{\mathrm{var}(\hat{X}_{n+h})}.
-\end{equation}
+$$
 
 
 
@@ -43,9 +43,9 @@ Therefore, a $(100 - \alpha)$\% prediction interval is
 If $d$ is a nonnegative integer, then $X_t$ is an ARIMA($p, d, q$) process if $Yt=(1 - B)^d X_t$ is a causal ARMA($p, q$) process.
 
 $X_t$ is an ARIMA(1,1,0) process if for some $\phi \in (-1, 1)$,
-\begin{equation}
+$$
 Y_t = (1 - B)X_t = \sum_{j=0}^{\infty} \phi^j Z_{t-j}.
-\end{equation}
+$$
 
 <<>>=
 x <- dget('x.txt') # Reading x into R
@@ -160,7 +160,7 @@ wine = ts(w, start =c(1980,1), frequency = 12)
 plot.ts(wine, xlab = "Years" , ylab = "Wine")
 @
 \caption{Data shows trend, periodic, and have non-constant variance.
-Therefore, we start from the variance-stabilizing transformation, in particular square root and log. See Figure~\ref{fig:winelog}.}
+Therefore, we start from the variance-stabilizing transformation, in particular square root and log. See @fig-winelog.}
 \label{fig:wine}
 \end{figure}
 
@@ -181,9 +181,9 @@ plot.ts(log.wine, main = "log.wine=log(wine)", xlab= "Years", ylab="log.wine", l
 \begin{figure}[h!]
 \subsection*{Trend Removal} 
 Here we used {\bfseries seasonal differencing}. If $Y_{t}$ has a seasonal period $m$, then the {\bfseries first seasonal difference} is defined to be
-\begin{equation}
+$$
 D_{m,t} = Y_{t}-Y_{t-m}
-\end{equation}
+$$
 
 for $t=m+1,m+2,\ldots,n.$
 In this way we compare seasons with seasons. Seasonal differencing will (at least approximately) remove the seasonal component.

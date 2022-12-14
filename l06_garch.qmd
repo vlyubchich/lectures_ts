@@ -35,14 +35,14 @@ Since financial data typically have the autocorrelation coefficient close to 1 a
 from today to tomorrow), it is much more interesting and also practically more relevant to model the returns of a financial time series rather than the series 
 itself.
 Let $\{Y_{t} \}$ be a stock price series, for example. The {\bf returns} are typically defined as
-\begin{equation}  \label{18.1}
+$$  \label{18.1}
 X_{t} = \mbox{log} Y_{t} - \mbox{log} Y_{t-1} ~~~~ \mbox{or} ~~~~ X_{t} = \frac{Y_{t} - Y_{t-1}}{ Y_{t -1} },
-\end{equation}
+$$
 which measure the relative changes of price. Note that the two forms above are
 approximately the same as
-\begin{equation}  \label{18.2}
+$$  \label{18.2}
 \mbox{log} Y_{t} - \mbox{log}  Y_{t-1} = \mbox{log}  \left(1 + \frac{Y_{t} - Y_{t-1}}{Y_{t -1}} \right) \approx \frac{ Y_{t} - Y_{t-1}}{ Y_{t -1} }.
-\end{equation}
+$$
 
 \begin{figure}[h!]
 \centering
@@ -57,7 +57,7 @@ plot.ts(diff(log(CAD$USD)), las = 1)
 \label{fig:CAD}
 \end{figure}
 
-\citet{Rydberg:2000} summarizes some important {\bf stylized features} of financial
+@Rydberg:2000} summarizes some important {\bf stylized features} of financial
 return series, which have been repeatedly observed in all kinds of assets including
 stock prices, interest rates, and foreign exchange rates:
 \begin{enumerate}
@@ -95,7 +95,7 @@ acf(diff(log(CAD$USD))^2, las = 1, na.action = na.pass)
 \label{fig:CAD:ACF}
 \end{figure}
 
-Figure~\ref{fig:CAD:ACF} is the simplest check for GARCH-effects: when time series itself is not autocorrelated, but is autocorrelated if squared. 
+@fig-CAD:ACF} is the simplest check for GARCH-effects: when time series itself is not autocorrelated, but is autocorrelated if squared. 
 
 
 \begin{figure}[h!]
@@ -115,7 +115,7 @@ acf(WN^2, las = 1)
 \FloatBarrier
 \section{Models}
 
-\citet{Engle:1982} defines an autoregressive conditional heteroscadastic (ARCH) model as
+@Engle:1982} defines an autoregressive conditional heteroscadastic (ARCH) model as
 \begin{eqnarray} \label{18.3}
 X_{t}  &=&  \sigma_{t} \varepsilon_{t}, \\
 \sigma^{2}_{t}  &= & a_{0} + a_{1} X^{2}_{t - 1} + \ldots+ a_{p} X^{2}_{ t  - p} , \nonumber
@@ -136,7 +136,7 @@ E X_{t} & = & 0,  \\
 {\bf Basic idea:} the predictive distribution of $X_{t}$ based on its past is a scale-transform of the distribution of $\varepsilon_{t}$ with the scaling constant $\sigma_{t}$ depending on the
 past of the process.
 
-\citet{Bollerslev:1986} introduced a generalized autoregressive conditional heteroscedastic\\ 
+@Bollerslev:1986} introduced a generalized autoregressive conditional heteroscedastic\\ 
 (GARCH) model by replacing the second equation in (\ref{18.3}) by
 \begin{eqnarray} \label{18.6}
 \sigma^{2}_{t} &=& a_{0}  + a_{1} X^{2}_{ t  - 1} + \ldots + a_{p} X^{2}_{ t  - p} + b_{1} \sigma^{2}_{t - 1} + \ldots + b_{q} \sigma^{2}_{t  - q}\\
@@ -153,9 +153,9 @@ maximum likelihood method. There exist a number of tests for ARCH/GARCH effects 
 
 \subsection{Lagrange Multiplier test}
 Lagrange Multiplier (LM) test is equivalent to testing the significance of the least squares regression on squared values, using $F$ statistic:
-\begin{equation}\label{eq:LMtregression}
+$$\label{eq:LMtregression}
 X^{2}_{t} = \alpha_{0}  + \alpha_1 X^{2}_{ t  - 1} + \ldots + \alpha_m X^{2}_{t  - m} + e_t, \quad t=m+1,\ldots,T,
-\end{equation}
+$$
 where $e_t$ denotes the error term, $m$ is prespecified positive integer, and $T$ is the sample size.
 
 Specifically, the null hypothesis is
@@ -165,9 +165,9 @@ $$SST = \sum_{t=m+1}^T(X_t^2 - \overline{X_t^2})^2,$$
 where $\overline{X_t^2} = T^{-1}\sum_{t=1}^T X_t^2$ is the sample mean of $X_t^2$, and sum of squares of the errors
 $$SSE = \sum_{t=m+1}^T \hat{e}_t^2,$$
 where $\hat{e}_t$ is the least squares residual of the linear regression (\ref{eq:LMtregression}). Then, 
-\begin{equation}\label{eq:LMFtest}
+$$\label{eq:LMFtest}
 F = \frac{(SST - SSE)/m}{SSE/(T-2m-1)}.
-\end{equation}
+$$
 which is asymptotically distributed as a chi-squared distribution with $m$ degrees of
 freedom under the null hypothesis.
 
@@ -175,7 +175,7 @@ freedom under the null hypothesis.
 \newpage
 \subsection{DAX example}
 Daily closing values of German Stock Index (DAX), 1991--1998.
-The data are sampled in business time, i.e., weekends and holidays are omitted (see Figure~\ref{fig:DAX}).
+The data are sampled in business time, i.e., weekends and holidays are omitted (see @fig-DAX}).
 
 \begin{figure}[h!]
 \centering
@@ -192,7 +192,7 @@ plot.ts(diff(log(DAX)), las = 1)
 \end{figure}
 
 \FloatBarrier
-Here we produce histogram and overlapping normal curve with the same mean and standard deviation as the log DAX returns (see Figure~\ref{fig:DAX:hist}).
+Here we produce histogram and overlapping normal curve with the same mean and standard deviation as the log DAX returns (see @fig-DAX:hist}).
 
 \begin{figure}[h!]
 \centering
@@ -206,7 +206,7 @@ curve(dnorm(x, mean = mean(diff(log(DAX))), sd = sd(diff(log(DAX)))),
 
 \FloatBarrier
 
-An easy way to spot (G)ARCH effect is to compare ACF plots of original and squared data (Figure~\ref{fig:DAX:ACF}). The effect is present when uncorrelated series appear to be autocorrelated when squared. 
+An easy way to spot (G)ARCH effect is to compare ACF plots of original and squared data (@fig-DAX:ACF}). The effect is present when uncorrelated series appear to be autocorrelated when squared. 
 
 \begin{figure}[h!]
 \centering
@@ -225,7 +225,7 @@ pacf(diff(log(DAX))^2, lag.max = 367)
 \label{fig:DAX:ACF}
 \end{figure}
 
-Compare with white noise in Figure~\ref{fig:WN:ACF} (no ARCH effects).
+Compare with white noise in @fig-WN:ACF} (no ARCH effects).
 
 \FloatBarrier
 \newpage
@@ -362,7 +362,7 @@ There was a boom in creating new models by adding new features to GARCH:
 \item ...
 \end{itemize}
 
-Thus, the papers by  \citet{Hansen:Lunde:2001} and \citet{Bollerslev:2009} had to appear.
+Thus, the papers by  @Hansen:Lunde:2001} and @Bollerslev:2009} had to appear.
 
 \section{Model building}
 Adapted from Chapter~3.3 by \cite{Tsay:2005}:
