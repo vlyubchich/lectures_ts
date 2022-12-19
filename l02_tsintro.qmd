@@ -19,8 +19,9 @@ The goal of this lecture is to introduce time series and their common components
 
 1. Define time series, common components (decomposition), and patterns to look out for (outliers, change points, heteroscedasticity).
 1. Discuss peculiarities of assessing (cross-validating) regression models built for time series.
-1. Learn simple models for univariate time series (building blocks for more complex models).
-1. Define autocorrelation and partial autocorrelation, assumption of stationarity; learn how to interpret the results.
+1. Distinguish simple models for univariate time series (building blocks for more complex models).
+1. Define autocorrelation and partial autocorrelation and interpret such estimates.
+1. Explain the assumption of stationarity for calculating autocorrelation.
 
 **Reading materials**
 

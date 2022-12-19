@@ -19,8 +19,8 @@ The goal of this lecture is to learn a variety of methods used for *trend visual
 1. Implement smoothing methods often used for trend
     * visualization (example: moving average, lowess);
     * modeling (example: exponential smoothing, polynomial smoothing);
-    * removal (example: differencing, however, the above methods can be also used to remove trends).
-1. For each of the cases above, consider a situation when seasonality is present.
+    * removal (example: differencing, however, the above methods also can be used to remove trends).
+1. Accomplish each of the tasks above when handling a time series with cycles (seasonality).
 1. Understand the concepts of trend- and difference-stationary time series.
 
 **Reading materials**

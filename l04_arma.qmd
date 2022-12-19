@@ -17,10 +17,10 @@ The goal of this lecture is to introduce a broad class of models for stationary 
 **Objectives**
 
 1. Define AR($p$), MA($q$), and ARMA($p,q$) models for stationary time series.
-1. Learn how to identify the orders $p$ and $q$ using ACF and PACF plots.
-1. Practice model estimation using different methods and model selection using information criteria (AIC and BIC).
-1. Practice diagnostics of residuals of these models.
-1. Learn how to obtain forecasts from these models.
+1. Identify the orders $p$ and $q$ using ACF and PACF plots.
+1. Estimate models using different methods and select a model using an information criterion (AIC or BIC).
+1. Diagnose the residuals of an ARMA model.
+1. Obtain forecasts from ARMA models.
 
 **Reading materials**
 

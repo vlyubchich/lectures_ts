@@ -19,7 +19,7 @@ After this lecture, you should be competent (again) in assessing violations of v
 
 1. Recall the form and standard assumptions of linear regression models.
 1. Recall and apply standard methods of assessing and testing homogeneity of variance and normality of residuals.
-1. Learn how to identify and test independence (most often, uncorrelatedness) of regression model residuals. Implement the tests in practice.
+1. Define and test independence (most often, uncorrelatedness) of regression model residuals.
 
 **Reading materials**
 
