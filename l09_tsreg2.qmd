@@ -30,53 +30,52 @@ The goal of this lecture is to bring together knowledge about regression, time s
 
 Here we explore a regression model with autocorrelated residuals. We already know how
 to
-\begin{itemize}
-\item forecast, construct prediction intervals, and test hypotheses about regression coefficients when
-the residuals satisfy the ordinary least squares (OLS) assumptions, i.e., the residuals are white noise and
-have joint normal distribution $N(0, \sigma^{2})$;
-\item model serial dependence (i.e., autocorrelation) in stationary univariate time series, such as
+
+* forecast, construct prediction intervals, and test hypotheses about regression coefficients when
+the residuals satisfy the ordinary least squares (OLS) assumptions, i.e., 
+the residuals are white noise and
+have a joint normal distribution $N(0, \sigma^{2})$;
+* model serial dependence (i.e., autocorrelation) in stationary univariate time series, such as
 using ARMA models.
-\end{itemize}
+
 Here we bring these two skills together.
 
 If the residuals do not satisfy the independence assumption, we can
 sometimes describe them in terms of a specific correlation model involving one or
-more new parameters and some ``new residuals.'' These new residuals essentially
+more new parameters and some 'new residuals.' These new residuals essentially
 satisfy the OLS assumptions and can replace the original correlated residuals
-(which we will sometimes call the ``old'' residuals) in the model.
+(which we will sometimes call the 'old' residuals) in the model.
 
-## Linear regression with ARMA errors}
 
-We begin with the simplest case, a {\em constant mean model}, where the
+## Linear regression with ARMA errors
+
+We begin with the simplest case, a *constant mean model*, where the
 residuals are serially correlated and follow an AR(1) model, that is
 $$
-\label{eq:constmean}
 Y_{t} = \beta_{0} + \epsilon_{t},
-$$
+$${#eq-constmean}
 where $\epsilon_{t} \sim$ AR(1), i.e.,
 $$
-\label{eq:ar1resid}
 \epsilon_{t} = \phi \epsilon_{t - 1} + a_{t}.
-$$
+$${#eq-ar1resid}
 
 Here $\phi$ is a real number satisfying $ 0 < |\phi| < 1$; $a_{t}$ is white noise with zero mean and the variance $\nu^{2}$, i.e., $a_{t} \sim \mathrm{WN}(0,\nu^2)$.
 We also assume that $\mathrm{cov}(a_{t}, \epsilon_{s}) = 0$ for all $s < t$ (i.e., that the residuals $\epsilon_s$ are not correlated with the future white noise $a_t$).
 
-The equation~\eqref{eq:ar1resid} allows us to express~\eqref{eq:constmean} as
+@eq-ar1resid allows us to express @eq-constmean as
 $$
-\label{eq:modelwithAR1}
 Y_{t} = \beta_{0} + \phi \epsilon_{t - 1} + a_{t}.
-$$
+$${#eq-modelwithAR1}
 
-The advantage of this representation is that the ``new'' residuals $a_{t}$ satisfy the
-OLS assumptions. In particular, since $a_{t}$ is white noise, $a_{t}$ is homoskedastic and
+The advantage of this representation is that the new residuals $a_{t}$ satisfy the
+OLS assumptions. In particular, since $a_{t}$ is white noise, $a_{t}$ is homoscedastic and
 uncorrelated.
 
 We shall also assume that $a_{t}$ are normally distributed (for justification of construction of confidence intervals and prediction intervals). However, even if $a_{t}$ are not normal, $a_{t}$ are uncorrelated, which is a big improvement over the serially correlated $\epsilon_{t}$.
 
 Our goal is to remove the $\epsilon_{t}$ entirely from the constant mean model and replace
-them with $a_{t}$ acting as ``new'' residuals. This can be done as follows. Note that we have~\eqref{eq:modelwithAR1}
-and, by writing~\eqref{eq:constmean} for $t-1$ and multiplying by $\phi$,
+them with $a_{t}$ acting as new residuals. This can be done as follows. Note that we have @eq-modelwithAR1
+and, by writing @eq-constmean for $t-1$ and multiplying by $\phi$,
 $$
 \phi Y_{t -1} = \phi \beta_{0} + \phi \epsilon_{t - 1}.
 $$
@@ -89,34 +88,30 @@ Y_{t} - \phi Y_{t - 1} &= \left( \beta_{0} + \phi \epsilon_{t - 1} + a_{t} \righ
 \end{split}
 $$
 
-Therefore we can rewrite the constant mean model~\eqref{eq:constmean} as
+Therefore we can rewrite the constant mean model in @eq-constmean as
 $$
-\label{eq:constmean2}
 Y_{t} = (1 - \phi) \beta_{0} + \phi Y_{t - 1} + a_{t}.
-$$
+$${#eq-constmean2}
 
 In general, for any multivariate linear model
 $$
-\label{eq:MlinModelAR1}
 Y_{t} = \beta_{0} + \sum^{k}_{j =1} \beta_{j} X_{t,j} + \epsilon_{t}, ~~~~  \text{where} ~~ \epsilon_{t} \sim \mbox{AR(1)},
-$$
+$${#eq-MlinModelAR1}
 we can perform a similar procedure of eliminating $\epsilon_{t}$.
 
 
 This elimination procedure leads to the alternate expression
 $$
-\label{eq:MlinModelAR1alt}
 Y_{t} = (1 - \phi) \beta_{0} + \phi Y_{t -1} + \sum^{k}_{j = 1} \beta_{j} (X_{t,j} - \phi X_{t-1, j}) + a_{t},
-$$
-where $a_{t} $ is white noise, i.e., homoskedastic with constant (zero) mean and uncorrelated. (See Appendix~\ref{sec:transAR} for the case of $k=1$ and Appendix~\ref{sec:GLS} on the method of generalized least squares).
+$${#eq-MlinModelAR1alt}
+where $a_{t} $ is white noise, i.e., homoscedastic with constant (zero) mean and uncorrelated. See @sec-gls on the method of generalized least squares and example of $k=1$.
 
 Note that rewriting the model in this way pulls the autocorrelation parameter
-for the ``old'' residuals, $\phi$, into the regression part of the model.
-
+for the old residuals, $\phi$, into the regression part of the model.
 Thus there are now $k + 2$ unknown regression parameters ($\beta_{0} , \beta_{1} , \ldots , \beta_{k}$ and $\phi$). The introduction of an additional parameter into the regression part of the
 model can be regarded as the price to be paid for extracting new residuals $a_{t}$ that satisfy the OLS assumptions.
 
-Note that the ``new'' residuals $a_{t}$ have smaller variance than the $\epsilon_{t}$. In fact,
+Note that the new residuals $a_{t}$ have smaller variance than the $\epsilon_{t}$. In fact,
 $$
 \begin{split}
 \sigma^{2} & = \mbox{var} (\epsilon_{t} ) = \mbox{var} (\phi \epsilon_{t - 1} + a_{t}) \\
@@ -128,152 +123,178 @@ $$
 $$
 leading to the relation
 $$
-\label{eq:varresid}
 \nu^{2} = \sigma^{2} (1 - \phi^{2} ).
-$$
+$${#eq-varresid}
 
 
-However, comparing~\eqref{eq:constmean2} with~\eqref{eq:constmean2}, and~\eqref{eq:MlinModelAR1alt} with~\eqref{eq:MlinModelAR1}, we see that the rewritten
-form of the model is {\bf not linear} in terms of the parameters $\beta_{0}, \beta_{1}, \ldots, \beta_{k}$ and
+However, comparing @eq-constmean2 with @eq-constmean2, and @eq-MlinModelAR1alt with @eq-MlinModelAR1, we see that the rewritten
+form of the model is *not linear* in terms of the parameters $\beta_{0}, \beta_{1}, \ldots, \beta_{k}$ and
 $\phi$. For example, the intercept term $(1 - \phi) \beta_{0}$ involves a product of two of the
-parameters. This nonlinearity makes OLS (implemented in R functions \texttt{lm} and \texttt{lsfit}) a poor method for obtaining parameter estimates. Instead we will
-use the method of \emph{maximum likelihood (ML)} carried out through the R function \texttt{arima}.
+parameters. This nonlinearity makes OLS (implemented in the R functions `lm()` and `lsfit()`) a poor method for obtaining parameter estimates. Instead we will
+use the method of *maximum likelihood* (ML) carried out through such R functions as `arima()`.
 
-The \texttt{arima} function allows us to input the model in its original form,
-as in~\eqref{eq:MlinModelAR1}. It then internally rewrites the model to put it in the form of~\eqref{eq:MlinModelAR1alt}. (So you do not have to rewrite the model!) It then makes the assumption that
+The function `arima()` allows us to input the model in its original form,
+as in @eq-MlinModelAR1. It then internally rewrites the model to put it in the form of @eq-MlinModelAR1alt. (So you do not have to rewrite the model!) It then makes the assumption that
 the $a_t$ are normal, and constructs the multivariate normal likelihood function
 $$
 L (Y_{1} , \ldots , Y_{n}; Q ),
 $$
 where $n$ is the sample size and $Q$ is the vector of all unknown parameters. In general, for an AR(1) model with $k$ original predictors (regressors), we have $Q = (\phi, \beta_{0}, \beta_{1}, \ldots, \beta_{k}, \nu^{2})$. Recall that $\nu^{2} = \mathrm{var}(a_{t}) = \mathrm{cov}(a_{t} , a_{t})$.
 
-The \texttt{arima} function then uses the historical data $Y_{1}, \ldots, Y_{n}$ to find the parameter estimates
+The function `arima()` then uses the historical data $Y_{1}, \ldots, Y_{n}$ to find the parameter estimates
 $$
 \hat{Q} = \left( \hat{\phi}, \hat{\beta}_{0} , \hat{\beta}_{1} , \ldots, \hat{\beta}_{k} , \hat{\nu}^2 \right),
 $$
-which maximize the likelihood function $L$. These estimates (and other things,
-such as the standard errors of the estimates) can be saved to an output file. We will use an
-example to illustrate use and interpretation of the \texttt{arima} function.
+which maximize the likelihood $L$. These estimates (and other things,
+such as the standard errors of the estimates) can be saved to an output object in R. We will use an example to illustrate use and interpretation of the function `arima()`.
 
-Moreover, we can extend regression model~\eqref{eq:MlinModelAR1} with AR(1) errors to a model with a more general form of errors, ARMA, by assuming $\epsilon_t \sim \text{ARMA}(p,q)$ (see Chapter~6.6 of \citealp{Brockwell:Davis:2002} and \url{https://robjhyndman.com/hyndsight/arimax/}):
-$$\label{eq:MlinModelARMA}
+Moreover, we can extend regression model in  @eq-MlinModelAR1 with AR(1) errors to a model with a more general form of errors, ARMA, by assuming $\epsilon_t \sim \text{ARMA}(p,q)$ [see Chapter 6.6 in @Brockwell:Davis:2002 and <https://robjhyndman.com/hyndsight/arimax/>]:
+$$
 \begin{split}
 Y_t &= \sum^{k}_{j =1} \beta_{j} X_{t,j} + \epsilon_{t},\\
 \epsilon_{t} &= \phi_1 \epsilon_{t-1} + \ldots + \phi_p \epsilon_{t-p} + \theta_1 a_{t-1} + \ldots + \theta_q a_{t-q} + a_t.
 \end{split}
+$${#eq-MlinModelARMA}
+This model in @eq-MlinModelARMA can be specified in R functions `arima()`, `fable::ARIMA()`, and 
+`forecast::Arima()` with `forecast::auto.arima()`.
+
+::: {.callout-note}
+The R package `forecast` has been superseded by the new package `fable` that uses an alternate parameterisation of constants, see `?fable::ARIMA`.
+:::
+
+::: {.callout-note}
+Remember that the variables $Y_t$ and $X_{t,j}$ ($j = 1,\ldots,k$) should be detrended prior the analysis (to avoid spurious regression results, see the previous lecture on dealing with trends in regression). If differencing is chosen as the method of detrending, the orders of differences $d$ and $D$ can be specified directly within the mentioned ARIMA functions (so R will do differencing for you).
+:::
+
+
+## ARIMAX models
+
+ARIMAX ('X' stands for 'external regressor') models are closely related to @eq-MlinModelARMA, but there is an important difference. For simplicity of notation, we can present an ARMAX($p,q$) model that is a regular ARMA($p,q$) model for $Y_t$ plus the external regressors:
 $$
-This model~\eqref{eq:MlinModelARMA} can be specified in R functions \texttt{arima} and functions \texttt{Arima}, \texttt{auto.arima} from the package \texttt{forecast} (see the argument for external regressors; \citealp{R-forecast}).
-
-Remember that the variables $Y_t$ and $X_{t,j}$ ($j = 1,\ldots,k$) should be detrended prior the analysis (to avoid spurious regression results, see previous lecture on dealing with trends in regression). If differencing is chosen as the method of detrending (Section~\ref{sec:RegTrendDiff}), the orders of differences $d$ and $D$ can be specified directly within the mentioned ARIMA functions (so R will do differencing for you).
-
-
-## ARIMAX models}
-
-ARIMAX (``X'' stands for ``external regressor'') models are closely related to~\eqref{eq:MlinModelARMA}, but there is also an important difference. For simplicity of notation, we can present an ARMAX($p,q$) model that is a regular ARMA($p,q$) model for $Y_t$ plus the external regressors:
-$$\label{eq:ARMAX}
 \begin{split}
 Y_t &= \phi_1 Y_{t-1} + \ldots + \phi_p Y_{t-p} + \theta_1 a_{t-1} + \ldots + \theta_q a_{t-q} + a_t\\
 &+\sum^{k}_{j =1} \beta_{j} X_{t,j},
 \end{split}
-$$
-where $a_t$ is still a zero-mean white noise process. Interestingly, at this time I do not know a convenient way to estimate this model in R. One could \emph{manually} write lagged values of $Y_t$ as external regressors (i.e., create new variables in R for $Y_{t-1},\ldots, Y_{t-p}$), use these variables in the R functions mentioned above, but force $p=0$~\citep[e.g.,][used the functions from R package \texttt{forecast}]{Soliman:etal:2019:influenza}.
+$${#eq-ARMAX}
+where $a_t$ is still a zero-mean white noise process. Interestingly, at this time I do not know a convenient way to estimate this model in R. One could *manually* write lagged values of $Y_t$ as external regressors (i.e., create new variables in R for $Y_{t-1},\ldots, Y_{t-p}$), use these variables in the R functions mentioned above, but force $p=0$ [e.g., @Soliman:etal:2019:influenza used the functions from the R package `forecast`].
 
-The obvious difference between~\eqref{eq:MlinModelARMA} and~\eqref{eq:ARMAX} is the presence
-of lagged values of the response variable, $Y_t$, in~\eqref{eq:ARMAX}. As Hyndman points out, regression coefficients
-$\beta_j$ in~\eqref{eq:ARMAX} lose their interpretability compared with usual regression and do \emph{not} show the effect on $Y_t$ when $X_t$ increased by one. Instead, $\beta$'s in ARMAX~\eqref{eq:ARMAX} are interpreted \emph{conditional} on the value of previous values of the response variable (\url{https://robjhyndman.com/hyndsight/arimax/}).
+The obvious difference between @eq-MlinModelARMA and @eq-ARMAX is the presence
+of lagged values of the response variable, $Y_t$, in @eq-ARMAX. As Hyndman points out, regression coefficients
+$\beta_j$ in @eq-ARMAX lose their interpretability compared with usual regression and *do not* show the effect on $Y_t$ when $X_t$ increased by one. Instead, $\beta$'s in ARMAX @eq-ARMAX are interpreted *conditional* on the value of previous values of the response variable (<https://robjhyndman.com/hyndsight/arimax/>).
+Therefore, model formulation as in @eq-MlinModelARMA may be preferred.
 
+::: {.callout-note}
+Other applicable models include models with mixed effects such as for *repeated measures ANOVA* (e.g., implemented in R using `nlme::gls()` and `nlme::lme()`, see different correlation structures; without a grouping factor, the results of `nlme::lme(..., correlation = corARMA(...))` should be similar to estimating model in @eq-MlinModelARMA). Other regression packages often borrow the functionality (and syntax) of the package `nlme` for estimating random effects, so autocorrelated residuals can be incorporated into a *generalized additive model*, GAM (see `mgcv::gamm()`), *generalized additive model for location scale and shape*, GAMLSS (see `gamlss::gamlss()`, which also can be used just as GAM, if scale and shape parameters are not modeled). A slightly different solution is possible using a *generalized autoregressive moving average model*, GARMA, demonstrated in @sec-insGARMA (see `gamlss.util::garmaFit()`).
+:::
 
-Therefore, model formulation as in~\eqref{eq:MlinModelARMA} may be preferred.
+::: {.callout-note icon=false}
 
-\paragraph{Note} Other applicable models include models with mixed effects such as for \textbf{repeated measures ANOVA} (e.g., implemented in R using \texttt{nlme::lme}, see different correlation structures; without grouping factor, the results of \texttt{lme(..., correlation = corARMA(...))} should be similar to estimating model~\eqref{eq:MlinModelARMA}). Other regression packages often borrow the functionality (and syntax) of \texttt{nlme} for estimating random effects, so autocorrelated residuals can be incorporated into a \textbf{generalized additive model}, GAM (see \texttt{mgcv::gamm}), \textbf{generalized additive model for location scale and shape}, GAMLSS (see \texttt{gamlss::gamlss}, which also can be used just as GAM, if scale and shape parameters are not modeled). A slightly different solution is possible using a \textbf{generalized autoregressive moving average model}, GARMA, demonstrated in Section~\ref{sec:insGARMA} (see \texttt{gamlss.util::garmaFit}).
+## Example: Golden tilefish
 
+Here we have time series of 1918--2017 annual landings of golden tilefish (tonne) in the U.S. North Atlantic region and Atlantic Multi-decadal Oscillation (AMO) index characterizing climatic conditions (@fig-tilefishTS). The goal is to develop a regression model to explore the relationship between the landings and AMO.
 
-## Example: golden tilefish}
-
-Here we have time series of 1918--2017 annual landings of golden tilefish (tonne) in the U.S.\ North Atlantic region and Atlantic Multi-decadal Oscillation (AMO) index characterizing climatic conditions (Figure~\ref{f:tilefishTS}). The goal is to develop a regression model to explore the relationship between the landings and AMO.
-
-<<>>=
-D = read.csv("./data/tilefish.csv")
+```{r}
+D <- read.csv("./data/tilefish.csv")
 summary(D)
-@
+```
 
+```{r}
+#| label: fig-tilefishTS
+#| fig-cap: "Time series plots of the golden tilefish landings and AMO."
 
-<<echo = FALSE>>=
-par(mar = c(4, 5, 1, 1) + 0.1, mgp = c(3, 1, 0), mfrow = c(1, 2))
-par(pty = "m") #s for square plotting region
-@
-\begin{figure}
-<<>>=
-plot(x = D$Year, y = D$Landings, las = 1, type = "o", lwd = 2,
-     xlab = "Year", ylab = "")
-mtext("Landings (tonne)", side = 2, line = 3.5)
-plot(x = D$Year, y = D$AMO, las = 1, type = "o", lwd = 2,
-     xlab = "Year", ylab = "AMO")
-@
-\caption{Time series plots of landings and AMO.}
-\label{f:tilefishTS}
-\end{figure}
+p1 <- ggplot(D, aes(x = Year, y = Landings)) +
+    geom_line() +
+    xlab("Year") +
+    ylab("Landings (tonne)") +
+    theme_light()
+p2 <- ggplot(D, aes(x = Year, y = AMO)) +
+    geom_line() +
+    xlab("Year") +
+    ylab("AMO") +
+    theme_light()
+p1 + p2 +
+    plot_annotation(tag_levels = 'A')
+```
 
-Interpolation of missing data (aka imputation) is a separate and very expansive topic. For a univariate time series, linear interpolation can be implemented using \texttt{forecast::na.interp} \citep{R-forecast}. Also, the landings time series required a power transformation, so square root transformation was applied (Figure~\ref{f:tilefishScatter}).
+Interpolation of missing data (a.k.a. imputation) is a separate and very expansive topic. For a univariate time series, linear interpolation can be implemented using `forecast::na.interp()`. Also, the landings time series required a power transformation, so square root transformation was applied (@fig-tilefishScatter).
 
-<<echo = FALSE>>=
+```{r}
+#| label: fig-tilefishScatter
+#| fig-cap: "Scatterplot matrix of landings and AMO."
+
+D <- D %>% 
+    mutate(Landings_noNA = as.numeric(forecast::na.interp(D$Landings))) %>% 
+    mutate(Landings_noNA_sqrt = sqrt(Landings_noNA))
+
+D %>% 
+    select(AMO, Landings_noNA_sqrt) %>% 
+    GGally::ggpairs() +
+    theme_light()
+```
+
+The lag `k` returned by `ccf(x, y)` estimates the correlation between `x[t + k]` and `y[t]` (@fig-tilefishCCF).
+
+```{r}
+#| label: fig-tilefishCCF
+#| fig-cap: "Estimated cross-correlation function (CCF) of time series of the landings and AMO."
+
 par(mar = c(4, 5, 1, 1) + 0.1, mgp = c(3, 1, 0), mfrow = c(1, 1))
-par(pty = "m") #s for square plotting region
-@
-\begin{figure}
-<<>>=
-library(forecast)
-land = as.numeric(na.interp(D$Landings))
-amo = D$AMO
-library(GGally)
-ggpairs(data.frame(amo, sqrt(land)))
-@
-\caption{Scatterplot matrix of landings and AMO.}
-\label{f:tilefishScatter}
-\end{figure}
-
-
-The lag \texttt{k} value returned by \texttt{ccf(x, y)} estimates the correlation between \texttt{x[t+k]} and \texttt{y[t]} (Figure~\ref{f:tilefishCCF}).
-<<echo = FALSE>>=
-par(mar = c(4, 5, 1, 1) + 0.1, mgp = c(3, 1, 0), mfrow = c(1, 1))
-par(pty = "m") #s for square plotting region
-@
-\begin{figure}
-<<>>=
-ccf(sqrt(land), amo, las = 1)
-@
-\caption{Estimated cross-correlation function (CCF) of time series of landings and AMO.}
-\label{f:tilefishCCF}
-\end{figure}
-
+with(D,
+     ccf(Landings_noNA_sqrt, AMO, las = 1)
+)
+```
 
 Implement model
 $$
-Landings_t = \beta_0 + \beta_{1} AMO_{t-7} + \epsilon_{t}
+\sqrt{Landings_t} = \beta_0 + \beta_{1} AMO_{t-7} + \epsilon_{t}
 $$
-where $\epsilon_{t} \sim $ARMA($p$, $q$) and the orders $p$, $q$ are selected automatically based on Akaike information criterion
-<<>>=
-m1 = auto.arima(sqrt(land), xreg = dplyr::lag(amo, 7))
-m1
-@
+where $\epsilon_{t} \sim $ARMA($p$, $q$), and the orders $p$ and $q$ are selected automatically based on Akaike information criterion
 
-Forgot to check stationarity of time series! It seems that landings can be considered as a unit-root process, so differencing is needed, hence a modified model
+```{r}
+library(fable)
+m1 <- D %>% 
+    select(Year, Landings_noNA_sqrt, AMO) %>% 
+    as_tsibble(index = Year) %>% 
+    model(ARIMA(Landings_noNA_sqrt ~ dplyr::lag(AMO, 7)))
+
+report(m1)
+```
+
+We forgot to check stationarity of the time series! It seems that landings can be considered as a unit-root process, so differencing is needed, hence a modified model
+
 $$
-\Delta Landings_t = \beta_0 + \beta_{1} AMO_{t-7} + \epsilon_{t}
+\Delta \sqrt{Landings_t} = \beta_0 + \beta_{1} AMO_{t-7} + \epsilon_{t}
 $$
 
-<<>>=
-m2 = auto.arima(diff(sqrt(land)), xreg = dplyr::lag(amo, 7)[-1])
+```{r}
+m2 <- forecast::auto.arima(diff(D$Landings_noNA_sqrt),
+                 xreg = dplyr::lag(D$AMO, 7)[-1],
+                 allowmean = TRUE)
 m2
-@
+```
 
-Note it is different from the implementation with \texttt{d = 1}, which differences all series:
+Note it is different from the implementation with `d = 1`, which differences all series:
+
 $$
-\Delta Landings_t = \beta_0 + \beta_{1} \Delta AMO_{t-7} + \epsilon_{t}
+\Delta \sqrt{Landings_t} = \beta_0 + \beta_{1} \Delta AMO_{t-7} + \epsilon_{t}
 $$
-<<>>=
-auto.arima(sqrt(land), xreg = dplyr::lag(amo, 7), d = 1)
-@
+```{r}
+forecast::auto.arima(D$Landings_noNA_sqrt,
+                     xreg = dplyr::lag(D$AMO, 7), 
+                     d = 1)
+```
+
+or using the newer package `fable`
+
+```{r}
+m3 <- D %>% 
+    select(Year, Landings_noNA_sqrt, AMO) %>% 
+    as_tsibble(index = Year) %>% 
+    model(ARIMA(Landings_noNA_sqrt ~ pdq(d = 1) + dplyr::lag(AMO, 7)))
+
+report(m3)
+```
+:::
 
 
 ## Example: insurance claims}
@@ -300,9 +321,9 @@ ggpairs(data_weekly)
 \label{f:insScatter}
 \end{figure}
 
-Based on the distribution plots in Figure~\ref{f:insScatter}, the data are highly right-skewed (heavy right tail). Number of claims is also a discrete variable. Therefore, we deal with non-normal distributions and need to use a class of models like generalized linear models (GLMs).
+Based on the distribution plots in @fig-insScatter}, the data are highly right-skewed (heavy right tail). Number of claims is also a discrete variable. Therefore, we deal with non-normal distributions and need to use a class of models like generalized linear models (GLMs).
 
-When modeling time series, we often want to find so-called \emph{leading indicators}, i.e., exogenous variables which lagged values can be used for predicting the response, so for the forecasts we do not need to predict $X$-variables that are employed in a model. In our case, there is just a slight chance that past week precipitation affects current week insurance claims. Hence, we will still keep the current precipitation and additionally explore the lagged effects, using the cross-correlation function (Figure~\ref{f:insCCF}).
+When modeling time series, we often want to find so-called \emph{leading indicators}, i.e., exogenous variables which lagged values can be used for predicting the response, so for the forecasts we do not need to predict $X$-variables that are employed in a model. In our case, there is just a slight chance that past week precipitation affects current week insurance claims. Hence, we will still keep the current precipitation and additionally explore the lagged effects, using the cross-correlation function (@fig-insCCF}).
 
 <<echo = FALSE>>=
 par(mar = c(4, 5, 1, 1) + 0.1, mgp = c(3, 1, 0), mfrow = c(1, 2))
@@ -479,12 +500,12 @@ Let $I_t$ be the total information set available at time $t$. This information s
 
 \begin{itemize}
 \item \textbf{Granger causality} $X$ is (simply) Granger causal to $Y$ if future values of $Y$ can be predicted better, i.e., with a smaller forecast error variance, if current and past values of $X$ are used:
-$$\label{eq:Granger}
+$${#eq-Granger}
 \sigma^2(Y_{t+1}|I_t) < \sigma^2(Y_{t+1}|I_t \setminus \bar{X}_t).
 $$
 
 \item \textbf{Instantaneous Granger causality} $X$ is instantaneously Granger causal to $Y$ if the future value of $Y$, $Y_{t+1}$, can be predicted better, i.e., with a smaller forecast error variance, if the future value of $X$, $X_{t+1}$, is used in addition to the current and past values of $X$:
-$$\label{eq:GrangerInst}
+$${#eq-GrangerInst}
 \sigma^2(Y_{t+1}|\{I_t, X_{t+1}\}) < \sigma^2(Y_{t+1}|I_t ).
 $$
 
@@ -492,7 +513,7 @@ $$
 \end{itemize}
 
 The test for (\ref{eq:Granger}) and (\ref{eq:GrangerInst}) is, essentially, an $F$-test comparing two nested models: with additional predictors $X$ and without. In other words, consider the model:
-$$\label{eq:GrangerModel}
+$${#eq-GrangerModel}
 Y_t = \beta_0 + \sum_{k=1}^{k_1}\beta_k Y_{t-k} + \sum_{k=k_0}^{k_2}\alpha_k X_{t-k} + U_t
 $$
 with $k_0 = 1$. An $F$-test is applied to test the null hypothesis, H$_0$: $\alpha_1 = \alpha_2 = \ldots = \alpha_{k_2} = 0$. By switching $X$ and $Y$ in (\ref{eq:GrangerModel}), it can be tested whether a simple causal relation from $Y$ to $X$ exists. There is a feedback relation if the null hypothesis is rejected in both directions ($X\rightarrow Y$ and $Y\rightarrow X$). To test whether there is an instantaneous causality, we finally set $k_0 = 0$ and perform a $t$ or $F$-test for the null hypothesis H$_0$: $\alpha_0 = 0$.
@@ -502,7 +523,7 @@ The problem with this test is that the results are strongly dependent on the num
 ### Insurance example}
 \label{sec:GrangerInsurance}
 
-For example, use the insurance data to test the relationships between home insurance losses and precipitation. A quick test has been performed to check that the time series are stationary and seasonality was removed, so we can use the series in~\eqref{eq:GrangerModel}.
+For example, use the insurance data to test the relationships between home insurance losses and precipitation. A quick test has been performed to check that the time series are stationary and seasonality was removed, so we can use the series in @eq-GrangerModel}.
 <<>>=
 D <- readRDS("./data/insurance.RDS")
 loss <- ts(D$loss, start = c(2002, 1), frequency = 52)
@@ -570,7 +591,7 @@ anova(M3, M4)
 @
 The results show the presence of such causality.
 
-\paragraph{Note} The \texttt{grangertest} options set one value to both $k_1$ and $k_2$ in~\eqref{eq:GrangerModel}. In our example, it was $k_1 = k_2 = 1$. The `manual' test using function \texttt{anova} can be used for models with $k_1 = k_2$ or $k_1 \neq k_2$.
+\paragraph{Note} The \texttt{grangertest} options set one value to both $k_1$ and $k_2$ in @eq-GrangerModel}. In our example, it was $k_1 = k_2 = 1$. The `manual' test using function \texttt{anova} can be used for models with $k_1 = k_2$ or $k_1 \neq k_2$.
 
 
 ## About predictions}
