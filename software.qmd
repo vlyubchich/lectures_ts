@@ -24,6 +24,7 @@ packages2cite <- sort(c(
     ,'funtimes'
     ,'gamlss'
     ,'gamlss.util'
+    ,'GGally'
     # ,'ggfortify'
     ,'ggplot2'
     ,'ggpubr'
@@ -36,11 +37,13 @@ packages2cite <- sort(c(
     ,'plotly'
     ,'pracma'
     ,'randtests'
-    ,'rmarkdown'))
+    ,'rmarkdown'
+    ,'TSstudio'))
 
 # Install the packages, if missing
 new.packages <- packages2cite[!(packages2cite %in% installed.packages()[,"Package"])]
-if (length(new.packages)) { install.packages(new.packages)
+if (length(new.packages)) {
+    install.packages(new.packages)
 }
 
 # Create a bib database for R packages

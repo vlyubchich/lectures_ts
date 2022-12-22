@@ -43,6 +43,8 @@ Cite
 @Brockwell:Davis:2002
 or
 [@Brockwell:Davis:2002]
+or
+[@Rebane:Pearl:1987;@Pearl:2009]
 
 Recall the classical decomposition
 $$
