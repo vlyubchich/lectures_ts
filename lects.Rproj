@@ -15,4 +15,7 @@ LaTeX: pdfLaTeX
 AutoAppendNewline: Yes
 StripTrailingWhitespace: Yes
 
+QuitChildProcessesOnExit: Yes
+DisableExecuteRprofile: Yes
+
 SpellingDictionary: en_US

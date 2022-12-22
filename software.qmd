@@ -22,22 +22,31 @@ packages2cite <- sort(c(
     ,'fma'
     ,'forecast' 
     ,'funtimes'
+    ,'gamlss'
+    ,'gamlss.util'
     # ,'ggfortify'
     ,'ggplot2'
     ,'ggpubr'
     ,'knitr'
     ,'lawstat'
     ,'lmtest'
+    ,'mgcv'
     ,'nlme'
     ,'patchwork'
     ,'plotly'
     ,'pracma'
-    ,'randtests'))
+    ,'randtests'
+    ,'rmarkdown'))
+
+# Install the packages, if missing
+new.packages <- packages2cite[!(packages2cite %in% installed.packages()[,"Package"])]
+if (length(new.packages)) { install.packages(new.packages)
+}
 
 # Create a bib database for R packages
 knitr::write_bib(c(.packages()
-    ,'base'
-    ,packages2cite
+                   ,'base'
+                   ,packages2cite
 ), 'refpackages.bib')
 
 # Form a list with citations
